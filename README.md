@@ -11,13 +11,6 @@
 ----------------------------        
 ##### Normal three commands:    
 * git add .    
-<<<<<<< HEAD
-=======
-
-* git commit -m "blabla"              
-* git push origin main
->>>>>>> 7fabf75399b40c947af6563c000d66aaa32884ce
-
 * git commit -m "blabla"              
 * git push origin main
 
