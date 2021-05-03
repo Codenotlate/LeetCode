@@ -44,3 +44,19 @@ class Solution {
         return cur;
     }
 }
+
+
+// self phase 2 for iterative way
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode cur = head;
+        ListNode pre = null;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
+    }
+}

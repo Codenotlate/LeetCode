@@ -24,6 +24,7 @@ class Solution {
     private boolean isSymPair(TreeNode t, TreeNode s) {
     	if (t == null && s == null) {return true;}
     	if (t == null || s == null) {return false;}
+        // if (p1 == null || p2 == null) {return p1 == p2;}
 
     	if (t.val != s.val) {return false;}
     	return isSymPair(t.left, s.right) && isSymPair(t.right, s.left);
@@ -58,6 +59,30 @@ class Solution {
     	
 }
 
+
+// iterative way phase2 self using queue
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {return true;}
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root.left);
+        queue.add(root.right);
+        while (!queue.isEmpty()) {
+            TreeNode first = queue.poll();
+            TreeNode second = queue.poll();
+            if (first == null || second == null) {
+                if (first != second) {return false;}
+            } else {
+                if (first.val != second.val) {return false;}
+                queue.add(first.left);
+                queue.add(second.right);
+                queue.add(first.right);
+                queue.add(second.left);
+            }
+        }
+        return true;
+    }
+}
 
 
 

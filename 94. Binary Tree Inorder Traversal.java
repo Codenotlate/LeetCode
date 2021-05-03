@@ -45,7 +45,8 @@ class Solution {
 }
 
 
-
+// try remember this one - much clearer and precise
+// time O(n) space O(n)
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
         // another iterative way
@@ -74,6 +75,35 @@ class Solution {
 }
 
 
+// another iterative way: morris Traversal
+// time O(n) space O(1)
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        TreeNode cur = root;
+        List<Integer> res = new LinkedList<>();
+        while (cur != null) {
+            if (cur.left == null) {
+                res.add(cur.val);
+                cur = cur.right;
+            } else {
+                TreeNode rightmost = cur.left;
+                while (rightmost.right != null) {
+                    rightmost = rightmost.right;
+                }
+                rightmost.right = cur;
+                TreeNode temp = cur;
+                cur = cur.left;
+                temp.left = null; // avoid infinite loop
+            }
+        }
+        return res;
+    }
+}
+
+
+
+
+
 
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
@@ -88,7 +118,6 @@ class Solution {
         return resList;
     }
 }
-
 
 
 

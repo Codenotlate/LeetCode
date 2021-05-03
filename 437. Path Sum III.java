@@ -68,6 +68,33 @@ class Solution {
 
 
 
+// phase 2 self:
+class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        int[] res = new int[1];
+        HashMap<Integer, Integer> pathSumMap = new HashMap<>();
+        // don't forget this one line
+        pathSumMap.put(0,1);
+        dfs(root, sum, 0, pathSumMap, res);
+        return res[0];
+    }
+    
+    private void dfs(TreeNode root, int sum, int cumSum, HashMap<Integer, Integer> pathSumMap, int[] res) {
+        if (root == null) {return;}
+        cumSum += root.val;
+        if (pathSumMap.keySet().contains(cumSum - sum)) {
+            res[0] += pathSumMap.get(cumSum - sum);
+        }
+        
+        pathSumMap.put(cumSum, pathSumMap.getOrDefault(cumSum, 0) + 1);
+        dfs(root.left, sum, cumSum, pathSumMap, res);
+        dfs(root.right, sum, cumSum, pathSumMap, res);
+        pathSumMap.put(cumSum, pathSumMap.get(cumSum) - 1);
+    }
+}
+
+
+
 
 
 

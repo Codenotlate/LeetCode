@@ -35,6 +35,27 @@ class Solution {
     }
 }
 
+class Solution {
+    // recursive way phase2 self without global var
+    public int kthSmallest(TreeNode root, int k) {
+        int[] val = new int[1];
+        int[] count = new int[1];
+        inorder(root, k, val, count);
+        return val[0];
+    }
+    
+    private void inorder(TreeNode root, int k, int[] val, int[] count) {
+        if (root == null) {return;}
+        inorder(root.left, k, val, count);
+        count[0] += 1;
+        if (k == count[0]) {
+            val[0] = root.val; 
+            return;
+        }
+        inorder(root.right, k, val, count);
+    }
+}
+
 
 class Solution {
     public int kthSmallest(TreeNode root, int k) {
@@ -70,6 +91,25 @@ class Solution {
 }
 
 
+class Solution {
+    // iterative way phase2 self
+    public int kthSmallest(TreeNode root, int k) {
+        int count = 0;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        while (cur != null || !stack.isEmpty()) {
+            while(cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            count += 1;
+            if (count == k) {return cur.val;}
+            cur = cur.right;            
+        }
+        return -1;
+    }
+}
 
 
 

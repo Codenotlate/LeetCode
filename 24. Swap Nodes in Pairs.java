@@ -53,3 +53,30 @@ class Solution {
 
     }
 }
+
+
+
+
+// Phase 2 self solution: same idea as M2 above
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode pre = head;
+        ListNode cur = head.next;
+        head = cur;
+        ListNode tail = new ListNode();
+        while (cur != null) {
+            pre.next = cur.next;
+            cur.next = pre;
+            tail.next = cur;
+            
+            tail = pre;
+            pre = pre.next;
+            if (pre == null) {break;}
+            cur = pre.next;
+        }
+        return head;
+    }
+}

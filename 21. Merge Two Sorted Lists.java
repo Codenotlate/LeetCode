@@ -43,6 +43,26 @@ class Solution {
 }
 
 
+// self phase2: iterative way more concise version
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode resHead = new ListNode(-999, null);
+        ListNode resTail = resHead;
+
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                resTail.next = l1;
+                l1 = l1.next;
+            } else {
+                resTail.next = l2;
+                l2 = l2.next;
+            }
+            resTail = resTail.next;
+        }
+        resTail.next = l1 == null ? l2 : l1;
+        return resHead.next;
+    }
+}
 
 
 class Solution {

@@ -34,3 +34,24 @@ class Solution {
 
     }
 }
+
+
+// phase2 self
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {return null;}
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode cur = stack.pop();
+            if (cur.val < p.val && cur.val < q.val) {
+                if (cur.right != null) {stack.push(cur.right);}
+            } else if (cur.val > p.val && cur.val > q.val) {
+                if (cur.left != null) {stack.push(cur.left);}
+            } else {
+                return cur;
+            }            
+        }
+        return null;
+    }
+}

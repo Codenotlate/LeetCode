@@ -93,8 +93,34 @@ class Solution {
 // amazing explanation: 
 // https://leetcode.com/problems/house-robber-iii/discuss/79330/step-by-step-tackling-of-the-problem
 
-
-
+// phase2 self:
+/*
+This actually uses idea of dp status machine. for each node, there are two status
+status 0 : current node not choose
+status 1: current node is chosen
+node status 0  <- left 0 / 1 + right 0 / 1
+node status 1 <- left 0 + right 0
+use int[2] {value of status 0, value of status 1} as the result returned by dfs.
+*/
+class Solution {
+    public int rob(TreeNode root) {
+        int[] res = dfs(root);
+        return Math.max(res[0], res[1]);
+    }
+    
+    // 2 status: 0 -> not choose current node
+    // 1 -> choose current node
+    // node status 0 <-- left child status 0/1 + right 0/1 
+    // node status 1 <-- left 0 + right 0
+    private int[] dfs(TreeNode root) {
+        if (root == null) {return new int[2];}
+        int[] left = dfs(root.left);
+        int[] right = dfs(root.right);
+        int dp0 = Math.max(right[0], right[1]) + Math.max(left[0], left[1]);
+        int dp1 = root.val + left[0] + right[0];
+        return new int[]{dp0, dp1};
+    }
+}
 
 
 

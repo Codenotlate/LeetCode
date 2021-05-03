@@ -113,7 +113,67 @@ class Solution {
 
 
 
-
+/**
+M3: based on M2. but reverse the tempHead list inplace with carry
+optimize the space from O(2n) to O(n)
+ */
+class Solution {
+    // no reverse of input
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int size1 = size(l1);
+        int size2 = size(l2);
+        int sizeDiff = size1 - size2;
+        if (sizeDiff < 0) { // swap to make sure l1 size >= l2 size.
+            ListNode temp = l1;
+            l1 = l2;
+            l2 = temp;
+            sizeDiff *= -1;
+        }
+        
+        ListNode reverseHead = null;
+        // deal with the part l1 longer than l2
+        while (sizeDiff > 0) {
+            reverseHead = new ListNode(l1.val, reverseHead);
+            sizeDiff--;
+            l1 = l1.next;
+        }
+        // deal with the part l1 and l2 have the same size
+        while(l1 != null) {
+            reverseHead = new ListNode(l1.val + l2.val, reverseHead);
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        return reverseWithCarry(reverseHead, 0); // try to reverse inplace        
+    }
+    
+    private int size(ListNode node) {
+        int res = 0;
+        while (node != null) {
+            res++;
+            node = node.next;
+        }
+        return res;
+    }
+    
+    private ListNode reverseWithCarry(ListNode head, int carry) {
+        ListNode pre = null;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode recordNext = cur.next;
+            int sum = cur.val + carry;
+            cur.val = sum % 10;
+            carry = sum / 10;
+            // after update the val of cur node, we reverse
+            cur.next = pre;
+            pre = cur;
+            cur = recordNext;
+        }
+        if (carry != 0) {
+            pre = new ListNode(carry, pre);
+        }
+        return pre;
+    }
+}
 
 
 

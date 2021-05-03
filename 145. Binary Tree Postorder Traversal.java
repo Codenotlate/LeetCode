@@ -126,7 +126,12 @@ It's acceptable that you put them into a collections first and then reverse it.
 */
 
 
+// Morris way
+// https://leetcode.com/problems/binary-tree-postorder-traversal/discuss/45628/Morris-Traversal-Time-O(n)-Space-O(1)-inorder-preorder-postorder
 
+// double push way
+// We are using duplicates, one is for processing(fetching) it's children and one copy will remain there on stack because that node itself will be processed after its children are processed.
+// https://leetcode.com/problems/binary-tree-postorder-traversal/discuss/45582/A-real-Postorder-Traversal-.without-reverse-or-insert-4ms
 
 
 

@@ -53,6 +53,30 @@ class Solution {
 
 
 
+class Solution {
+    // Phase2 M2 self: øiterative way using BFS
+    public int minDepth(TreeNode root) {
+        int level = 0;
+        if (root == null) {return level;}
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            level += 1;
+            while (size > 0) {
+                TreeNode cur = queue.poll();
+                if (cur.left == null && cur.right == null) {return level;}
+                if (cur.left != null) {queue.add(cur.left);}
+                if (cur.right != null) {queue.add(cur.right);}
+                size--;
+            }
+        }
+        return level;
+    }
+}
+
+
+
 
 
 

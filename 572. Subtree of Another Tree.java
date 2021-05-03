@@ -30,3 +30,15 @@ class Solution {
         return isSame(s.left, t.left) && isSame(s.right, t.right);
     }
 }
+
+
+
+/**
+If assum m is the number of nodes in the 1st tree and n is the number of nodes in the 2nd tree, then
+Time complexity: O(m*n), worst case: for each node in the 1st tree, we need to check if isSame(Node s, Node t). Total m nodes, isSame(...) takes O(n) worst case
+Space complexity: O(height of 1str tree)(Or you can say: O(m) for worst case, O(logm) for average case)
+*/
+
+
+// a advanced way with O(S + T) time (don't think we need to know that)
+// https://leetcode.com/problems/subtree-of-another-tree/discuss/102741/Python-Straightforward-with-Explanation-(O(ST)-and-O(S%2BT)-approaches)

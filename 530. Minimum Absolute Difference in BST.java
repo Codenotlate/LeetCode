@@ -65,6 +65,27 @@ class Solution {
     }
 }
 
+//above m2 way: self phase 2
+class Solution {
+    public int getMinimumDifference(TreeNode root) {
+        Integer[] minDiff = new Integer[] {null};        
+        inorder(root, minDiff, null);
+        return minDiff[0];
+    }
+    
+    private Integer inorder(TreeNode root, Integer[] minDiff, Integer lastNum) {
+        if (root == null) {return lastNum;}
+        lastNum = inorder(root.left, minDiff, lastNum);
+        if (lastNum != null && (minDiff[0] == null || root.val - lastNum <= minDiff[0])) {
+            minDiff[0] = root.val - lastNum;
+            
+        }
+        lastNum = root.val;
+        lastNum = inorder(root.right, minDiff, lastNum);
+        return lastNum;
+    }
+}
+
 
 
 class Solution {

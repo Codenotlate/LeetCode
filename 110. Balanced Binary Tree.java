@@ -33,6 +33,33 @@ class Solution {
 }
 
 
+class Solution {
+    //m1 topdown recursive O(nlogn) using iterative way to get depth
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {return true;}
+        return (Math.abs(maxDepth(root.left) - maxDepth(root.right)) <= 1) && isBalanced(root.left) && isBalanced(root.right);
+    }
+    
+    private int maxDepth(TreeNode root) {
+        int level = 0;
+        if (root == null) {return level;}
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            level += 1;
+            while (size > 0) {
+                TreeNode cur = queue.poll();
+                if (cur.left != null) {queue.add(cur.left);}
+                if (cur.right != null) {queue.add(cur.right);}
+                size--;
+            }
+        }
+        return level;
+    }
+}
+
+
 
 class Solution {
 	// add a class variable
