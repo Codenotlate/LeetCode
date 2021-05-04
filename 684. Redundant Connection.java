@@ -41,7 +41,7 @@ class Solution {
 
 
 // method 2: Union find (disjoint set)
-// time O(n∂(n)) O(∂(n)) is close to O(1); space = O(n)
+// time O(n∂(n)) （O(∂(n)) is close to O(1)）; space = O(n)
 class Solution {
     public int[] findRedundantConnection(int[][] edges) {
     	int N = 1001;
