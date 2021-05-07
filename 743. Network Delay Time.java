@@ -48,6 +48,48 @@ class Solution {
 
 
 
+// phase2: self (replace the map dist in m1 with a simple visited array, cause it's no need to track the dist)
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // use dijkstra algo
+        // build the graph
+        Map<Integer, ArrayList<int[]>> graph= new HashMap<>();
+        for (int[] e: times) {
+            graph.putIfAbsent(e[0], new ArrayList<>());
+            graph.get(e[0]).add(new int[]{e[1], e[2]});
+        }
+        
+        // build the PQ for dijkstra, visited to record all visited nodes
+        PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> (e1[1] - e2[1]));
+        // Map<Integer, Integer> dist = new HashMap<>(); 
+        // we actually don't need to record the dist, casue it's dijkstra, it guarantees for the same node, the first time it's polled out of the pq, that is its shortest path from source node.
+        int[] visited = new int[n + 1];
+        int longestDist = 0;
+        int countVisited = 0;
+        
+        
+        pq.add(new int[]{k, 0});
+        
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            if (visited[cur[0]] == 1) {continue;}
+            visited[cur[0]] = 1;
+            countVisited++;
+            longestDist = Math.max(longestDist, cur[1]);
+            if (countVisited == n) {return longestDist;}
+            if (graph.keySet().contains(cur[0])) {
+                for (int[] next: graph.get(cur[0])) {
+                    if (visited[next[0]] == 1) {continue;}
+                    pq.add(new int[]{next[0], next[1] + cur[1]});
+                }
+            }            
+        }          
+        
+        // return result based on visited set
+        return -1;
+    }
+}
+
 
 
 
