@@ -23,8 +23,8 @@
 ---
 ### Bellman-Ford Algo - used for general weighted graph (edge can be negative weight)
 
-* pseudo code as belo
-(```)
+* pseudo code as below
+```
 # Do relaxation for each edge (n - 1) times
 while i <= n - 1:
 	for u, v in Edge( u -> v)
@@ -38,7 +38,7 @@ for u, v in Edge( u -> v)
 	if v.distance > u.distance + w( u -> v )
 		return False # there is a negative weighted circle
 return True # there is no such circle
-(```)
+```
 
 
 
