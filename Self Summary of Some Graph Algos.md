@@ -81,15 +81,16 @@ for k from 1 to |V|
 > * 经过节点k时，从i到j的最短距离是从i到k的最短距离加上从j到k的最短距离，即shortestPath(i, k, k - 1) + shortestPath(k, j, k - 1) 。
 
 * Why k should be the most outer loop:
-> d[i][j][k] = shortest path from i -> j and intermediates from: [0 - k]
-> init: d[i][j][-1] = graph[i][j], direct edges
+```
+d[i][j][k] = shortest path from i -> j and intermediates from: [0 - k]
+init: d[i][j][-1] = graph[i][j], direct edges
 
-> relation:
->       d[i][j][k] = min( d[i][j][k-1], d[i][k][k-1] + d[k][j][k-1] )
->                  = min( not pick k , pick k )
+relation:
+    d[i][j][k] = min( d[i][j][k-1], d[i][k][k-1] + d[k][j][k-1] )
+               = min( not pick k , pick k )
 
-> because d[i][j][k] only depends on d[i][j][k-1] -> can use 2-d array and k must be outermost loop
-
+because d[i][j][k] only depends on d[i][j][k-1] -> can use 2-d array and k must be outermost loop
+```
 <br>
 
 * Note: 
