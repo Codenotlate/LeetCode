@@ -45,6 +45,7 @@ return True # there is no such circle
 * Detail explanation - why only n - 1 loops are required and how to detact negative edge
 [Detail](https://www.sining.io/2018/04/30/understanding-bellman-ford-algorithm/)
    * one way to understand this algo, is that it uses idea of dynamic programing. For ith loop, it guarantees the shortest path of thoes nodes that is i edges from source node, based on the (i-1)th nodes' shortest path(which is finalized).
+   * note if we care about how may round of loops has finished, in each round of loop, we need to copy a temp array of current dist array. We update temp array based on values in dist array, so that we can only update the distance of node i edges from src in the i-th round of loop.
 
 
 
@@ -53,14 +54,17 @@ return True # there is no such circle
    * time complexity is O(VE), slower than regular Dijkstra
 
 
+<br>
 
 
+---
+## Using Other regular algos (DFS / BFS) to find shortest path
+---
 
+### See BFS & DFS in 787.
+[solution](https://leetcode.com/problems/cheapest-flights-within-k-stops/discuss/361711/Java-DFSBFSBellman-Ford-Dijkstra's)
+* Time O(V^V)
 
-
-* understand BellmanFord algo for 787
-* understand BFS/DFS for 787
-* why dijkstra is not the best for 787
-* self summary the time complexity and all 4 methods
+---
 
 * understand and implement Floyd algo for 1334

@@ -1,7 +1,7 @@
 // This problem needs review: still not very clear about the time complexity
 
 // -------------------- Dijkstra way ----------------------//
-// time O(V^k * log(V^k)) ? not sure
+// time O(V^k * log(V^k)) ? not sure (based on runtime in LC, it's not this slow)
 
 // Phase2 self M1
 class Solution {
@@ -141,7 +141,7 @@ class Solution {
         dist[src] = 0;
 
         for (int i = 0; i < k + 1; i++) { // run at most 
-        	//Note: we need to use a copies temp of result from last round
+        	//Note: we need to use a copies temp of result from last round （regular BF doesn't care how many rounds of loop may not need this）
         	// becasue otherwise, we may update a node dist based on the dist of other node that has been updated in the same round
         	// in that case, we can no longer guarantee that only nodes i edges from src will be updated on the i-th round of loop
         	// in this problem, meaning the stop can exceed k.
@@ -154,6 +154,87 @@ class Solution {
         }
 
         return dist[dst] == Integer.MAX_VALUE ? -1 : dist[dst];
+    }
+}
+
+
+
+// -------------------- DFS way ----------------------//
+// time: O(V^K)
+
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        // build the graph
+        Map<Integer, ArrayList<int[]>> graph = new HashMap<>();
+        for (int[] e: flights) {
+            graph.putIfAbsent(e[0], new ArrayList());
+            graph.get(e[0]).add(new int[]{e[1], e[2]});
+        }
+
+        int[] answer = new int[]{Integer.MAX_VALUE};
+        // do dfs starting from src, if the steps is largeer than k - stop. 
+        // If dst is visited within k stops, update the answer[].
+        dfs(graph, src, dst, k + 1, 0, answer);
+
+        return answer[0] == Integer.MAX_VALUE ? -1 : answer[0];
+    }
+
+    private void dfs(Map<Integer, ArrayList<int[]>> graph, int cur, int dst, int k, int cost, int[] answer) {
+        if (k < 0 || cost >= answer[0]) {return;}
+        if (cur == dst) {
+            answer[0] = Math.min(answer[0], cost); 
+            return;
+        }
+        if (graph.keySet().contains(cur)) {
+            for (int[] next: graph.get(cur)) {
+                if (cost + next[1] >= answer[0]) {continue;}  // no need to go deeper
+                dfs(graph, next[0], dst, k - 1, cost + next[1], answer);
+            }
+        }
+    }
+}
+
+
+
+// -------------------- BFS way ----------------------//
+// time: O(V^K) (will get TLE in LC)
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        // build the graph
+        Map<Integer, ArrayList<int[]>> graph = new HashMap<>();
+        for (int[] e: flights) {
+            graph.putIfAbsent(e[0], new ArrayList());
+            graph.get(e[0]).add(new int[]{e[1], e[2]});
+        }
+
+        // do bfs, need to cound level, once hit k then stop
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{src, 0});
+        int level = -1;
+        int answer = Integer.MAX_VALUE;
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                if (cur[1] >= answer) {continue;}
+                if (cur[0] == dst) {
+                    answer = Math.min(answer, cur[1]); 
+                    continue;
+                }
+                if (graph.keySet().contains(cur[0])) {
+                    for (int[] next: graph.get(cur[0])) {
+                        if (next[1] + cur[1] >= answer) {continue;}
+                        queue.add(new int[]{next[0], next[1] + cur[1]});
+                    }
+                }
+            }
+
+            if (++level > k) {break;}
+        }
+
+        return answer == Integer.MAX_VALUE ? -1 : answer;
+
     }
 }
 
