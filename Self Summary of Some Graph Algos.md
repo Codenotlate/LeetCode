@@ -56,6 +56,58 @@ return True # there is no such circle
 
 <br>
 
+---
+## Algo used for multi-sources shorted path
+---
+### Floyd-Warshall Algo
+[wikipedia](https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm)
+
+* Pseudocode
+```
+let dist be a |V| × |V| array of minimum distances initialized to ∞ (infinity)
+for each edge (u, v) do
+    dist[u][v] ← w(u, v)  // The weight of the edge (u, v)
+for each vertex v do
+    dist[v][v] ← 0
+for k from 1 to |V|
+    for i from 1 to |V|
+        for j from 1 to |V|
+            if dist[i][j] > dist[i][k] + dist[k][j] 
+                dist[i][j] ← dist[i][k] + dist[k][j]
+            end if
+```
+* key logic
+> * 不经过节点k时，从i到j的最短距离即为shortestPath(i, j, k – 1) ；
+> * 经过节点k时，从i到j的最短距离是从i到k的最短距离加上从j到k的最短距离，即shortestPath(i, k, k - 1) + shortestPath(k, j, k - 1) 。
+
+* Why k should be the most outer loop:
+> d[i][j][k] = shortest path from i -> j and intermediates from: [0 - k]
+> init: d[i][j][-1] = graph[i][j], direct edges
+
+> relation:
+>       d[i][j][k] = min( d[i][j][k-1], d[i][k][k-1] + d[k][j][k-1] )
+>                  = min( not pick k , pick k )
+
+> because d[i][j][k] only depends on d[i][j][k-1] -> can use 2-d array and k must be outermost loop
+
+<br>
+
+* Note: 
+    * This algo can be used for weighted graph with negative edges, but can't used for weighter graph with negative cycles.  Though it can be used to detect whether there's negative cycles exist. (checking whether shortesPath(i, i) < 0)
+    * This algo uses Dynamic programming idea. Can be understand as
+       1. k = 1, we update the path of all (i, j) pairs that can use node 1 as intermediate node.
+       2. k = 2, we update the path of all (i, j) pairs that can use up to node 1 and node 2 as intermediate node
+       3. ......
+       4. k = V, we update the path of all (i, j) pairs that can can use up to node1, node2, ... node V (all nodes) as intermediate node.
+
+
+* Complexity
+   * Time - O(V^3)
+   * Space - O(v^2)
+
+* sample problem (1334)
+
+<br>
 
 ---
 ## Using Other regular algos (DFS / BFS) to find shortest path
