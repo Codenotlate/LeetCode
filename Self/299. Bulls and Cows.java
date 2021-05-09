@@ -43,8 +43,8 @@ class Solution {
         int bNum = 0;
 
         for (int i = 0; i < secret.length(); i++) {
-        	int s = secret.charAt(i) = '0';
-        	int g = guess.charAt(i) = '0';
+        	int s = secret.charAt(i) - '0';
+        	int g = guess.charAt(i) - '0';
         	if (s == g) {
         		aNum++;
         	} else {
