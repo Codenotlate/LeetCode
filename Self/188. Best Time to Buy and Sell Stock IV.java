@@ -76,7 +76,23 @@ class Solution {
 
 
 
-
+// phase3 self
+// Note we still need to deal with k > n/2 case, to optimize to O(n) as M1 above
+class Solution {
+    public int maxProfit(int k, int[] prices) {
+        int[] k0 = new int[k + 1];
+        int[] k1 = new int[k + 1];
+        Arrays.fill(k1, Integer.MIN_VALUE);
+        
+        for (int p : prices) {
+            for (int j = k; j >= 1; j--) {
+                k0[j] = Math.max(k0[j], k1[j] + p);
+                k1[j] = Math.max(k1[j], k0[j - 1] - p);
+            }
+        }
+        return k0[k];
+    }
+}
 
 
 

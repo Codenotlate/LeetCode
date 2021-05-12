@@ -7,6 +7,7 @@ class Solution {
         for (int p: prices) {
         	int temp = dp_i_0;
         	dp_i_0 = Math.max(dp_i_0, dp_i_1 + p);
+            // note we put fee only buy side not sell side, cause otherwise since dp_i_1 is initialized as -inf, if p smaller than fee, we will have overflow.
         	dp_i_1 = Math.max(dp_i_1, temp - p - fee);
         }
         return dp_i_0;

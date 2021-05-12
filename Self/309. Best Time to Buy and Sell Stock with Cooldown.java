@@ -43,3 +43,20 @@ class Solution {
     	return res;
     }
 }
+
+
+// phase3 self
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        int dp_i0 = 0, dp_i1 = Integer.MIN_VALUE;
+        int dp_prev_i0 = 0;
+        for (int p: prices) {
+            int temp = dp_i0; // store the value that will become the dp[i - 2][0] when go to the i+1 round
+            dp_i0 = Math.max(dp_i0, dp_i1 + p);
+            dp_i1 = Math.max(dp_i1, dp_prev_i0 - p);
+            dp_prev_i0 = temp;
+        }
+        return dp_i0;   
+    }
+} 
