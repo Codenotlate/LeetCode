@@ -76,3 +76,27 @@ class Solution {
 
 
 
+// Phase 3
+class Solution {
+    public int findDuplicate(int[] nums) {
+        // O(n) time O(1) space and no modify way using circle detect with fast and slow pointers
+        int fast = nums[0];
+        int slow = nums[0];
+        while (true) {
+            fast = nums[nums[fast]];
+            slow = nums[slow];
+            if (slow == fast) {
+                break;
+            }
+        }
+        slow = nums[0];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return fast;
+    }
+}
+
+
+
