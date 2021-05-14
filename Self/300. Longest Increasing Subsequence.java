@@ -58,6 +58,70 @@ class Solution {
 
 
 
+// Phase 3
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        //M1: DP way time O(n^2)
+        // dp[i] represents the LIS of nums[1:i] when i is included in the result sequence
+        int n = nums.length;
+        int[] dp = new int[nums.length];
+        // note: need to initialize all to 1 first
+        Arrays.fill(dp, 1);
+        int max = 1;
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }                              
+            }
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+}
+
+
+
+// M2: patience sort - card game algo
+// https://leetcode.com/problems/longest-increasing-subsequence/discuss/74824/JavaPython-Binary-search-O(nlogn)-time-with-explanation
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length <= 1) {return nums.length;}
+
+        int[] tileTop= new int[nums.length]; // tileTop is an increasing array
+        int tileCount = 0; // count the existing tile numbers
+        tileTop[tileCount++] = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] > tileTop[tileCount - 1]) {
+                tileTop[tileCount++] = nums[i];
+            } else {
+                int updatePos = findUpdatePos(tileTop, 0, tileCount - 1, nums[i]);
+                tileTop[updatePos] = nums[i];
+            }
+        }
+        return tileCount;
+    }
+
+
+    // want to find the first one larger than or equal to target
+    private int findUpdatePos(int[] arr, int start, int end, int target) {
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] < target) {
+                start = mid + 1;
+            } else {
+                end = mid;
+            }
+        }
+        return start;
+        
+
+
+    }
+}
+
+
 
 
 
