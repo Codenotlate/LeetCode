@@ -84,6 +84,7 @@ class Solution {
 
 // M2: patience sort - card game algo
 // https://leetcode.com/problems/longest-increasing-subsequence/discuss/74824/JavaPython-Binary-search-O(nlogn)-time-with-explanation
+// https://leetcode.com/problems/longest-increasing-subsequence/discuss/74880/JAVA-Easy-Version-To-Understand!!!!!!!!
 class Solution {
     public int lengthOfLIS(int[] nums) {
         if (nums.length <= 1) {return nums.length;}
