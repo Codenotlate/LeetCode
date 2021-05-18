@@ -102,7 +102,7 @@ class Solution {
 
 
 /*
-Some comments about M3:
+Some comments about M3 dp way:
 I don't think the approach 3 meet the description of this question. We are told that You can only see the k numbers in the window which means we should treat it as a data stream instead of a static data list. Therefore we shouldn't do any preprocess on it.
 */
 

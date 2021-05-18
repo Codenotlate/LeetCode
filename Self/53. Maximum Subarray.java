@@ -108,6 +108,20 @@ class Solution {
 
 
 
+// Phase 3 self precise way of M1
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int maxSum = Integer.MIN_VALUE;
+        int curSum = 0;
+        
+        for (int n: nums) {
+            curSum = Math.max(n, n + curSum);
+            maxSum = Math.max(maxSum, curSum);
+        }
+        return maxSum;
+    }
+}
+
 
 
 

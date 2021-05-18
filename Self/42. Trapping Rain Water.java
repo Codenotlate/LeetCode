@@ -57,8 +57,11 @@ Using this rule, we guarantee, if the node is visited by moving the l++, then al
 */
 
 
+
 class Solution {
     public int trap(int[] height) {
+    	// need to deal with n = 0 first
+    	if (height.length == 0) {return 0;}
         int left = 0;
         int leftMost = height[left];
         int right = height.length  - 1;

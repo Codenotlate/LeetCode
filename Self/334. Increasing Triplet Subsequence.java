@@ -25,3 +25,5 @@ class Solution {
         return false;
     }
 }
+
+// can be understood as a simplified version of LIS
