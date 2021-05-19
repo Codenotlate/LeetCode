@@ -141,8 +141,37 @@ public class Solution {
         return count;
     }
 }
+/* greedy way idea
+This problem is equivalent to finding the number of alternating max. and min. peaks in the array. Since, if we choose any other intermediate number to be a part of the current wiggle subsequence, the maximum length of that wiggle subsequence will always be less than or equal to the one obtained by choosing only the consecutive max. and min. elements.
+
+*/
 
 
+
+
+
+
+// Phase3 self DP way
+// O(n) time and O(1) space
+// this idea is the same as solution #2/3/4
+class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        // dp way: self
+        if (nums.length <= 1) {return nums.length;}
+        int dp0 = 1, dp1 = 1;
+        for (int i = 1; i < nums.length; i++) {
+            int temp = dp0;
+            if (nums[i - 1] > nums[i]) {
+                dp0 = dp1 + 1;
+            }
+            if (nums[i - 1] < nums[i]) {
+                dp1 = temp + 1;
+            }
+        }
+        return Math.max(dp1, dp0);
+        
+    }
+}
 
 
 

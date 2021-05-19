@@ -30,3 +30,31 @@ class Solution {
         }
     }
 }
+
+
+// Phase3 self
+class Solution {
+    // O(m + n) time  just start with the end first
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        // three pointers, two for nums1, and nums2, and another one for result
+        int p1 = m - 1;
+        int p2 = n - 1;
+        int resp = nums1.length - 1;
+        while (p1 >= 0 && p2 >= 0) {
+            nums1[resp] = Math.max(nums1[p1], nums2[p2]);
+            if (nums1[p1] < nums2[p2]) {
+                p2--;
+            } else {
+                p1--;
+            }
+            resp--;
+        }
+        
+        if (p1 < 0) {
+            while (resp >= 0) {
+                nums1[resp--] = nums2[p2--];
+            }
+        }
+        
+    }
+}

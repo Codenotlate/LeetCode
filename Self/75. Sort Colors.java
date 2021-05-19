@@ -51,8 +51,8 @@ class Solution {
 	    int n0 = -1, n1 = -1, n2 = -1;
 	    for (int i = 0; i < n; ++i) {
 	        if (A[i] == 0) 
-	        {
-	            A[++n2] = 2; A[++n1] = 1; A[++n0] = 0;
+	        { 
+	            A[++n2] = 2; A[++n1] = 1; A[++n0] = 0; // The order here matters
 	        }
 	        else if (A[i] == 1) 
 	        {
@@ -89,3 +89,55 @@ class Solution {
 	
 	}
 }
+
+
+
+// Phase3 not-self
+class Solution {
+    public void sortColors(int[] nums) {
+        // pivot sort related, but two pointers to separate into 3 sorted range and one unsearched range
+        int p0 = 0, p1 = 0, p2 = nums.length - 1;
+        int pivot = 1;
+        while (p1 <= p2) {
+            if (nums[p1] == pivot) {p1++;}
+            else if (nums[p1] > pivot) {
+                swap(nums, p1, p2);
+                p2--;
+            } else {
+                swap(nums, p0, p1);
+                p0++;
+                p1++;
+            }
+        }
+    }
+    private void swap(int[] nums, int a, int b) {
+        int temp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = temp;
+    }
+}
+
+// Phase3 not-self
+class Solution {
+    public void sortColors(int[] nums) {
+        int p0 = 0, p1 = 0, p2 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 2) {
+                nums[p2++] = 2;
+            } else if (nums[i] == 1) {
+                nums[p2++] = 2;
+                nums[p1++] = 1;
+            } else {
+                nums[p2++] = 2;
+                nums[p1++] = 1;
+                nums[p0++] = 0;
+            }
+        }
+    }
+}
+
+
+
+
+
+
