@@ -44,6 +44,61 @@ class Solution {
 
 
 // M3: if given char[], can do it in O(1) space
+// reverse the whole char[], then reverse each word, finally clean all the excess spaces
+class Solution {
+    public String reverseWords(String s) {
+        char[] str = s.toCharArray(); // assume we are given this char array
+        int n = str.length;
+        reverse(str, 0, n - 1);
+
+        reverseWord(str, n);
+
+        return cleanSpace(str);
+    }
+
+    private void reverse(char[] s, int start, int end) {
+    	while (start < end) {
+    		char temp = s[start];
+    		s[start] = s[end];
+    		s[end] = temp;
+    		start++;
+    		end--;
+    	}
+    }
+
+    private void reverseWord(char[] s, int n) {
+    	int start = 0;
+    	int end = 0;
+
+    	while (end < n && start < n) {
+    		while (start < n && s[start] == ' ') {
+    			start++;
+    		}
+    		while (end < start || end < n && s[end] != ' ') {
+    			end++;
+    		}
+    		reverse(s, start, end - 1);
+    		start = end + 1;
+    	}
+    }
+
+    private String cleanSpace(char[] s) {
+    	int i = 0;
+    	int j = 0;
+    	int n = s.length;
+    	while (j < n) {
+    		while (j < n && s[j] == ' ') {j++;}
+	    	while (j < n && s[j] != ' ') {s[i++] = s[j++];}
+	    	// add one space, remember to check i<n
+	    	if(j < n && i < n) {s[i++] = ' ';}
+    	}
+    	// remember to remove the last space if any
+    	if (s[i - 1] == ' ') {i--;}
+    	return new String(s).substring(0, i);
+
+    }
+}
+//https://leetcode.com/problems/reverse-words-in-a-string/discuss/47720/Clean-Java-two-pointers-solution-(no-trim(-)-no-split(-)-no-StringBuilder)
 
 
 

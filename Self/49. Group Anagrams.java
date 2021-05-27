@@ -1,0 +1,90 @@
+// Phase 3 self
+// M1: sort every str in strs, and use that sorted string as the key of each group
+// time O(nklogk) where n is the # of str in strs, k is the max len of str in strs
+// space O(nk)
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+
+        for (String s: strs) {
+        	char[] temp = s.toCharArray();
+        	Arrays.sort(temp);
+        	String sortedCur = new String(temp);
+        	map.putIfAbsent(sortedCur, new ArrayList<>());
+        	map.get(sortedCur).add(s);
+        }
+
+        // List<List<String>> res = new LinkedList<>();
+        // for (List<String> l: map.valueSet()) {
+        // 	res.add(l);
+        // }
+
+        // return res;
+
+        // can be directly as below
+        return new ArrayList(map.values());
+    }
+}
+
+
+
+// Phase3 solution
+// M2: a faster way, is to build a string representing the count of the letters in each str, in contrast to sort, this takes O(k) time.
+// time O(nk) space O(nk)
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+
+        for (String s: strs) {
+        	String countCode = getCountCode(s);
+        	map.putIfAbsent(countCode, new ArrayList<>());
+        	map.get(countCode).add(s);
+        }
+        return new ArrayList(map.values());
+    }
+
+    private String getCountCode(String s) {
+    	int[] count = new int[26];
+    	for (char c: s.toCharArray()) {
+    		count[c - 'a']++;
+    	}
+
+    	StringBuilder sb = new StringBuilder();
+    	for (int n: count) {
+    		sb.append('#');
+    		sb.append(n);
+    	}
+
+
+    	return sb.toString();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

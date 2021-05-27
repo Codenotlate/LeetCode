@@ -16,3 +16,45 @@ class Solution {
 
     }
 }
+
+
+
+// Phase3 self
+// time O(n), space O(1)
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {return false;}
+        int[] charCount = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            charCount[s.charAt(i) - 'a']++;
+            charCount[t.charAt(i) - 'a']--;
+        }
+        
+        for (int n: charCount) {
+            if (n != 0) {return false;}
+        }
+        return true;
+    }
+}
+
+class Solution {
+    // for followup: use hashmap instead of array
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {return false;}
+        Map<Character, Integer> countMap = new HashMap<>();
+        
+        for (int i = 0; i < s.length(); i++) {
+            char c1 = s.charAt(i);
+            char c2 = t.charAt(i);
+            countMap.putIfAbsent(c1, 0);
+            countMap.put(c1, countMap.get(c1) + 1);
+            countMap.putIfAbsent(c2, 0);
+            countMap.put(c2, countMap.get(c2) - 1);
+        }
+        
+        for (char c: countMap.keySet()) {
+            if (countMap.get(c) != 0) {return false;}
+        }
+        return true;
+    }
+}
