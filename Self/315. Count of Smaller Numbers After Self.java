@@ -1,5 +1,6 @@
 // Phase3, solution, segment tree - bottom up
 // time O(nlogM)
+// see goodnote and solution page for detail
 class Solution {
     public List<Integer> countSmaller(int[] nums) {
         // set the offset, size of the total possible numbers
@@ -51,6 +52,7 @@ class Solution {
 
 
 // phase3 solution2 segment-tree M2
+// reference: https://leetcode.com/problems/count-of-smaller-numbers-after-self/discuss/76674/3-Ways-(Segment-Tree-Binary-Indexed-Tree-Merge-Sort)-clean-Java-code
 class Solution {
 	private class SegTreeNode {
 		int count; // represents the count within range [min, max]
@@ -133,6 +135,74 @@ class Solution {
 
 
 
+// Phase 3 solution M3: Merge sort
+/*
+The key is in the merge sort, when we merge two sorted part, for a[i] in first half, the position of j pointer in the second half before a[i] is put into the overall sorted array represents the numbers that is smaller than a[i] but position-wise in the right side of the i. which is exactly what we want in the problem.
+Thus we keep an array "smaller" to keep track and count the number being moved from a[i]'s right side to left side. And we need to sum up that count in each level of merge sort.
+
+Time : O(nlogn)
+space: O(n)
+
+//https://leetcode.com/problems/count-of-smaller-numbers-after-self/discuss/76584/Mergesort-solution
+*/
+
+
+class Solution {
+	// Note for each number, we need to know the original index position of each number after they are sorted. Thus we use Pair to pair the value of the elements with its original position in the nums.
+
+
+    public List<Integer> countSmaller(int[] nums) {
+        Integer[] smaller = new Integer[nums.length];
+        Arrays.fill(smaller, 0);
+        // can also use int[][] instead
+        Pair<Integer, Integer>[] numsAndIdx = new Pair[nums.length];
+        // will get TLE if put copyArr inside mergeSort
+        Pair<Integer, Integer>[] copyArr = new Pair[nums.length];
+
+        for (int i = 0; i < nums.length; i++) {
+        	numsAndIdx[i] = new Pair(nums[i], i);
+        }
+
+        mergeSort(numsAndIdx, copyArr,  0, nums.length - 1, smaller);
+
+        return Arrays.asList(smaller);
+    }
+
+
+    private void mergeSort(Pair<Integer, Integer>[] arr, Pair<Integer, Integer>[] copyArr, int start, int end, Integer[] smaller) {
+    	if (start >= end) {return;}
+
+    	int mid = start + (end - start) / 2;
+    	mergeSort(arr, copyArr, start, mid, smaller);
+    	mergeSort(arr, copyArr, mid + 1, end, smaller);
+
+    	// since we make inplace sort in the arr itself, we need to copy it to another copyArr[] first, then put new sorted result of both half into the arr [start, end] range again
+    	
+    	for (int i = start; i <= end; i++) {
+    		copyArr[i] = arr[i];
+    	}
+
+    	// i, j start at the head of each half array
+    	int i = start;
+    	int j = mid + 1;
+
+    	while (i <= mid || j <= end) {
+    		// two cases: 1) both half still has element and [i] <= [j]; 2) second half is exausted, then for the rest i, the number of jumped elements is always the length of the second half.
+    		if (j > end || (i <= mid && copyArr[i].getKey().intValue() <= copyArr[j].getKey().intValue())){
+    			// the j position now tells how many elements in second half arr was put into final arr before firstHalf[i]
+                // System.out.print(copyArr[i].getValue().intValue());
+                // System.out.print(smaller.length);
+    			smaller[copyArr[i].getValue().intValue()] += j - (mid + 1);
+    			// put the value into final sorted array
+    			arr[i + j - (mid + 1)] = copyArr[i];
+    			i++;
+    		} else { // also two cases: 1) normal case, [i] >[j], put [j] in final arr; 2) i is exausted, just put [j] in final arr and no action to "smaller" array.
+    			arr[i + j - (mid + 1)] = copyArr[j];
+    			j++;
+    		}
+    	}
+    }
+}
 
 
 
@@ -145,9 +215,9 @@ class Solution {
 
 
 
-
-
-
+// M2 binary index tree skip for now
+// explanation video
+// https://www.youtube.com/watch?v=uSFzHCZ4E-8
 
 
 

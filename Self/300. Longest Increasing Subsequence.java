@@ -123,6 +123,43 @@ class Solution {
 }
 
 
+// another card sort implementation
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> topList = new ArrayList<>();
+        
+        for(int n: nums) {
+            int pos = findFirstLte(topList, n);
+            if (pos == -1) {
+                topList.add(n);
+            } else {
+                topList.set(pos, n);
+            }
+        }
+        
+        return topList.size();
+    }
+    
+    private int findFirstLte(List<Integer> list, int k) {
+        if (list.isEmpty()) {return -1;}
+        int start = 0;
+        int end = list.size() - 1;
+        
+        
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (list.get(mid) < k) {
+                start = mid + 1;
+            } else {
+                end = mid;
+            }
+        }
+        
+        return list.get(start) >= k ? start : -1;
+    }
+}
+
+
 
 
 
