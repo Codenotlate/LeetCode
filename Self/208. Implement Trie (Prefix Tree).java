@@ -85,6 +85,7 @@ class Trie {
     }
     
     /** Inserts a word into the trie. */
+    // O(m) time
     public void insert(String word) {
         TrieNode cur = root;
         for (char c: word.toCharArray()) {
@@ -99,6 +100,7 @@ class Trie {
     }
     
     /** Returns if the word is in the trie. */
+    // O(m) time
     public boolean search(String word) {
         TrieNode cur = root;
         
@@ -111,6 +113,7 @@ class Trie {
     }
     
     /** Returns if there is any word in the trie that starts with the given prefix. */
+    // O(m) time  
     public boolean startsWith(String prefix) {
         TrieNode cur = root;
         
