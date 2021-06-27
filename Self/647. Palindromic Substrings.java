@@ -63,6 +63,55 @@ class Solution {
 
 
 
+// Phase 3 improve M1 to space O(n)
+class Solution {
+    public int countSubstrings(String s) {
+        boolean[] dp = new boolean[s.length()];
+        int count = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (int j = s.length() - 1; j >= i; j--) {
+                // don't forget two base cases
+                if (j == i || (j == i + 1) && s.charAt(j) == s.charAt(i)) {
+                    dp[j] = true;}
+                else {
+                    dp[j] = dp[j - 1] && (s.charAt(i) == s.charAt(j));
+                }               
+                if (dp[j]) {count++;}
+            }           
+        }
+        return count;
+    }
+}
+
+
+// Phase3 M2
+class Solution {
+    // extend from center to outside
+    public int countSubstrings(String s) {
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            count += extend(s, i, i);
+            count += extend(s, i, i+1);
+        }
+        return count;
+    }
+    
+    private int extend(String s, int start, int end) {
+        int count = 0;
+        while (start >= 0 && end < s.length() && s.charAt(start) == s.charAt(end)) {
+            start--;
+            end++;
+            count++;
+        }
+        return count;
+    }
+}
+
+
+
+
+
+
 
 
 
