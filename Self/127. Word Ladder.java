@@ -147,6 +147,100 @@ class Solution {
 
 
 
+// Phase3 
+// M1 regular BFS
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        int level = 0;
+        Queue<String> queue = new LinkedList<>();
+        Set<String> wordSet = new HashSet(wordList);
+        // special case
+        if (!wordSet.contains(endWord)) {return level;}
+        
+        queue.add(beginWord);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            level++;
+            while (size-- > 0) {
+                String cur = queue.poll();
+                if (cur.equals(endWord)) {return level;}
+
+                Set<String> validNeigh = getValidNeighbors(cur, wordSet);
+                for (String s: validNeigh) {
+                    queue.add(s);
+                }
+            }
+            
+        }
+        return 0;
+    }
+    
+    private Set<String> getValidNeighbors(String cur, Set<String> wordSet) {
+        Set<String> res = new HashSet<>();
+        for (int i = 0; i < cur.length(); i++) {
+            char[] chars = cur.toCharArray();
+            for (char c = 'a'; c <= 'z'; c++) {
+                chars[i] = c;
+                String neighbor = String.valueOf(chars);
+                //String neighbor = chars.toString(); -- can't use this one, it returns an array of string
+                // https://www.tutorialspoint.com/java/util/arrays_tostring_char.htm
+                if (wordSet.contains(neighbor)) {
+                    res.add(neighbor);
+                    wordSet.remove(neighbor);
+                }
+            }
+        }
+        return res;
+    }
+}
+
+
+
+
+// phase 3 self M2
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> wordSet = new HashSet(wordList);
+        int level = 0;
+        if (!wordSet.contains(endWord)) {return level;}
+        Set<String> startSet = new HashSet<>();
+        Set<String> endSet = new HashSet<>();
+        
+        startSet.add(beginWord);
+        level++;
+        endSet.add(endWord);
+        wordSet.remove(endWord); // label as visited
+        
+        while (!startSet.isEmpty() && !endSet.isEmpty()) {
+            // swap if startSet size > endSet size
+            if (startSet.size() > endSet.size()) {
+                Set<String> temp = startSet;
+                startSet = endSet;
+                endSet = temp;
+            }
+            
+            Set<String> nextSet = new HashSet<>();  
+            level++;
+            for (String cur: startSet) {
+                for (int i = 0; i < cur.length(); i++) {
+                    char[] chars = cur.toCharArray();
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        chars[i] = c;
+                        String neighbor = String.valueOf(chars);
+                        if (endSet.contains(neighbor)) {return level;}
+                        if (wordSet.contains(neighbor)) {
+                            nextSet.add(neighbor);
+                            wordSet.remove(neighbor);
+                        }
+                    }
+                }
+            }
+            startSet = nextSet;
+        }
+        return 0;
+        
+    }
+}
 
 
 

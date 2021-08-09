@@ -82,6 +82,50 @@ class Solution {
 
 
 
+// Phase 3 self
+
+class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        //Phase 3 self : DFS + backtracking
+        List<String> res = new LinkedList<>();
+        if (s.length() < 4) {return res;}
+        StringBuilder curStr = new StringBuilder();
+        dfs(s, 0, res, curStr,0);
+        return res;
+    }
+    
+    private void dfs(String s, int curPos, List<String> res, StringBuilder curStr, int curCount) {
+        // base case
+        // pay attention to this end condition
+        if (curCount >= 4 || curPos >= s.length()) {
+            if (curCount == 4 && curPos == s.length()) {
+                curStr.deleteCharAt(curStr.length() - 1);
+                res.add(curStr.toString());
+            }
+            return;
+        }
+        
+        // backtracking
+        // don't forget curPos + i <= s.length() condition
+        for (int i = 1; i <= 3 && curPos + i <= s.length(); i++) {
+            String part = s.substring(curPos, curPos + i);
+            if (isValid(part)) {
+                int oriSize = curStr.length();
+                curStr.append(part);
+                curStr.append('.');
+                dfs(s, curPos + i, res, curStr, curCount + 1);
+                curStr.delete(oriSize, curStr.length());
+            }
+        }
+    }
+    
+    private boolean isValid(String s) {
+        if (s.length() != 1 && s.charAt(0) == '0' || s.length() > 3) {return false;}
+        return Integer.valueOf(s) <= 255;
+        
+    }
+}
+
 
 
 

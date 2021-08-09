@@ -73,9 +73,61 @@ class Solution {
 
 
 
+// phase 3 self
+// M1: buckets sort
+class Solution {
+    public String frequencySort(String s) {
+        // main idea: bucket sort, each bucket represents the freq of the occurance of that char
+        Set<Character>[] buckets = new HashSet[s.length() + 1];
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i] = new HashSet<>();
+        }
+        Map<Character, Integer> count = new HashMap<>();
+        for (char c: s.toCharArray()) {
+            count.put(c, count.getOrDefault(c, 0) + 1);
+            int cnt = count.get(c);
+            buckets[cnt].add(c);
+            buckets[cnt - 1].remove(c);
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i = buckets.length - 1; i >= 0; i--) {
+            if (buckets[i].size() != 0) {
+                for (char c: buckets[i]) {
+                    for (int k = 0; k < i; k++) {
+                        res.append(c);
+                    }
+                }
+            }            
+        }
+        return res.toString();
+    }
+}
 
 
 
+class Solution {
+    public String frequencySort(String s) {
+        //main idea: same count map, but using heap instead of buckets to store chars in freq order
+        Map<Character, Integer> count = new HashMap<>();
+        for (char c: s.toCharArray()) {
+            count.put(c, count.getOrDefault(c, 0) + 1);
+        }
+        
+        PriorityQueue<Character> heap = new PriorityQueue<>((a,b) -> -Integer.compare(count.get(a), count.get(b)));
+        
+        heap.addAll(count.keySet());
+        
+        StringBuilder res = new StringBuilder();
+        while (!heap.isEmpty()) {
+            char c = heap.poll();
+            for (int k = 0; k < count.get(c); k++) {
+                res.append(c);
+            }
+        }
+        return res.toString();
+        
+    }
+}
 
 
 

@@ -78,11 +78,65 @@ class Solution {
 
 
 
+//Phase3 self
+// similar to above M2
+
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        // first pass find the right most for each char
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), i);
+        }
+        // second pass update curend and res
+        List<Integer> res = new ArrayList<>();
+        int curEnd = 0;
+        int preLen = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (i <= curEnd) {
+                curEnd = Math.max(curEnd, map.get(s.charAt(i)));
+            } else {
+                res.add(curEnd + 1 - preLen);
+                preLen = curEnd + 1;
+                curEnd = map.get(s.charAt(i));
+            }
+        }
+        res.add(curEnd + 1 - preLen);
+        return res;
+    }
+}
 
 
-
-
-
+// phase3 try sliding window
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        // first pass: store count of char
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c: s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        
+        int cur = 0;
+        int prev = 0;
+        Set<Character> curWin = new HashSet<>();
+        List<Integer> res = new ArrayList<>();
+        while (cur < s.length()) {
+            char c = s.charAt(cur);
+            if (!curWin.contains(c)) {curWin.add(c);}
+            
+            map.put(c, map.get(c) - 1);
+            if (map.get(c) == 0) {
+                curWin.remove(c);
+            }
+            if (curWin.isEmpty()) {
+                res.add(cur - prev + 1);
+                prev = cur + 1;
+            }          
+            cur++;
+        }
+        return res;
+    }
+}
 
 
 

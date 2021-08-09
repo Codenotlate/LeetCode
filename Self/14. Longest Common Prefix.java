@@ -46,6 +46,13 @@ class Solution {
 			
 		}
 
+		private TrieNode root;
+
+		pubcli Trie() {
+			root = new TrieNode();
+		}
+
+
 		public void insert(String word) {
 			TrieNode cur = root;
 

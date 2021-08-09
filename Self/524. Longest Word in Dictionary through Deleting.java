@@ -76,3 +76,40 @@ Collections.sort(d, new Comparator < String > () {
     }
 });
 */
+
+
+
+
+
+
+
+// phase3 self
+class Solution {
+    public String findLongestWord(String s, List<String> dictionary) {
+        // main idea: check each d in dict to see if it's a substr of s
+        String res = "";
+        for (String d: dictionary) {
+            // if d is in worse order compare to current result, then no need to check if it's substr of s
+            if (isBetter(d, res) && isSubstr(d, s)) {
+                res = d;
+            }
+        }
+        return res;
+    }
+    
+    // return whether d is in preferred order than res
+    private boolean isBetter(String d, String res) {
+        return d.length() > res.length() || d.length() == res.length() && d.compareTo(res) < 0;
+    }
+    
+    private boolean isSubstr(String d, String s) {
+        if (d.length() > s.length()) {return false;}
+        int pd = 0;
+        int ps = 0;
+        while (pd < d.length() && ps < s.length()) {
+            if (d.charAt(pd) == s.charAt(ps)) {pd++;}
+            ps++;
+        }
+        return pd == d.length();
+    }
+}

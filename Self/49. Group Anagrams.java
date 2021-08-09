@@ -63,6 +63,38 @@ class Solution {
 
 
 
+// phase3 self review
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str: strs) {
+            String countRes = countStr(str);
+            map.putIfAbsent(countRes, new ArrayList<String>());
+            map.get(countRes).add(str);           
+        }
+        
+        return new ArrayList(map.values());
+    }
+    
+    // scan each str in the array to get its string count representation
+    private String countStr(String s) {
+        StringBuilder res = new StringBuilder();
+        int[] count = new int[26];
+        for (char c: s.toCharArray()) {
+            count[c - 'a']++;
+        }
+        
+        for (int i = 0; i < 26; i++) {
+            if (count[i] != 0) {
+                res.append(count[i]).append('a' + i);
+            }
+        }
+        
+        return res.toString();
+    }
+}
+
+
 
 
 

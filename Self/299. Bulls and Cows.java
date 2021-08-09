@@ -48,6 +48,7 @@ class Solution {
         	if (s == g) {
         		aNum++;
         	} else {
+                // Pay attention to this part, can't use equal to 0 as condition, that won't work for 1122 & 2211
         		if (count[s] < 0) {bNum++;}
         		if (count[g] > 0) {bNum++;}
         		count[s]++;

@@ -103,6 +103,50 @@ class Solution {
 
 
 
+//Phase3 self 
+class Solution {
+    public String reverseWords(String s) {
+        char[] str = s.toCharArray();
+        int n = str.length;
+        // step1: reverse the whole
+        reverse(str, 0, n - 1);
+        // step2: reverse each world
+        int left = 0;
+        int right = 0;
+        while (left < str.length) {
+            while (left < str.length && str[left] == ' '){left++; right++;}
+            while (right < str.length && str[right] != ' ') {right++;}
+            reverse(str, left, right - 1);
+            left = right;
+        }
+        // step3: remove the unnecessary white space
+        left = 0;
+        right = 0;
+        while (right < str.length) {
+            while (right < str.length && str[right] == ' ') {right++;}
+            while (right < str.length && str[right] != ' ') {str[left++] = str[right++];}
+            // add a space behind
+            if (left < str.length) {str[left++] = ' ';} 
+        }
+        // not use if
+        while (str[left - 1] == ' ') {left--;}
+        return new String(str).substring(0, left);
+    }
+    
+    private void reverse(char[] s, int start, int end) {
+        int l1 = start;
+        int l2 = end;
+        while (l1 < l2) {
+            char temp = s[l1];
+            s[l1] = s[l2];
+            s[l2] = temp;
+            l1++;
+            l2--;
+        }
+    }
+}
+
+
 
 
 

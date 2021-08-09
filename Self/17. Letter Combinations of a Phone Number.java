@@ -47,6 +47,51 @@ class Solution {
 }
 
 
+// Phase 3 self
+// M1: DFS + backtracking
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        List<String> res = new LinkedList<>();
+        String[] map = new String[]{"0","1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        if (digits.length() == 0) {return res;}
+        StringBuilder current  = new StringBuilder();
+        dfs(current, 0, digits, map, res);
+        return res;
+    }
+    
+    private void dfs(StringBuilder current, int i, String digits, String[] map, List<String> res) {
+        //  base case
+        if (i == digits.length()) {
+            res.add(current.toString());
+            return;
+        }
+        // backtracking
+        for (char c: map[digits.charAt(i) - '0'].toCharArray()) {
+            current.append(c);
+            dfs(current, i + 1, digits, map, res);
+            current.deleteCharAt(i);
+        }
+    }
+}
+
+// M2: BFS
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        Queue<String> queue = new LinkedList<>();
+        if (digits.length() == 0) {return (List) queue;}
+        String[] map = new String[]{"0","1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        queue.add("");
+        while (queue.peek().length() < digits.length()) {
+            String cur = queue.poll();
+            for (char c: map[digits.charAt(cur.length()) - '0'].toCharArray()) {
+                queue.add(cur + c);
+            }
+        }
+        return (List) queue;
+    }
+}
+
+
 
 
 
