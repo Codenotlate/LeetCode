@@ -71,6 +71,32 @@ class Solution {
 
 
 
+// self review
+class Solution {
+    public String convert(String s, int numRows) {
+        // pay special attention to this special case!!
+        if (numRows == 1) {return s;}
+        int gap = 2 * (numRows - 1);
+        StringBuilder res = new StringBuilder();
+        
+        for (int i = numRows - 1; i>= 0; i--) {
+            int r = numRows - 1;
+            while (r - i < s.length()) {
+                res.append(s.charAt(r - i));
+                if (r + i < s.length() && i != 0 && i != numRows - 1) {
+                    res.append(s.charAt(r + i));
+                }
+                r += gap;
+            }
+        }
+        
+        return res.toString();
+    }
+}
+
+
+
+
 
 
 

@@ -32,3 +32,32 @@ class Solution {
     	return sb.toString();
     }
 }
+
+
+// self review
+class Solution {
+    public List<List<String>> groupStrings(String[] strings) {
+        Map<String, List<String>> map = new HashMap<>();
+        
+        for (String str: strings) {
+            String diffKey = getDiffStr(str);
+            map.putIfAbsent(diffKey, new ArrayList<>());
+            map.get(diffKey).add(str);
+        }
+        
+        return new ArrayList(map.values());
+    }
+    
+    
+    private String getDiffStr(String s) {
+        StringBuilder res = new StringBuilder();
+        res.append('#');
+        char prev = s.charAt(0);
+        for (int i = 1; i < s.length(); i++) {
+            int diff = (s.charAt(i) - prev + 26) % 26;
+            res.append(diff).append('#');
+            prev = s.charAt(i);
+        }
+        return res.toString();
+    }
+} 
