@@ -30,3 +30,49 @@ class Solution {
         return res.toString();
     }
 }
+
+
+
+
+// self review
+class Solution {
+    static List<Pair<Integer, String>> romanList = new ArrayList<>();
+	static {
+		romanList.add(new Pair(1000, "M"));
+		romanList.add(new Pair(900, "CM"));
+		romanList.add(new Pair(500, "D"));
+		romanList.add(new Pair(400, "CD"));
+		romanList.add(new Pair(100, "C"));
+		romanList.add(new Pair(90, "XC"));
+		romanList.add(new Pair(50, "L"));
+		romanList.add(new Pair(40, "XL"));
+		romanList.add(new Pair(10, "X"));
+		romanList.add(new Pair(9, "IX"));
+		romanList.add(new Pair(5, "V"));
+		romanList.add(new Pair(4, "IV"));
+		romanList.add(new Pair(1, "I"));
+		
+	}
+    
+    
+    public String intToRoman(int num) {
+        StringBuilder res = new StringBuilder();
+        
+        for (Pair<Integer, String> p: romanList) {
+            if (num == 0) {break;}
+            int val = p.getKey();
+            String romanStr = p.getValue();
+            
+            int c = num / val;
+            if (c == 0) {continue;}
+            
+            while (c-- > 0) {
+                res.append(romanStr);
+            }
+            num %= val;
+            
+        }
+        
+        return res.toString();
+    }
+}
