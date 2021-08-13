@@ -5,7 +5,8 @@
 class Solution {
 	private String[] lessThenTwenty = new String[]{"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
 	private String[] tens = new String[]{"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
-	private String[] thousands = new String[] {"", "Thousand", "Million", "Billion", "Trillion"};
+	private String[] thousands = new String[] {"", "Thousand", "Million", "Billion"};
+    // given the range of num, no need for Trillion.
 
     public String numberToWords(int num) {
         if (num == 0) {return "Zero";}
@@ -66,6 +67,48 @@ class Solution {
 
     }
 
+}
+
+
+// self review
+class Solution {
+    private String[] lessThenTwenty = new String[]{"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    private String[] tens = new String[]{"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    private String[] thousands = new String[] {"Billion",  "Million", "Thousand",""};
+    
+    public String numberToWords(int num) {
+        int val = 1000000000;
+        StringBuilder res = new StringBuilder();
+        for (String s: thousands) {
+            if (num == 0) {break;}
+            int c = num / val;
+            if (c != 0) {
+                res.append(say(c)).append(" " + s + " ");
+            }
+            
+            num %= val;
+            val /= 1000;
+        }
+        String r = res.toString().trim();
+        return r.equals("") ? "Zero" : r;
+    }
+    
+    private String say(int n) {
+        StringBuilder res = new StringBuilder();
+        if (n / 100 > 0) {
+            res.append(lessThenTwenty[n / 100]).append(" " + "Hundred");
+        } 
+        n %= 100;
+        if (n < 20 && n > 0) {
+            res.append(" " + lessThenTwenty[n]);
+        } else if (n >= 20) {
+            res.append(" " + tens[n / 10]);
+            if ( n % 10 > 0) {
+                res.append(" " + lessThenTwenty[n % 10]);
+            }
+        }
+        return res.toString().trim();
+    }
 }
 
 
