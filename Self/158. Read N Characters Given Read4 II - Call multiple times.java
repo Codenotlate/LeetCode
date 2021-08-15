@@ -91,6 +91,41 @@ But in Java we can't implement this
 */
 
 
+// self review
+/**
+ * The read4 API is defined in the parent class Reader4.
+ *     int read4(char[] buf4); 
+ */
+
+public class Solution extends Reader4 {
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+    private int buf4Len = 4;
+    private int buf4Idx = 4;
+    private char[] buf4 = new char[4];
+    
+    
+    public int read(char[] buf, int n) {
+        int bufPos = 0;
+        while (n != 0 && buf4Len != 0) {
+            if (buf4Len == buf4Idx) {
+                buf4Len = read4(buf4);
+                buf4Idx = 0;
+            }
+            int startPos = buf4Idx;
+            while (buf4Idx < n + startPos && buf4Idx < buf4Len) {
+                buf[bufPos++] = buf4[buf4Idx++];
+            }
+            n -= buf4Idx - startPos;
+        }
+        return bufPos;
+    }
+}
+
+
 
 
 
