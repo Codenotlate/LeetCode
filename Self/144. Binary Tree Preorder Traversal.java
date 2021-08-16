@@ -60,42 +60,34 @@ class Solution {
     }
 }
 
-class Solution { 
-    public List<Integer> postorderTraversal(TreeNode root) {
-        //iterative way: a general one fits for preorder/inorder/postorder
-        // last_pop and the conditions are all same for 3 types
-        // only diff is when the node is visited, represents by adding to resList in this problem
-        
-        List<Integer> resList = new LinkedList<>();
-        if (root == null) return resList;
 
-        Stack<TreeNode> stack = new Stack<>();
-		// use last_pop to check the last element being popped
-		// and can use it to determine push left/ push right / pop
-        TreeNode last_pop = root; 
-        stack.push(root);
-        // for preorder, the node is visited when it's pushed into stack.
-		resList.add(root.val);
-        while(!stack.isEmpty()) {
-        	TreeNode top = stack.peek();
-        	// condition to push left
-        	if (top.left != null && top.left != last_pop && top.right != last_pop) {
-        		stack.push(top.left);
-        		// for preorder, the node is visited when it's pushed into stack.
-        		resList.add(top.left.val);
-        	} else if (top.right != null && top.right != last_pop 
-        				&& (top.left == null || top.left == last_pop)) {
-        				// condition to push right
-        		stack.push(top.right);
-        		// for preorder, the node is visited when it's pushed into stack.
-        		resList.add(top.right.val);
-        	} else {// pop out
-        		stack.pop();
-        		last_pop = top;
-        		
-        	}       	
+// morris way (transformed from inorder morris way)
+class Solution {
+    // morris way: same as inorder morris, only difference is print out the cur when it's first visited instead of the second time
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> res = new LinkedList<>();
+        if (root == null) {return res;}
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.left == null) {
+                res.add(cur.val);
+                cur = cur.right;
+            } else {
+                TreeNode prev = cur.left;
+                while (prev.right != null && prev.right != cur) {
+                    prev = prev.right;
+                }
+                if (prev.right == null) {
+                    res.add(cur.val);
+                    prev.right = cur;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    cur = cur.right;
+                }
+            }
         }
-        return resList;
+        return res;
     }
 }
 

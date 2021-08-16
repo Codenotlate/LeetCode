@@ -75,7 +75,7 @@ class Solution {
 }
 
 
-// another iterative way: morris Traversal
+// another iterative way: morris Traversal (This morris way change the original tree structure, use the below morris way to keep the tree unchanged)
 // time O(n) space O(1)
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
@@ -94,6 +94,37 @@ class Solution {
                 TreeNode temp = cur;
                 cur = cur.left;
                 temp.left = null; // avoid infinite loop
+            }
+        }
+        return res;
+    }
+}
+
+
+// another morris way, keep the tree structure unchanged
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new LinkedList<>();
+        if (root == null) {return res;}
+        
+        TreeNode cur = root;
+        while (cur != null) {
+            if(cur.left == null) {
+                res.add(cur.val);
+                cur = cur.right;
+            } else {
+                TreeNode prev = cur.left;
+                while (prev.right != null && prev.right != cur) {
+                    prev = prev.right;
+                }
+                if (prev.right == cur) {
+                    prev.right = null;
+                    res.add(cur.val);
+                    cur = cur.right;
+                } else {
+                    prev.right = cur;
+                    cur = cur.left;
+                }
             }
         }
         return res;
