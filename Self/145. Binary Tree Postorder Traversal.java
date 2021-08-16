@@ -133,7 +133,32 @@ It's acceptable that you put them into a collections first and then reverse it.
 // We are using duplicates, one is for processing(fetching) it's children and one copy will remain there on stack because that node itself will be processed after its children are processed.
 // https://leetcode.com/problems/binary-tree-postorder-traversal/discuss/45582/A-real-Postorder-Traversal-.without-reverse-or-insert-4ms
 
-
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res = new LinkedList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        if (root == null) {return res;}
+        stack.push(root);
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode cur = stack.pop();
+            // remember to add stack is empty condition here
+            if (stack.isEmpty() || stack.peek() != cur) {
+                res.add(cur.val);
+            } else {
+                if (cur.right != null) {
+                    stack.push(cur.right);
+                    stack.push(cur.right);
+                }
+                if (cur.left != null) {
+                    stack.push(cur.left);
+                    stack.push(cur.left);
+                }
+            }
+        }
+        return res;
+    }
+}
 
 
 
