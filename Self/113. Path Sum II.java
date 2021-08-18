@@ -73,6 +73,32 @@ class Solution {
 // https://leetcode.com/problems/path-sum-ii/discuss/36829/Python-solutions-(Recursively-BFS%2Bqueue-DFS%2Bstack)
 
 
+// self review
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new LinkedList<>();
+        List<Integer> curList = new LinkedList<>();
+        if (root == null) {return res;}
+        dfs(root, targetSum, curList, res);
+        return res;
+    }
+    
+    private void dfs(TreeNode root, int targetSum, List<Integer> curList, List<List<Integer>> res) {
+        if((root.left == null && root.right == null)) {
+            if (targetSum - root.val == 0) {
+                curList.add(root.val);
+                res.add(new LinkedList(curList));
+                curList.remove(curList.size() - 1);
+            }
+            return;
+        }
+        curList.add(root.val);
+        if (root.left != null) {dfs(root.left, targetSum - root.val, curList, res);}
+        if (root.right != null) {dfs(root.right, targetSum - root.val, curList, res);}
+        curList.remove(curList.size() - 1);
+    }
+}
+
 
 
 
