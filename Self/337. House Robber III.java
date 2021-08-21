@@ -124,6 +124,27 @@ class Solution {
 
 
 
+// self review
+class Solution {
+    public int rob(TreeNode root) {
+        int[] max = new int[]{0};
+        helper(root, max);
+        return max[0];
+    }
+    
+    
+    private int[] helper(TreeNode root, int[] max) {
+        if (root == null) {return new int[]{0, 0};}
+        int[] left = helper(root.left, max);
+        int[] right = helper(root.right, max);
+        int inc = root.val + left[1] + right[1];
+        int exc = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        max[0] = Math.max(max[0], Math.max(inc, exc));
+        return new int[]{inc, exc};
+    }
+}
+
+
 
 
 
