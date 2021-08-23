@@ -71,6 +71,27 @@ class Solution {
 // https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/Learn-one-iterative-inorder-traversal-apply-it-to-multiple-tree-questions-(Java-Solution)
 
 
+// self review
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        long[] res = dfs(root);
+        return res[2] == 1;
+    }
+    
+    
+    private long[] dfs(TreeNode root) {
+        // reminder: to use Long.min and Long.max instead of doing -1 and +1 with int.min and int.max, that will cause overflow error, i.e. int.max + 1 = int.min
+        if (root == null) {return new long[]{Long.MAX_VALUE, Long.MIN_VALUE, 1};}
+        long[] left = dfs(root.left);
+        long[] right = dfs(root.right);
+        if (left[2] == 0 || right[2] == 0 || left[1] >= root.val || right[0] <= root.val) {
+            return new long[]{0, 0, 0};
+        }
+        long curMin = left[0] == Long.MAX_VALUE ? root.val : left[0];
+        long curMax = right[1] == Long.MIN_VALUE ? root.val : right[1];
+        return new long[]{curMin, curMax, 1};
+    }
+}
 
 
 
