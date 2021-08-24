@@ -90,6 +90,57 @@ class Solution {
 //https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/discuss/65236/JavaPython-iterative-solution
 
 
+// self review phase3
+class Solution {
+    // M1 recursive way
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {return null;}
+        if (root == p || root == q) {return root;}
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if ((left != null && right != null) || root == p || root == q) {
+            return root;
+        }
+        return left == null ? right : left;
+    }
+}
+
+
+class Solution {
+    // M2 iterative way
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        Map<TreeNode, TreeNode> parentMap = getMapBFS(root, p, q);
+        Set<TreeNode> pParent = new HashSet<>();
+        while (p != null) {
+            pParent.add(p);
+            p = parentMap.get(p);
+        }
+        
+        while (!pParent.contains(q)) {
+            q = parentMap.get(q);
+        }    
+        return q;  
+    }
+    
+    
+    
+    private Map<TreeNode, TreeNode> getMapBFS(TreeNode root, TreeNode p, TreeNode q) {
+        Map<TreeNode, TreeNode> res = new HashMap<>();
+        if (root == null) {return res;}
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        res.put(root, null);
+        while (!res.containsKey(q) || !res.containsKey(p)) {
+            TreeNode cur = queue.poll();
+            // mistake: don't write cur as root
+            if (cur.left != null) {queue.add(cur.left); res.put(cur.left, cur);}
+            if (cur.right != null) {queue.add(cur.right); res.put(cur.right, cur);}
+        }
+        return res;
+    }
+}
+
+
 
 
 
