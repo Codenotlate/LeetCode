@@ -68,6 +68,7 @@ class Solution {
 	// need to figure out the size of the linkedlist first, and use it to recursively build the inorder tree.
 	// using a private var: nextListNode, 
 	// also need to move listnode to next listnode after its val has been added to the tree.
+    // note: object is pass-by-value in Java
     private ListNode nextListNode;
 
     public TreeNode sortedListToBST(ListNode head) {
@@ -104,6 +105,112 @@ class Solution {
     	return root;
     }
 }
+
+
+
+
+
+// self review
+// M1
+class Solution {
+    // M1 slower way time - O(nlogn)
+    public TreeNode sortedListToBST(ListNode head) {
+        if (head == null) {return null;}
+        ListNode preMid = getPreMid(head);
+        // don't forget this special case, when there's only one node
+        if (preMid == null) {return new TreeNode(head.val);}
+        ListNode Mid = preMid.next;
+        preMid.next = null;
+        TreeNode left = sortedListToBST(head);
+        TreeNode right = sortedListToBST(Mid.next);
+        TreeNode root = new TreeNode(Mid.val, left, right);
+        return root;
+    }
+    
+    // return the pre Node of mid node
+    private ListNode getPreMid(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = null;
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        return prev;
+    }
+}
+
+
+// M2
+class Solution {
+    // M2: consider it's a sorted linkedlist, it should be the inorder traversal result of the BST, thus build a BST inorder and fill in the value from linkedlist
+    private ListNode curListNode;
+    
+    public TreeNode sortedListToBST(ListNode head) {
+        curListNode = head;
+        int size = 0;
+        while (curListNode != null) {
+            size++;
+            curListNode = curListNode.next;
+        }
+        curListNode = head;
+        return inorder(0, size - 1);
+    }
+    
+    private TreeNode inorder(int start, int end) {
+        if (start > end) {return null;}
+        int mid = start + (end - start) / 2;
+        TreeNode left = inorder(start, mid - 1);
+        TreeNode root = new TreeNode(curListNode.val);
+        curListNode = curListNode.next;
+        TreeNode right = inorder(mid + 1, end);
+        root.left = left;
+        root.right = right;
+        
+        return root;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
