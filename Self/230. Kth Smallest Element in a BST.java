@@ -116,7 +116,13 @@ class Solution {
 
 // possible followup discussion
 //(https://leetcode.com/problems/kth-smallest-element-in-a-bst/discuss/63743/Java-divide-and-conquer-solution-considering-augmenting-tree-structure-for-the-follow-up)
+// followup and time space detail see solution page
 
+// time of iterative way is O(H + k)
+/*
+O(H) to reach the smallest node in the BST.
+O(k) to find the kth smallest from there doing an inorder search.
+*/
 
 
 
