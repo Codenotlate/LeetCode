@@ -178,3 +178,130 @@ public class Codec {
 }
 
 // reference: https://leetcode.com/problems/serialize-and-deserialize-binary-tree/discuss/74253/Easy-to-understand-Java-Solution
+
+
+// self review
+// BFS way
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        //use BFS way to serialize into string
+        StringBuilder res = new StringBuilder();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if (root != null) {
+            queue.add(root);
+            while (!queue.isEmpty()){
+                TreeNode cur = queue.poll();
+                if (cur == null) {
+                    res.append("n").append("#");
+                } else {
+                    res.append(cur.val).append("#");
+                    queue.add(cur.left);
+                    queue.add(cur.right); 
+                }
+                      
+            }
+        }
+        if (res.length() > 0) {res.deleteCharAt(res.length() - 1);}
+        return res.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        // use BFS way to build the tree
+        if (data.length() == 0) {return null;}
+        String[] nums = data.split("#");       
+        TreeNode root = new TreeNode(Integer.valueOf(nums[0]));
+        Queue<TreeNode> queue = new LinkedList<>();
+        int i = 1;
+        queue.add(root);
+        while ( i < nums.length) {
+            TreeNode cur = queue.poll();
+            if (!nums[i].equals("n")) {
+                cur.left = new TreeNode(Integer.valueOf(nums[i]));
+                queue.add(cur.left);
+            }
+            if (i + 1 < nums.length && !nums[i + 1].equals("n")) {
+                cur.right = new TreeNode(Integer.valueOf(nums[i + 1]));
+                queue.add(cur.right);
+            }
+            i += 2;
+        }
+        return root;
+    }
+}
+
+
+// DFS preorder way
+/* Split method:
+data: "1#2#n#n#3#4#n#n#5#n#n#"
+q: ["1","2","n","n","3","4","n","n","5","n","n"]
+*/
+
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder res = new StringBuilder();
+        buildString(root, res);
+        return res.toString();
+    }
+    
+    private void buildString(TreeNode root, StringBuilder res) {
+        if (root == null) {res.append("n#"); return;}
+        res.append(root.val).append('#');
+        buildString(root.left, res);
+        buildString(root.right, res);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        Queue<String> q = new LinkedList<>(Arrays.asList(data.split("#")));
+        TreeNode root = buildTree(q);
+        return root;
+    }
+    
+    
+    private TreeNode buildTree(Queue<String> q) {
+        String cur = q.poll();
+        if (cur.equals("n")) {return null;}
+        TreeNode root = new TreeNode(Integer.valueOf(cur));
+        root.left = buildTree(q);
+        root.right = buildTree(q);
+        return root;        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
