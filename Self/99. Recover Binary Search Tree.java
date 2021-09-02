@@ -96,6 +96,86 @@ class Solution {
 
 
 
+// M1 self review
+class Solution {
+    public void recoverTree(TreeNode root) {
+        // inorder iterative traverse way space O(h)
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode lg = null;
+        TreeNode sm = null;
+        TreeNode cur = root;
+        TreeNode prev = null;
+        
+        while (!stack.isEmpty() || cur != null) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            if (prev != null && cur.val < prev.val) {
+                if (lg == null) {lg = prev; sm = cur;}
+                else {sm = cur; break;}
+            }
+            prev = cur;
+            cur = cur.right;
+        }
+        
+        // swap the value of lg and sm
+        int temp = lg.val;
+        lg.val = sm.val;
+        sm.val = temp;
+    }
+}
+
+//M2 morris way self review
+class Solution {
+    // M2: self implemented Morris way time O(n) space O(1)
+    public void recoverTree(TreeNode root) {
+        TreeNode lg = null;
+        TreeNode sm = null;
+        TreeNode prev = null;
+        TreeNode cur = root;
+        
+        while (cur != null) {
+            if (cur.left == null) {
+                if (prev != null && prev.val > cur.val) {
+                    if (lg == null) {lg = prev;}
+                    sm = cur;
+                }
+                prev = cur;
+                cur = cur.right;
+            } else {
+                TreeNode rightMost = cur.left;
+                while (rightMost.right != null && rightMost.right != cur) {
+                    rightMost = rightMost.right;
+                }
+                if (rightMost.right == null) {
+                    rightMost.right = cur;
+                    cur = cur.left;
+                }
+                else {
+                    rightMost.right = null;
+                    if (prev != null && prev.val > cur.val) {
+                        if (lg == null) {lg = prev;}
+                        sm = cur;
+                    }
+                    prev = cur;
+                    cur = cur.right;
+                }
+            }
+        }
+        
+        int temp = lg.val;
+        lg.val = sm.val;
+        sm.val = temp;
+    }
+}
+
+
+
+
+
+
 
 
 
