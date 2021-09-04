@@ -30,3 +30,33 @@ class Solution {
 }
 
 // adding iterative way, idea from discussion
+// https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/discuss/37811/Simple-solution-using-constant-space
+// basically just level order traversal using the next pointer from the parent level. Use a dummyhead node(headchild) to track the start of next level, and use curchild to track the tail of the next-linkedlist in child level.
+// time O(n) space O(1)
+class Solution {
+    public Node connect(Node root) {
+        Node rootcopy = root;
+        Node headchild = new Node(0);
+        Node curchild = headchild;
+        
+        while (rootcopy != null) {
+            headchild.next = null;
+            curchild = headchild;
+            while (rootcopy != null) {
+                if (rootcopy.left != null) {
+                    curchild.next = rootcopy.left;
+                    curchild = curchild.next;
+                }
+                if (rootcopy.right != null) {
+                    curchild.next = rootcopy.right;
+                    curchild = curchild.next;
+                }
+                rootcopy = rootcopy.next;
+            }
+            rootcopy = headchild.next;
+        }
+        
+        return root;
+        
+    }
+}
