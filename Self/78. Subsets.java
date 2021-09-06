@@ -100,3 +100,84 @@ class Solution {
     }
 }
 
+
+
+// Phase 3 self review 
+/* For all DFS ways:
+    time O(n * 2^n)) - n for replicating curList to res, and in total 2^n recursions
+    space O(n * 2^n + n) - n * 2^n is for result, n is the recursion stack space. If we don't count the space of the result, the space is O(n).
+    For BFS way:
+    time O(n * 2^n)
+    space also O(n * 2^n + n) the former part is for result space, the 'n' part is for the cur/addnew part we polled and created during the BFS.
+*/
+// M1: DFS, loop each int in nums, at each node have two choices: include that int or not include. Need to backtrack for the include choice. Each dfs represents at each int node in nums array.
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        List<Integer> curList = new LinkedList<>();
+        dfs(nums, 0, curList, res);
+        return res;
+    }
+    
+    
+    private void dfs(int[] nums, int curIdx, List<Integer> curList, List<List<Integer>> res) {
+        if (curIdx == nums.length){
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        dfs(nums, curIdx + 1, curList, res);
+        curList.add(nums[curIdx]);
+        dfs(nums, curIdx + 1, curList, res);
+        curList.remove(curList.size() - 1);
+    }
+}
+
+// M2: DFS, at each int node in nums, there are [curIdx+1, nums.length-1] choices, each choice represent which int(at index i) in the index range[curIdx + 1, nums.length-1] we are going to choose in this dfs level. Then continue the dfs with shrinked range: [i + 1, nums.length - 1]
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        List<Integer> curList = new LinkedList<>();
+        dfs(nums, 0, curList, res);
+        return res;
+    }
+    
+    
+    private void dfs(int[] nums, int i, List<Integer> curList, List<List<Integer>> res) {
+        if (i == nums.length) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        // record curList in res along the way
+        res.add(new LinkedList(curList));
+        
+        for (int j = i; j < nums.length; j++) {
+            curList.add(nums[j]);            
+            dfs(nums, j + 1, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+// M3: BFS, use the queue as the final res container. For each int node i in nums, we poll out all the list (composed of int with index < i) from queue. add back the polled out list (representing not choose nums[i]), also add the new list equaling to original list + nums[i] (representing nums[i] included).
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        // BFS way: using a queue and convert to list in the end
+        Queue<List<Integer>> queue = new LinkedList<>();
+        queue.add(new LinkedList<>());
+        for (int i = 0; i < nums.length; i++) {
+            int size = queue.size();
+            while (size-- > 0) {
+                List<Integer> curList = queue.poll();
+                List<Integer> incNext = new LinkedList(curList);
+                incNext.add(nums[i]);
+                queue.add(curList);
+                queue.add(incNext);
+            }
+        }
+        
+        return (List)queue;
+        
+    }
+}
