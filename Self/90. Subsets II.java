@@ -45,6 +45,60 @@ class Solution {
 }
 
 
+// phase3 self
+// M1
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(nums, 0, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int curIdx, List<Integer> curList, List<List<Integer>> res) {
+        if (curIdx == nums.length) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        res.add(new LinkedList(curList));
+        for (int i = curIdx; i < nums.length; i++) {
+            // skip dup
+            if (i > curIdx && nums[i] == nums[i - 1]) {continue;}
+            curList.add(nums[i]);
+            dfs(nums, i + 1, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+// M2
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(nums, 0, new LinkedList<Integer>(), res, false);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int curIdx, List<Integer> curList, List<List<Integer>> res, boolean prevChosen) {
+        if (curIdx == nums.length) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        // not choose current
+        dfs(nums, curIdx + 1, curList, res, false);
+        // choose current only when meet below conditions
+        if (curIdx == 0 || nums[curIdx] != nums[curIdx - 1] || prevChosen) {
+            curList.add(nums[curIdx]);
+            dfs(nums, curIdx + 1, curList, res, true);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+
 
 
 
