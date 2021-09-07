@@ -80,6 +80,48 @@ class Solution {
 // https://leetcode.com/problems/combinations/discuss/27019/A-short-recursive-Java-solution-based-on-C(nk)C(n-1k-1)%2BC(n-1k)
 // https://leetcode.com/problems/combinations/discuss/27090/DP-for-the-problem
 
+// phase3 self
+// M1: choices: for each one in range [cur, n - k + 1]
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(n, 1, new LinkedList<Integer>(), res, k);
+        return res;
+    }
+    
+    private void dfs(int n, int cur, List<Integer> curList, List<List<Integer>> res, int k) {
+        if (k == 0) {res.add(new LinkedList(curList)); return;}
+        for (int i = cur; i <= n-k+1; i++) {
+            curList.add(i);
+            dfs(n, i+1, curList, res, k-1);
+            curList.remove(curList.size() -1);
+        }
+    }
+}
+
+// M2: choices: two: include cur or not
+
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(n, 1, new LinkedList<Integer>(), res, k);
+        return res;
+    }
+    
+    private void dfs(int n, int cur, List<Integer> curList, List<List<Integer>> res, int k) {
+        if (k == 0 || cur > n) {
+            if (k == 0) {res.add(new LinkedList(curList));}
+            return;
+        }
+        
+        dfs(n, cur + 1, curList, res, k);
+        curList.add(cur);
+        dfs(n, cur + 1, curList, res, k-1);
+        curList.remove(curList.size() -1);
+
+    }
+}
+
 
 
 
