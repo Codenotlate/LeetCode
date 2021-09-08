@@ -50,7 +50,28 @@ this isn't really meant for dp. this dp solution involves finding EVERY possible
 // optimize to 1d
 // but this problem ask for combination not the # of combinations, so not applied here.
 
-
+// phase3 self
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(candidates, target, 0, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int[] cand, int target, int curIdx, List<Integer> curList, List<List<Integer>> res) {
+        if (target == 0) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        for (int i = curIdx; i < cand.length; i++) {
+            if (target < cand[i]) {continue;}
+            curList.add(cand[i]);
+            dfs(cand, target - cand[i], i, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
 
 
 
