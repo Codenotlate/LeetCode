@@ -59,3 +59,82 @@ class Solution {
         }
     }
 }
+
+
+
+
+// phase3 self
+// M1: each dfs level has curIdx to len - 1 choices
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        Arrays.sort(candidates);
+        dfs(candidates, target, 0, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    
+    private void dfs(int[] cand, int target, int curIdx, List<Integer> curList, List<List<Integer>> res) {
+        
+        if (target == 0) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        for (int i = curIdx; i < cand.length && cand[i] <= target; i++) {
+            if (i > curIdx && cand[i] == cand[i - 1]) {continue;}
+            curList.add(cand[i]);
+            dfs(cand, target - cand[i], i + 1, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+        
+    }
+}
+
+
+//M2: each dfs level has two choices: include cand[curIdx] or not
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        Arrays.sort(candidates);
+        dfs(candidates, target, 0, new LinkedList<Integer>(), res, false);
+        return res;
+    }
+    
+    
+    private void dfs(int[] cand, int target, int curIdx, List<Integer> curList, List<List<Integer>> res, boolean prevChosen) {
+        
+        if (curIdx == cand.length || target == 0) {
+            if (target == 0) {
+                res.add(new LinkedList(curList));
+            }         
+            return;
+        }
+        
+        dfs(cand, target, curIdx + 1, curList, res, false);
+        if ((curIdx == 0 || cand[curIdx - 1] != cand[curIdx] || prevChosen) && target >= cand[curIdx]) {
+            curList.add(cand[curIdx]);
+            dfs(cand, target - cand[curIdx], curIdx + 1, curList, res, true);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
