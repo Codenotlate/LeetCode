@@ -47,6 +47,11 @@ class Solution {
 
 // comments about loop order
 // https://leetcode.com/problems/combination-sum-iv/discuss/85036/1ms-Java-DP-Solution-with-Detailed-Explanation
+/* self remember way:
+if we want combination, for each w, we require the item to be picked must after prev picked one. Otherwise there will be repetitve combination. Thus item as outer loop.
+If we want permutation. then for each w, we can choose all items. Thus w is the outer loop.
+*/
+
 
 /*
 follow-up: if there's negative value, then we need to constrain the maxLen of the combination or 

@@ -45,3 +45,51 @@ class Solution {
         }
     }
 }
+
+
+
+// phase3 self
+class Solution {
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(n, k, 1, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int n, int k, int curNum, List<Integer> curList, List<List<Integer>> res) {
+        if (n == 0 || curList.size() == k) {
+            if (n == 0 && curList.size() == k) {
+                res.add(new LinkedList(curList));
+            }
+            return;
+        }
+        for (int i = curNum; i <= 9 && i <= n; i++) {
+            curList.add(i);
+            dfs(n - i, k, i + 1, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+    }
+} 
+
+// or slightly diff one
+class Solution {
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(n, k, 1, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int n, int k, int curNum, List<Integer> curList, List<List<Integer>> res) {
+        if (n == 0 || k == 0) {
+            if (n == 0 && k == 0) {
+                res.add(new LinkedList(curList));
+            }
+            return;
+        }
+        for (int i = curNum; i <= 9 && i <= n; i++) {
+            curList.add(i);
+            dfs(n - i, k - 1, i + 1, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
