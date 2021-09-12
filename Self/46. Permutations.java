@@ -39,6 +39,32 @@ class Solution {
 
 
 
+// phase 3 self
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(nums, new LinkedList<Integer>(), new HashSet<Integer>(), res);
+        return res;
+    }
+    
+    
+    private void dfs(int[] nums, List<Integer> curList, Set<Integer> visited, List<List<Integer>> res) {
+        if (curList.size() == nums.length) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        for (int n: nums) {
+            if (visited.contains(n)) {continue;}
+            visited.add(n);
+            curList.add(n);
+            dfs(nums, curList, visited, res);
+            curList.remove(curList.size() - 1);
+            visited.remove(n);
+        }
+    }
+}
+
 
 
 

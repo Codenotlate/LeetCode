@@ -131,3 +131,98 @@ class Solution {
     	}
     }
 }
+
+
+
+
+
+// phase3 self
+// above M1 (same as phase2 self implementation)
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        Arrays.sort(nums);
+        dfs(nums, new int[nums.length], new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    
+    private void dfs(int[] nums, int[] visited, List<Integer> curList, List<List<Integer>> res) {
+        if (curList.size() == nums.length) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] == 1 || (i > 0 && nums[i - 1] == nums[i] && visited[i - 1] == 0)) {
+                continue;
+            }
+            visited[i] = 1;
+            curList.add(nums[i]);
+            dfs(nums, visited, curList, res);
+            visited[i] = 0;
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+//above M2 self implementation
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        // use a map to store each element and count, in each dfs level loop all elements with count > 0 to avoid using dup
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int n: nums) {
+            countMap.put(n, countMap.getOrDefault(n, 0) + 1);
+        }
+        dfs(countMap, nums.length, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    
+    private void dfs(Map<Integer, Integer> countMap, int n, List<Integer> curList, List<List<Integer>> res) {
+        if (curList.size() == n) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        
+        for (int i: countMap.keySet()) {
+            if (countMap.get(i) <= 0) {continue;}
+            curList.add(i);
+            countMap.put(i, countMap.get(i) - 1);
+            dfs(countMap, n, curList, res);
+            countMap.put(i, countMap.get(i) + 1);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
