@@ -93,8 +93,57 @@ class Solution {
 
 
 
+// Phase 3 self
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        // M1 : DFS + backtracking time O(n * 4^n) space O(n)
+        List<String> res = new LinkedList<>();
+        if (digits.length() == 0) {return res;}
+        StringBuilder curStr = new StringBuilder();
+        String[] map = new String[]{"0","1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        dfs(digits, 0, map, curStr, res);
+        return res;       
+    }
+    
+    private void dfs(String digits, int curIdx, String[] map, StringBuilder curStr, List<String> res) {
+        if (curIdx == digits.length()) {
+            res.add(curStr.toString());
+            return;
+        }
+        
+        for (char c: map[digits.charAt(curIdx) - '0'].toCharArray()) {
+            curStr.append(c);
+            dfs(digits, curIdx + 1, map, curStr, res);
+            curStr.deleteCharAt(curIdx);
+        }
+    }
+}
 
 
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        // M2 : BFS time O(n * 4^n) space O(n)
+        String[] map = new String[]{"0","1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        Queue<String> queue = new LinkedList<>();
+        if (digits.length() == 0) {return (List) queue;}
+        queue.add("");
+        int i = 0;
+        while ( i < digits.length()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                String cur = queue.poll();
+                for (char c: map[digits.charAt(i) - '0'].toCharArray()) {
+                    queue.add(cur + c);
+                }
+            }
+            i++;
+        }
+        
+        return (List) queue;
+    }
+    
+    
+}
 
 
 
