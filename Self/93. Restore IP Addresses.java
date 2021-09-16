@@ -131,6 +131,42 @@ class Solution {
 
 
 
+// Phase 3 self - new String.join() method introduced, but this requires the list to be of strings
+// https://stackoverflow.com/questions/1751844/java-convert-liststring-to-a-joind-string
+class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        List<String> res = new LinkedList<>();
+        List<String> curList = new LinkedList<>();
+        dfs(s, 0, curList, res);
+        return res;
+    }
+    
+    private void dfs(String s, int curIdx, List<String> curList, List<String> res) {
+        // base case
+        if (curList.size() == 4) {
+            if (curIdx == s.length()) {
+                res.add(String.join(".",curList));
+            }
+            return;
+        }
+        
+        for (int i = 1; i <= 3 && curIdx + i <= s.length(); i++) {
+            String cur = s.substring(curIdx, curIdx + i);
+            if (cur.charAt(0) == '0' && cur.length() >1 || Integer.valueOf(cur) > 255) {
+                continue;
+            }
+            curList.add(cur);
+            dfs(s, curIdx + i, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+
+
+
+
+
 
 
 
