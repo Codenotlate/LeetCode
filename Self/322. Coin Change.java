@@ -47,6 +47,48 @@ class Solution {
 
 
 
+// Phase3 self
+class Solution {
+    // M1: Top-down: DFS + memo
+    public int coinChange(int[] coins, int amount) {
+        int[] memo = new int[amount + 1];
+        return dfs(coins, amount, memo);
+    }
+    
+    private int dfs(int[] coins, int amount, int[] memo) {
+        if (amount < 0) {return -1;}
+        if (amount == 0) {return 0;}
+        if (memo[amount] != 0) {return memo[amount];}
+        int min = amount + 1;
+        for (int c: coins) {
+            int res = dfs(coins, amount - c, memo);
+            if (res >= 0 & res + 1 < min) {min = res + 1;}
+        }
+        memo[amount] = min == amount + 1 ? -1 : min;
+        return memo[amount];
+    }
+}
+
+
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        // M2: bottom-up
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        for (int t =1; t <= amount; t++) {
+            for (int c: coins) {
+                if (t >= c && dp[t - c] != -1) {
+                    dp[t] = Math.min(dp[t], dp[t - c] + 1);
+                }
+            }
+        }
+        
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
+    }
+}
+
 
 
 
