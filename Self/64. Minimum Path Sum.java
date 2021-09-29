@@ -54,3 +54,51 @@ class Solution {
 
 // thinking from recursion to dp
 // https://leetcode.com/problems/minimum-path-sum/discuss/344980/Java.-Details-from-Recursion-to-DP.
+
+
+
+// Phase3 self
+class Solution {
+    public int minPathSum(int[][] grid) {
+        //M1: top - down time O(m* n) space O(m * n)
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] memo = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(memo[i], -1);
+        }
+        return dfs(0, 0, grid, memo, m, n);
+    }
+    
+    private int dfs(int i, int j, int[][] grid, int[][] memo, int m, int n) {
+        if (i == m || j == n) {return 1000;}
+        if (i == m - 1 && j == n - 1) {return grid[i][j];}
+        if (memo[i][j] != -1) {return memo[i][j];}
+        memo[i][j] = grid[i][j] + Math.min(dfs(i + 1, j, grid, memo, m, n), dfs(i, j + 1, grid, memo, m, n));
+        return memo[i][j];
+    }
+}
+
+
+
+class Solution {
+    public int minPathSum(int[][] grid) {
+        // M2 bottom-up and optimize space to O(n)
+        int m = grid.length;
+        int n = grid[0].length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, 30000); // given the n <= 200 and grid[i][j] <= 100
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // pay attention to deal with i, j = 0 special cases
+                if (j == 0) {
+                    if (i == 0) {dp[0] = grid[0][0]; continue;}
+                    dp[j] += grid[i][j];
+                    continue;
+                }
+                dp[j] = Math.min(dp[j], dp[j - 1]) + grid[i][j];
+            }
+        } 
+        return dp[n - 1];
+    }
+}
