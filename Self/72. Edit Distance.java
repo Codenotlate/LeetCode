@@ -61,8 +61,66 @@ class Solution {
 
 
 
+// phase3 self
+class Solution {
+    public int minDistance(String word1, String word2) {
+        // M1 dfs + memo -  Top-down
+        // time O(l1 * l2) space O(l1 * l2);
+        // memo[p1][p2] represents the result of w1[p1, l1] and w2[p2, l2].
+        int l1 = word1.length();
+        int l2 = word2.length();
+        int[][] memo = new int[l1][l2];
+        for (int[] row: memo) {
+            Arrays.fill(row, -1);
+        }
+        return dfs(word1, word2, 0, 0, l1, l2, memo);
+        // return memo[0][0]; this can't deal with ("", "")
+    }
+    
+    private int dfs(String w1, String w2, int p1, int p2, int l1, int l2, int[][] memo) {
+        if (p1 == l1 || p2 == l2) {
+            if (p2 != l2) {return l2 - p2;}
+            return l1 - p1;
+        }
+        
+        if (memo[p1][p2] != -1) {return memo[p1][p2];}
+        int r1 = dfs(w1, w2, p1, p2+1, l1, l2, memo) + 1;
+        int r2 = dfs(w1, w2, p1 + 1, p2, l1, l2, memo) + 1;
+        int r3 = dfs(w1, w2, p1 + 1, p2+1, l1, l2, memo);
+        if (w1.charAt(p1) != w2.charAt(p2)) {r3 += 1;}
+        memo[p1][p2] = Math.min(Math.min(r1, r2), r3);
+        return memo[p1][p2];
+    }
+}
 
 
+
+
+class Solution {
+    public int minDistance(String word1, String word2) {
+        // M2: bottom-up: dp[p1][p2] represents the result of w1[0, p1] and w2[0, p2];
+        // can campress status to have O(l2) space
+        int l1 = word1.length();
+        int l2 = word2.length();
+        int[] dp = new int[l2 + 1];
+        // init dp[0][p2] = p2
+        for (int p2 = 0; p2 <= l2; p2++) {
+            dp[p2] = p2;
+        }
+        int prev;
+        for (int p1 = 1; p1 <= l1; p1++) {
+            dp[0] = p1;
+            prev = p1 - 1;
+            for (int p2 = 1; p2 <= l2; p2++) {
+                int temp = dp[p2];
+                int isreplace = word1.charAt(p1 - 1) == word2.charAt(p2 - 1) ? 0 : 1;
+                dp[p2] = Math.min(Math.min(dp[p2 - 1], dp[p2]) + 1, prev + isreplace);
+                prev = temp;
+            }
+        }
+        return dp[l2];
+    }
+}
 
 
 
