@@ -32,3 +32,75 @@ class Solution {
         return false;
     }
 }
+
+
+// M2: bottomup DP time and space same as M1, but space can be optimized to O(l2) in below M3
+class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int l1 = s1.length();
+        int l2 = s2.length();
+        if (l1 + l2 != s3.length()) {return false;}
+        
+        boolean[][] dp = new boolean[l1 + 1][l2 + 1];
+        // dp[p1][p2] represents result of s1[0:p1-1] s2[0:p2-1] to s3[0:p1+p2-1]
+        
+        // init dp[0][0] and dp[0][...], dp[...][0]
+        dp[0][0] = true;
+        for (int p1 = 1; p1 <= l1; p1++) {
+            dp[p1][0] = dp[p1 - 1][0] && s1.charAt(p1 - 1) == s3.charAt(p1-1);
+        } 
+        for (int p2 = 1; p2 <= l2; p2++) {
+            dp[0][p2] = dp[0][p2-1] && s2.charAt(p2 - 1) == s3.charAt(p2-1);
+        }
+        
+        for (int p1 = 1; p1 <= l1; p1++) {
+            for (int p2 = 1; p2 <= l2; p2++) {
+                int p3 = p1 + p2;
+                char c1 = s1.charAt(p1-1);
+                char c2 = s2.charAt(p2-1);
+                char c3 = s3.charAt(p3-1);
+                dp[p1][p2] = (dp[p1][p2 - 1] && c2 == c3) || (dp[p1 - 1][p2] && c1 == c3);
+                
+            }
+        }
+        return dp[l1][l2];
+    }
+}
+
+
+
+// M3: status compress, space O(l2)
+class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int l1 = s1.length();
+        int l2 = s2.length();
+        if (l1 + l2 != s3.length()) {return false;}
+        
+        boolean[] dp = new boolean[l2 + 1];
+        // dp[p1][p2] represents result of s1[0:p1-1] s2[0:p2-1] to s3[0:p1+p2-1]
+        
+        // init dp[0][0] 
+        dp[0] = true;
+        // init dp[0][p2]
+        for (int p2 = 1; p2 <= l2; p2++) {
+            dp[p2] = dp[p2-1] && s2.charAt(p2 - 1) == s3.charAt(p2-1);
+        }
+        
+        for (int p1 = 1; p1 <= l1; p1++) {
+            // init dp[p1][0]
+            dp[0] = dp[0] && s1.charAt(p1 - 1) == s3.charAt(p1-1);
+            for (int p2 = 1; p2 <= l2; p2++) {
+                int p3 = p1 + p2;
+                char c1 = s1.charAt(p1-1);
+                char c2 = s2.charAt(p2-1);
+                char c3 = s3.charAt(p3-1);
+                dp[p2] = (dp[p2 - 1] && c2 == c3) || (dp[p2] && c1 == c3);
+                
+            }
+        }
+        return dp[l2];
+    }
+}
+
+
+
