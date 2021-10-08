@@ -41,3 +41,50 @@ class Solution {
 
 
 // can use bottom up dp and space optimization
+class Solution {
+    public int calculateMinimumHP(int[][] dungeon) {
+        // M2: bottom-up dp way
+        // dp[r][c] represents the result from cell (r, c) to (m-1, n-1);
+        // time O(m * n) space O(m *n)
+        int m = dungeon.length;
+        int n = dungeon[0].length;
+        int[][] dp = new int[m + 1][n + 1];
+        // init with -inf
+        for(int[] row: dp) {
+            Arrays.fill(row, Integer.MIN_VALUE);
+        }
+        for (int r = m-1; r >= 0; r--) {
+            for (int c = n-1; c >= 0; c--) {
+                if (r == m - 1 && c == n - 1) {dp[r][c] = dungeon[r][c]; continue;}
+                dp[r][c] = dungeon[r][c] + Math.max(Math.min(0, dp[r + 1][c]), Math.min(0, dp[r][c + 1]));
+            }
+        }
+        
+        return dp[0][0] >= 0 ? 1 : -dp[0][0] + 1;
+        
+    }
+}
+
+
+class Solution {
+    public int calculateMinimumHP(int[][] dungeon) {
+        // M2.1: bottom-up dp way
+        // dp[r][c] represents the result from cell (r, c) to (m-1, n-1);
+        // time O(m * n); optimize space from O(m *n) to O(n)
+        int m = dungeon.length;
+        int n = dungeon[0].length;
+        int[] dp = new int[n + 1];
+        // init with -inf
+        Arrays.fill(dp, Integer.MIN_VALUE);
+
+        for (int r = m-1; r >= 0; r--) {
+            for (int c = n-1; c >= 0; c--) {
+                if (r == m - 1 && c == n - 1) {dp[c] = dungeon[r][c]; continue;}
+                dp[c] = dungeon[r][c] + Math.max(Math.min(0, dp[c]), Math.min(0, dp[c + 1]));
+            }
+        }
+        
+        return dp[0] >= 0 ? 1 : -dp[0] + 1;
+        
+    }
+}
