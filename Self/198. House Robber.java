@@ -14,3 +14,48 @@ class Solution {
         return next1;
     }
 }
+
+
+
+// phase3 self
+// different from above method. Above method
+class Solution {
+    public int rob(int[] nums) {
+        //M1: basic dp way, time O(n), space O(n)
+        //need 2 results from i - 1 to represent two cases: i-1 included or i-1 not included
+        // dp[i][0] represents max result from nums[0] to nums[i] and i not chosen
+        // dp[i][1] represents max result from nums[0] to nums[i] and i is chosen
+        int n = nums.length;
+        int[][] dp = new int[n][2];
+        // init
+        dp[0][0] = 0;
+        dp[0][1] = nums[0];
+        
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][1], dp[i-1][0]);
+            dp[i][1] = dp[i-1][0] + nums[i];
+        }
+        return Math.max(dp[n-1][0], dp[n-1][1]);
+    }
+}
+
+
+class Solution {
+    public int rob(int[] nums) {
+        //M1.1: optimized dp way, time O(n), space O(1)
+        //need 2 results from i - 1 to represent two cases: i-1 included or i-1 not included
+        // dp[i][0](dp_i0) represents max result from nums[0] to nums[i] and i not chosen
+        // dp[i][1](dp_i1) represents max result from nums[0] to nums[i] and i is chosen
+        int n = nums.length;
+        // init
+        int dp_i0 = 0;
+        int dp_i1 = nums[0];
+        
+        for (int i = 1; i < n; i++) {
+            int temp = dp_i0;
+            dp_i0 = Math.max(dp_i0, dp_i1);
+            dp_i1 = temp + nums[i];
+        }
+        return Math.max(dp_i0, dp_i1);
+    }
+}
