@@ -1,0 +1,66 @@
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        //M1: naive O(n^2) way -- time limit exceeded
+        //main idea: for each cur bar from 0 to n - 1, find the closest left bar and right bar that is smaller than the current bar. Then the max area of the rect with height = cur bar will equal to (right idx - left index - 1) * cur bar height.
+        int maxArea = 0;
+        for (int cur = 0; cur < heights.length; cur++) {
+            int height = heights[cur];
+            int left = findLeft(heights, cur);
+            int right = findRight(heights, cur);
+            maxArea = Math.max(maxArea, (right - left - 1) * height);
+        }
+        return maxArea;
+    }
+    
+    private int findLeft(int[] heights, int cur) {
+        for (int i = cur; i >= 0; i--) {
+            if(heights[i]< heights[cur]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    private int findRight(int[] heights, int cur) {
+        for (int i = cur + 1; i < heights.length; i++) {
+            if(heights[i] < heights[cur]) {
+                return i;
+            }
+        }
+        return heights.length;
+    }
+}
+
+
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        //M2: use stack O(n) way
+        //main idea: for each cur bar from 0 to n - 1, find all the bars on the left to cur that has larger height. those are the heights of rect that will use cur as its right end bar. And since we will keep popping out bars have higher height than cur bar, the final bars (actually idx in the bar. refer to its corresponding bar height here) left in the stack will be in ascending order. Thus the left start bar will be the top one in stack after the height popped out.
+        int maxArea = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        stack.push(0);
+        for (int cur = 1; cur < heights.length; cur++) {
+            while (stack.peek() != -1 && heights[cur] < heights[stack.peek()]) {
+                int height = heights[stack.pop()];
+                int right = cur;
+                int left = stack.peek();
+                maxArea = Math.max(maxArea, (right - left - 1) * height);
+            }
+            stack.push(cur);
+        }
+        
+        while (stack.peek() != -1) {
+            int height = heights[stack.pop()];
+            maxArea = Math.max(maxArea, (heights.length - stack.peek() - 1) * height);
+        }
+        return maxArea;
+    }
+    
+}
+
+
+
+//https://leetcode.com/problems/largest-rectangle-in-histogram/solution/
+// another divide and conquar method for later review
