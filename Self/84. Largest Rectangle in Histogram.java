@@ -31,6 +31,26 @@ class Solution {
     }
 }
 
+// using the one wrote in 85, a more concise version of above method
+private int histMaxarea(int[] hist) {
+    int maxArea = 0;
+    for (int i = 0; i < hist.length; i++) {
+        int cur = hist[i];
+        int left = i - 1;
+        int right = i + 1;
+        while (left >= 0) {
+            if (hist[left] < cur) {break;}
+            left--;
+        }
+        while (right < hist.length) {
+            if (hist[right] < cur) {break;}
+            right++;
+        }
+        maxArea = Math.max(maxArea, (right - left - 1) * cur);
+    }
+    return maxArea;
+}
+
 
 
 class Solution {
