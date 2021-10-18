@@ -63,6 +63,29 @@ class Solution {
 
 
 
+// Phase3 self one pass way
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode( -1, head);
+        ListNode prev = dummy;
+        ListNode slow = head;
+        ListNode fast = head;
+        while (n > 0) {
+            fast = fast.next;
+            n--;
+        }
+        while (fast!= null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next;
+        }
+        
+        prev.next = slow.next;
+        return dummy.next;
+    }
+}
+
+
 
 
 
