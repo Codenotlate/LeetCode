@@ -28,3 +28,28 @@ class Solution {
         return head;
     }
 }
+
+
+
+// Phase3 self
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        // Iterative way
+        if (head == null || head.next == null) {return head;}
+        ListNode dummyeven = new ListNode(-1, head.next);
+        ListNode prevodd = head;
+        ListNode curodd = head;
+        ListNode cureven = head.next;
+        while (curodd != null && cureven != null) {
+            curodd.next = cureven.next;
+            prevodd = curodd;
+            curodd = curodd.next;
+            if (curodd == null) {break;}
+            cureven.next = curodd.next;
+            cureven = cureven.next;
+        }
+        if (curodd != null) {prevodd = curodd;}
+        prevodd.next = dummyeven.next;
+        return head;
+    }
+}
