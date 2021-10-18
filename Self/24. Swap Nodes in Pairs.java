@@ -80,3 +80,38 @@ class Solution {
         return head;
     }
 }
+
+
+
+// Phase3 self
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        // M1: recursive way
+        // base case
+        if (head == null || head.next == null) {return head;}
+        ListNode cur = head;
+        ListNode next = cur.next;
+        cur.next = swapPairs(next.next);
+        next.next = cur;
+        return next;
+    }
+}
+
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        //M2: iterative way
+        ListNode dummy = new ListNode(-1, head);
+        ListNode prev = dummy;
+        ListNode cur = head;
+        while (cur != null && cur.next != null) {
+            ListNode next = cur.next;
+            prev.next = next;
+            cur.next = next.next;
+            next.next = cur;
+            
+            prev = cur;
+            cur = cur.next;
+        }
+        return dummy.next;
+    }
+}

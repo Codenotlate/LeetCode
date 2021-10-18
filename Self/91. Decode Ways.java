@@ -69,7 +69,7 @@ class Solution {
             for (int k = 1; k <=2; k++) {
                 if(i - k >= 0 && codeSet.contains(s.substring(i - k, i))) {
                     dp[i] += dp[i - k];
-                }
+                }ø
             }
         }
         
