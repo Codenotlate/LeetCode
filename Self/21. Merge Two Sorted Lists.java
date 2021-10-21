@@ -81,3 +81,26 @@ class Solution {
 
     }
 }
+
+
+// phase 3 self
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        // M2: iterative way
+        ListNode dummy = new ListNode(-1);
+        ListNode tail = dummy;
+        while (l1 != null || l2 != null) {
+            int val1 = l1 == null ? 1000 : l1.val;
+            int val2 = l2 == null ? 1000 : l2.val;
+            if (val1 <= val2) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        return dummy.next;
+    }
+}
