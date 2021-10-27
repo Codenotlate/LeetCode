@@ -65,5 +65,55 @@ class Solution {
 // discuss with interviewer, see if he wants you to sort an array or linkedlist only
 // https://leetcode.com/problems/insertion-sort-list/discuss/46429/Thoughts-from-a-Google-interviewer
 
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        // Phase 3 self
+        if (head == null || head.next == null) {return head;}
+        ListNode dummy = new ListNode(-1);
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode curNext = cur.next;
+            cur.next = null;
+            dummy = insert(dummy, cur);
+            cur = curNext;
+        }
+        return dummy.next;
+    }
+    
+    private ListNode insert(ListNode dummy, ListNode cur) {
+        ListNode prev = dummy;
+        ListNode p = dummy.next;
+        while (p!= null && p.val <= cur.val) {
+            prev = p;
+            p = p.next;
+        }
+        prev.next = cur;
+        cur.next = p;
+        return dummy;
+    }
+}
 
+
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        // Phase 3 self: Optimized, time still O(n^2)
+        if (head == null || head.next == null) {return head;}
+        ListNode dummy = new ListNode(-1);
+        ListNode cur = head;
+        ListNode p = dummy;
+        while (cur != null) {
+            ListNode curNext = cur.next;
+            cur.next = null;
+            // if the current p.val is smaller than cur, no need to search again from the beginning of the sorted part, can start directly from current p position
+            if (p.val > cur.val) {p = dummy;}
+            while (p.next != null && p.next.val <= cur.val) {p = p.next;}
+            // insert cur
+            cur.next = p.next;
+            p.next = cur;
+
+            cur = curNext;
+        }
+        return dummy.next;
+    }   
+}
 
