@@ -102,3 +102,42 @@ class Solution {
 
 
 
+// Phase3 self
+
+class Solution {
+    // Top down way is obvious, recursive on first and second half, then merge sort these two halves. Time O(nlogk) space O(logk)
+    // Bottom up way can optimize the space to be O(1) by storing the sorted list in the original array
+    public ListNode mergeKLists(ListNode[] lists) {
+        int k = lists.length;
+        if (k == 0) {return null;}
+        int step = 1;
+        while (step < k) {
+            for (int i = 0; i < k - step; i = i + 2 * step) {
+                lists[i] = mergeSort(lists[i], lists[i + step]);
+            }
+            step *= 2;
+        }
+        return lists[0];
+    }
+    
+    
+    private ListNode mergeSort(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode prevTail = dummy;
+        while (l1 != null || l2 != null) {
+            int val1 = l1 == null? Integer.MAX_VALUE:l1.val;
+            int val2 = l2 == null? Integer.MAX_VALUE:l2.val;
+            if (val1 < val2) {
+                prevTail.next = l1;
+                l1 = l1.next;
+            } else {
+                prevTail.next = l2;
+                l2 = l2.next;
+            }
+            prevTail = prevTail.next;
+        }
+        return dummy.next;
+    }
+}
+
+
