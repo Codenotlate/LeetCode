@@ -39,7 +39,7 @@ class Solution {
 
 
 
-// M2: assume the array is sorted, then use two pointers to do it in O(ax(l1,l2)) time and O(1) space
+// M2: assume the array is sorted, then use two pointers to do it in O(max(l1, l2) time and O(1) space
 
 class Solution {
     public int[] intersect(int[] nums1, int[] nums2) {
@@ -90,13 +90,11 @@ https://leetcode.com/problems/intersection-of-two-arrays-ii/discuss/82243/Soluti
 
 
 
-/* mapReduce technique
+/* mapReduce technique*/
 
 
-
-
-*/
-
+// external sort
+// https://www.geeksforgeeks.org/external-sorting/
 
 
 
