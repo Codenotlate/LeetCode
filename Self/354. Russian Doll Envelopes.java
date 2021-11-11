@@ -62,7 +62,59 @@ class Solution {
 
 
 
-
+// Phase 3 self
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        // The key is to sort the first ele in ascending order - which makes sure no need to worry about the 1st dim afterwards
+        // and then sort the second ele in descending order - which makes sure when we do LIS on 2nd dim regardless of whether they have same 1st dim, we won't increase the length twice for the same 1st dim ones since it's in desc order.
+        // time O( nlogn) space O(n)
+        // sort first and define the compare
+        Arrays.sort(envelopes, new Comparator<int[]>() {
+            public int compare(int[] e1, int[] e2) {
+                if (e1[0] == e2[0]) {
+                    return e2[1] - e1[1];
+                } else {
+                    return e1[0] - e2[0];
+                }
+            }
+        });
+        
+        // then do LIS to 2nd dim
+        int[] arr = new int[envelopes.length];
+        for (int i = 0; i < envelopes.length; i++) {
+            arr[i] = envelopes[i][1];
+        }
+        return LIS(arr);
+    }
+    
+    
+    private int LIS(int[] arr) {
+        if (arr.length == 0) {return 0;}
+        List<Integer> seq = new ArrayList<>();
+        seq.add(arr[0]);
+        for (int i = 1; i < arr.length; i++) {
+            int idx = findFirstLte(seq, arr[i]);
+            if (idx == -1) {
+                seq.add(arr[i]);
+            } else {
+                seq.set(idx, arr[i]);
+            }
+        }
+        return seq.size();
+    }
+    
+    private int findFirstLte(List<Integer> seq, int t) {
+        int start = 0;
+        int end = seq.size() -1;
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            int num = seq.get(mid);
+            if (num < t) {start = mid + 1;}
+            else {end = mid;}
+        }
+        return seq.get(start) >= t ? start : -1;
+    }
+}
 
 
 
