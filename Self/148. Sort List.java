@@ -93,7 +93,7 @@ class Solution {
 // Phase 3 self
 // M1: bottom up
 /**
- * Definition for singly-linked list.
+ * Definition for singly-l nked list.
  * public class ListNode {
  *     int val;
  *     ListNode next;

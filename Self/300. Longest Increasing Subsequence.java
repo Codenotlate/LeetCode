@@ -163,6 +163,57 @@ class Solution {
 
 
 
+// phase 3 self
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        //M1: DP way, time O(n^2), space O(n)
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        int maxLen = 1;
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            } 
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+        return maxLen;
+    }
+}
+
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        //M2: building increasing sequence way, time O(nlogn), space O(n)
+        // the goal is to keep the correct length and at the same time leave larger potential by constructing the seq using as small elements as possible
+        List<Integer> seq = new ArrayList<>();
+        seq.add(nums[0]);
+        for (int i = 1; i < nums.length; i++) {
+            int idx = findFirstLarge(seq, nums[i]);
+            if (idx != -1) {
+                seq.set(idx, nums[i]);
+            } else {
+                seq.add(nums[i]);
+            }
+        }
+        return seq.size();
+    }
+    
+    
+    private int findFirstLarge(List<Integer> seq, int target) {
+        int start = 0;
+        int end = seq.size() - 1;
+        while (start < end) {
+            int mid = start + (end - start) /2;
+            int num = seq.get(mid);
+            if (num == target) {return mid;}
+            else if (num > target) {end = mid;}
+            else {start = mid + 1;}
+        }
+        return seq.get(start) >= target ? start : -1;
+    }
+}
+
 
 
 
