@@ -323,7 +323,55 @@ class Solution {
 
 
 
-
+// Phase3 self
+class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        int n = nums.length;
+        int[][] numIdx = new int[n][2];
+        // put corresponding index and num pair into nums
+        for (int i = 0; i < n; i++) {
+            numIdx[i][0] = nums[i];
+            numIdx[i][1] = i;
+        }
+        // use copy to copy numIdx on each level
+        int[][] copy = new int[n][2];
+        // use list count to store the final result
+        List<Integer> count = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            count.add(0);
+        }
+        int start = 0;
+        int end = n - 1;
+        mergesort(numIdx, copy, start, end, count);
+        return count;
+    }
+    
+    
+    private void mergesort(int[][] numIdx, int[][] copy, int start, int end, List<Integer> count) {
+        if (start >= end) {return;}
+        int mid = start + (end - start) / 2;
+        mergesort(numIdx, copy, start, mid, count);
+        mergesort(numIdx, copy, mid+1, end, count);
+        // since numIdx is needed to store sorted array from merging 2 halves, we need to copy the original numIdx to copy[][]
+        for (int i = start; i <= end; i++) {
+            copy[i] = numIdx[i];
+        }
+        
+        // start merge two halves
+        int i = start;
+        int j = mid + 1;
+        while ( i <= mid || j <= end) {
+            if (j > end || (i <= mid && copy[i][0] <= copy[j][0])) {
+                numIdx[i + j - (mid + 1)] = copy[i];
+                count.set(copy[i][1], count.get(copy[i][1]) + j - (mid + 1));
+                i++;
+            } else {
+                numIdx[i + j - (mid + 1)] = copy[j];
+                j++;
+            }
+        }
+    }
+}
 
 
 
