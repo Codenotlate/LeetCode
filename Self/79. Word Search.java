@@ -76,3 +76,50 @@ class Solution {
         return false;
     }
 }
+
+
+
+
+// Phase3 self time O(m*n * 3^L)
+class Solution {
+    public int[][] dirs = new int[][]{{-1,0},{1,0},{0,-1},{0, 1}};
+    
+    public boolean exist(char[][] board, String word) {
+        // Phase3 self
+        int m = board.length;
+        int n = board[0].length;
+        int[][] visited = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dfs(board, word, i , j, visited, 0)) {return true;}
+            }
+        }
+        return false;
+    }
+    
+    
+    private boolean dfs(char[][] board, String word, int i, int j, int[][] visited, int w) {
+        int m = board.length;
+        int n = board[0].length;
+        // base case
+        if (w == word.length() || i < 0 || i >= m || j < 0 || j >= n || visited[i][j] == 1) {
+            return w == word.length();
+        }
+        
+        if (board[i][j] == word.charAt(w)) {
+            visited[i][j] = 1;
+            for (int[] dir : dirs) {
+                if (dfs(board, word, i + dir[0], j + dir[1], visited, w + 1)) {
+                    visited[i][j] = 0;
+                    return true;
+                }
+            }
+            visited[i][j] = 0;
+        }
+        return false;
+    }
+    
+    
+    
+    
+}
