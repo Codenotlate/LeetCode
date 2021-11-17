@@ -47,6 +47,20 @@ class Solution {
 }
 
 
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        // Phase3 self O(m + n) way
+        // can also start from bottom left corner
+        int r = matrix.length - 1;
+        int c = 0;
+        while (r >= 0 && c < matrix[0].length) {
+            if (matrix[r][c] == target) {return true;}
+            else if (matrix[r][c] < target) {c++;} // prune current col
+            else {r--;} // prunce current row
+        }
+        return false;
+    }
+}
 
 
 
