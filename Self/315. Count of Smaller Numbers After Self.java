@@ -323,7 +323,7 @@ class Solution {
 
 
 
-// Phase3 self
+// Phase3 self: merge sort solution
 class Solution {
     public List<Integer> countSmaller(int[] nums) {
         int n = nums.length;
@@ -374,6 +374,63 @@ class Solution {
 }
 
 
+class Solution {
+    // phase 3 self
+    // use segment tree:  time O(nlog(M)) space O(M)
+    /*
+    1.since the number is in range [-10^4, 10^4], we can set a segment tree with leaf nodes representing the count of number from -10^4 to 10^4 (assume M = 2 * 10^4 + 1)in nums. 
+    2.We use an array of size 2 * M to represent the segment tree and the root node starts at index = 1. (Because segment tree is complete tree, if it has n leaf nodes, it will have n-1 other notes, and in total 2n - 1 nodes)
+    3. since array index starts at 0, whereas the min can be -10^4. Thus we use on offset= 10^4 to make the number range starts 0 consistent with the array index. All the leaf nodes(numbers + offset range from 0 to M) indexes range from M to 2*M-1  Thus, assume num in nums, the leaf node index of num in the segment tree array is num + offset + 2*M + 1
+    4. In this problem, the node stores the count of number in nums that is in that range represented by that node. Thus the initial value of each node is zero. Since we store it in an array and automatically initialized as 0, we don't need to build the segment tree in this problem.
+    5. Since the problem is count the number smaller in the right, we need to traverse nums starting from right side. For each num in nums, we query the node value representing range [-10^4, num-1] or [-10^4, num), put it in the corresponding position in result list. Then update the values of nodes in the path to leaf node "num".
+    6. The segment tree artical uses topdown way for build/query/update. In this question's solution, it uses bottom-up and thus requires less space.
+    
+    */
+    public List<Integer> countSmaller(int[] nums) {
+        int offset = 10000;
+        int size = 2 * 10000 + 1;
+        // array for segment tree
+        int[] tree = new int[2 * size];
+        List<Integer> res = new LinkedList<>();
+        // traverse nums in reverse order
+        for (int i = nums.length - 1; i >= 0; i--) {
+            res.add(0, query(tree, 0, nums[i] + offset - 1, size)); // tree, low, high, size for leaf index calculation
+            update(tree, nums[i] + offset, 1, size); // tree, the node to update with adding 1, size for leaf index calculation
+        }
+        return res;
+    }
+    
+    // bottom-up way: want to find the count in range [low, high]
+    private int query(int[] tree, int low, int high, int size) {
+        // get leaf indexes
+        low += size;
+        high += size;
+        int res = 0;
+        while (low < high) {
+            if(low % 2 == 1) { // low is the right child
+                res += tree[low];
+                low++;      
+            }
+            low /= 2;
+            if (high % 2 == 0) { // right is the left child   
+                res += tree[high];
+                high--;
+            }
+            high /= 2;
+        }
+        if (low == high) {res += tree[low];}
+        return res;
+    }
+    
+    
+    private void update(int[] tree, int index, int val, int size){
+        index += size; // go to the leaf node
+        while (index >= 1) {
+            tree[index] += val;
+            index /= 2;
+        }
+    }
+}
 
 
 
