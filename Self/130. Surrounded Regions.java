@@ -159,7 +159,47 @@ class Solution {
 
 
 
+class Solution {
+    public void solve(char[][] board) {
+        // Phase3 solution
+        // basic idea is to label out those Os are not going to be flipped by doing DFS starting from the borders. Those Os connected to border O is not going to satisfy the condition(surrounded by Xs).
+        // time O(mn) space O(mn)
+        int m = board.length;
+        int n = board[0].length;
+        for (int i = 0; i < m; i++) {
+            if (board[i][0] == 'O') {dfs(board, i, 0);}
+            if (board[i][n-1] == 'O') {dfs(board, i, n-1);}
+        }
+        for (int j = 1; j < n-1; j++) {
+            if (board[0][j] == 'O') {dfs(board, 0,j);}
+            if (board[m-1][j] == 'O') {dfs(board, m-1,j);}
+        }
+        
+        // after all dfs from the border, we can loop again and change those 'O' to 'X', and those '*' to 'O'
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O') {board[i][j] = 'X';}
+                if (board[i][j] == '*') {board[i][j] = 'O';}
+            }
+        }
+    }
+    
+    
+    private void dfs(char[][] board, int i, int j) {
+        board[i][j] = '*';
+        int[][] dirs = {{-1,0},{1,0},{0,1},{0,-1}};
+        for (int[] dir : dirs) {
+            int newi = i + dir[0];
+            int newj = j + dir[1];
+            if (newi >= 0 && newj >= 0 && newi < board.length && newj < board[0].length && board[newi][newj] == 'O') {
+                dfs(board, newi, newj);
+            }
+        }
+        
+    }
+}
 
+// note the dfs can also be replaced by bfs
 
 
 
