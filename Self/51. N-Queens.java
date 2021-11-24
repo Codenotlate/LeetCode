@@ -164,3 +164,37 @@ class Solution {
         return false;
     }
 }
+
+
+
+// Phase3 self
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new LinkedList<>();
+        List<String> curList = new LinkedList<>();
+        Set<Integer> cols = new HashSet<>();
+        Set<Integer> diags = new HashSet<>();
+        Set<Integer> revdiags = new HashSet<>();
+        dfs(n, 0, cols, diags, revdiags, curList, res);
+        return res;
+    }
+    
+    private void dfs(int n, int i, Set<Integer> cols, Set<Integer> diags, Set<Integer> revdiags, List<String> curList, List<List<String>> res) {
+        if (i == n) {res.add(new LinkedList(curList)); return;}
+        for (int j = 0; j < n; j++) {
+            if (cols.contains(j) || diags.contains(i + j) || revdiags.contains(i - j)) {continue;}
+            cols.add(j);
+            diags.add(i+ j);
+            revdiags.add(i - j);
+            char[] row = new char[n];
+            Arrays.fill(row, '.');
+            row[j] = 'Q';
+            curList.add(new String(row));
+            dfs(n, i+ 1, cols, diags, revdiags, curList, res);
+            curList.remove(curList.size() - 1);
+            cols.remove(j);
+            diags.remove(i + j);
+            revdiags.remove(i- j);
+        }
+    }
+}

@@ -1,211 +1,55 @@
-
-
-// Not solved yet!!
 class Solution {
+    // phase3 self: based on regular BFS way in 127
+    // basically we store the String list in queue, each time we check the last string in the list to find valid next string to add.
+    // two notes to remember: when we add the new List with valid next string to the queue, we need to make a copy of the curList and add the copy to the queue. Otherwise curList is a reference and maybe changed along the way.
+    // Also considering the case when two same level list have the same next string, since we are not only counting the string length, but also want to track each shortest path here, we can't direcly add that string to visited after the first curList process, we need to have a visit set for that level, and only add that level visit set to total visited set after this whole level is finished processing.
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
-        Set<String> startSet = new HashSet<>();
-        Set<String> endSet = new HashSet<>();
-        Set<String> visited = new HashSet<>();
-        Set<String> wordSet = new HashSet<>(wordList);
-        Map<String, Set<String>> startParent = new HashMap<>();
-        Map<String, Set<String>> endParent = new HashMap<>();
         List<List<String>> res = new LinkedList<>();
-        // special case
+        Set<String> wordSet = new HashSet(wordList);
         if (!wordSet.contains(endWord)) {return res;}
-        boolean isStart = true; // used to label whether startSet/startParen is real start one, cause we do swap along the way
-
-        startSet.add(beginWord);
-        startParent.put(beginWord, null);
-        visited.add(beginWord);
-        endSet.add(endWord);
-        endParent.put(endWord, null);
-        visited.add(endWord);
-
-        boolean hasFound = false; // used to flag when we already find the shortest length chain, then no need to go deeper level.
-
-        while (!startSet.isEmpty() && !endSet.isEmpty()) {
-        	if (startSet.size() > endSet.size()) {
-        		isStart = !isStart;
-        		Set<String> tempSet = startSet;
-        		startSet = endSet;
-        		endSet = tempSet;
-
-        		Map<String, Set<String>> tempMap = startParent;
-        		startParent = endParent;
-        		endParent = tempMap;
-        	}
-
-        	Set<String> nextSet = new HashSet<>();
-        	for (String cur: startSet) {
-        		for (int i = 0; i < cur.length(); i++) {
-        			char[] s = cur.toCharArray();
-        			for (char c = 'a'; c <= 'z'; c++) {
-        				s[i] = c;
-        				String word = new String(s);
-        				if (endSet.contains(word)) {
-        					genChain(isStart, startParent, cur, endParent, word, res);
-        					hasFound = true;
-        				}
-        				// won't go to add string into nextSet when has already find the shortest length, other possible list only exists in current level
-        				if (!hasFound && !visited.contains(word) && wordSet.contains(word)) {
-        					visited.add(word);
-        					nextSet.add(word);
-        					// add parent
-        					Set<String> newP = startParent.getOrDefault(word, new HashSet<String>());
-        					newP.add(cur);
-        					startParent.push(word, newP);
-        				}
-        			}
-        		}
-        	}
-        	if(hasFound) {break;}
-        	startSet = nextSet;
+        
+        
+        Queue<List<String>> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        List<String> beginList = new LinkedList<>();
+        beginList.add(beginWord);
+        queue.add(beginList);
+        
+        
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            Set<String> levelVisited = new HashSet<>();
+            while (size-- > 0) {
+                List<String> curList = queue.poll();
+                String curStr = curList.get(curList.size() - 1);
+                // if the last word is alreaydy endword, meaning this is already the shortest path length, thus we only process curlists in this level, and add to res if it has endWord as last word.
+                if (curStr.equals(endWord)) {
+                    res.add(new LinkedList(curList));
+                    continue;
+                }
+                
+                // find valid next Str for curStr
+                for (int i = 0; i < curStr.length(); i++) {
+                    char[] chars = curStr.toCharArray();
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        if (c == chars[i]) {continue;}
+                        chars[i] = c;
+                        String next = new String(chars);
+                        if (wordSet.contains(next) && !visited.contains(next)) {
+                            levelVisited.add(next);
+                            List<String> nextList = new LinkedList(curList);
+                            nextList.add(next);
+                            queue.add(nextList);
+                        }
+                    }
+                }
+            }
+            visited.addAll(levelVisited);
         }
+        
         return res;
-    }
-
-
-    private void genChain(boolean isStart, Map<String, Set<String>> startParent, String cur, Map<String, Set<String>> endParent, String word, List<List<String>> res) {
-    	List<List<String>> firstHalf = new LinkedList<>();
-    	List<List<String>> secondHalf = new LinkedList<>();
-    	genHalf(startParent, cur, firstHalf, new LinkedList<String> curList, isStart);
-    	genHalf(endParent, word, secondHalf, new LinkedList<String> curList, !isStart);
-    	for (List<String> first: firstHalf) {
-    		for (List<String> second: secondHarf) {
-    			if (isStart) {
-    				first.addAll(second);
-    				res.add(first);
-    			} else {
-    				second.addAll(first);
-    				res.add(second);
-    			}
-    			
-    		}
-    	}
-    }
-
-    private void genHalf(Map<String, Set<String>> parent, String cur, List<List<String>> res, List<String> curList) {
-    	if (cur == null) {
-    		if (isStart) {curList.reverse();}
-    		res.add(new LinkedList<>(curList));
-    		return;
-    	}
-    	curList.add(cur);
-    	for (String next: parent.get(cur)) {
-    		genHalf(parent, next, res, curList);
-    	}
-    	curList.remove(curList.size() - 1);
     }
 }
 
 
-/*
-
-magic,
-manic,
-mania,
-maria,
-pearl,
-pears,peary,
-peaks,perry,
-maris,marta,
-paris,marks,marty,
-parks,marry,party,
-
-manic,
-mania,
-maria,
-maris,marta,
-pears,peary,
-peaks,perry,
-parry,perks,merry,
-paris,marks,marty,
-parks,marry,party,
-
-
-
-[["magic","manic","mania","maria","maris","paris","parks","perks","peaks","pears","pearl"],
-["magic","manic","mania","maria","marta","marty","marry","parry","perry","peary","pearl"],
-["magic","manic","mania","maria","marta","marty","marry","merry","perry","peary","pearl"],
-["magic","manic","mania","maria","marta","marty","party","parry","perry","peary","pearl"]]
-
-[["magic","manic","mania","maria","marta","marty","party","parry","perry","peary","pearl"],
-["magic","manic","mania","maria","maris","paris","parks","perks","peaks","pears","pearl"],
-["magic","manic","mania","maria","marta","marty","marry","merry","perry","peary","pearl"],
-["magic","manic","mania","maria","marta","marty","marry","parry","perry","peary","pearl"],
-
-
-
-["magic","manic","mania","maria","maris","marks","parks","perks","peaks","pears","pearl"]]
-
-[["magic","manic","mania","maria","maris","paris","parks","perks","peaks","pears","pearl"],
-["magic","manic","mania","maria","maris","marks","manic","magic","perks","peaks","pears","pearl"],
-["magic","manic","mania","maria","marta","marty","marry","parry","perry","peary","pearl"],
-["magic","manic","mania","maria","marta","marty","marry","merry","perry","peary","pearl"],
-["magic","manic","mania","maria","marta","marty","party","parry","perry","peary","pearl"]]
-
-
-paris,marks,--->parks
-maris,--->paris
-maria,--->maris
-mania,--->maria
-manic,--->mania
-magic,--->manic
-maris,--->marks
-maria,--->maris
-mania,--->maria
-manic,--->mania
-magic,--->manic
-peaks,--->perks
-pears,--->peaks
-pearl,--->pears
-marty,--->marry
-marta,--->marty
-maria,--->marta
-mania,--->maria
-manic,--->mania
-magic,--->manic
-perry,--->parry
-peary,--->perry
-pearl,--->peary
-marty,--->marry
-marta,--->marty
-maria,--->marta
-mania,--->maria
-manic,--->mania
-magic,--->manic
-perry,--->merry
-peary,--->perry
-pearl,--->peary
-marty,--->party
-marta,--->marty
-maria,--->marta
-mania,--->maria
-manic,--->mania
-magic,--->manic
-perry,--->parry
-peary,--->perry
-pearl,--->peary
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// can optimize using trace path by dfs
