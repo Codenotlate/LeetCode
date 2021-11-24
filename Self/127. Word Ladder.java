@@ -243,6 +243,100 @@ class Solution {
 }
 
 
+// phase 3.1 self time O(26NL^2) space O(N*L)? (solution is O(L^2 * N))
+// M1 : regular BFS
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        // convert wordList to wordDict
+        Map<String, Integer> wordDict = new HashMap<>();
+        for (String s: wordList) {
+            wordDict.put(s, 1);
+        }
+        // special case
+        if (!wordDict.containsKey(endWord)) {return 0;}
+        Queue<String> queue = new LinkedList<>();
+        queue.add(beginWord);
+        
+        int level = 1;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                String curStr = queue.poll();
+                
+                for (int i = 0; i < curStr.length(); i++) {       
+                    for (char c='a'; c <= 'z'; c++) {
+                        char[] curChars = curStr.toCharArray();
+                        if (curChars[i] == c) {continue;}
+                        curChars[i] = c;
+                        String next = new String(curChars);
+                        if (wordDict.getOrDefault(next, 0) != 0) {
+                            if (next.equals(endWord)) {return level + 1;}
+                            queue.add(next);
+                            wordDict.put(next, 0);
+                        }
+                    }
+                }
+            }
+            level++;
+        }
+        return 0;    
+    }
+}
+
+
+// M2: bidirectional BFS
+
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        // convert wordList to wordSet
+        Set<String> wordSet = new HashSet<>();
+        for (String s: wordList) {
+            wordSet.add(s);
+        }
+        // special case
+        if (!wordSet.contains(endWord)) {return 0;}
+        // use set instead of queue in bidirectional BFS
+        Set<String> startSet = new HashSet<>();
+        Set<String> endSet = new HashSet<>();
+        startSet.add(beginWord);
+        endSet.add(endWord);
+        wordSet.remove(endWord); // remove from wordSet to label as visited
+        
+        int level = 1;
+
+        while (!startSet.isEmpty() &&!endSet.isEmpty()) {
+            // always use the smaller set
+            if (startSet.size() > endSet.size()) {
+                Set<String> temp = startSet;
+                startSet = endSet;
+                endSet = temp;
+            }
+            
+            Set<String> nextSet = new HashSet<>();
+            for (String curStr: startSet) {                
+                for (int i = 0; i < curStr.length(); i++) {       
+                    for (char c='a'; c <= 'z'; c++) {
+                        char[] curChars = curStr.toCharArray();
+                        if (curChars[i] == c) {continue;}
+                        curChars[i] = c;
+                        String next = new String(curChars);
+                        if (endSet.contains(next)) {return level + 1;}
+                        if (wordSet.contains(next)) {
+                            nextSet.add(next);
+                            wordSet.remove(next);
+                        }
+                    }
+                }
+            }
+            startSet = nextSet;
+            level++;
+        }
+        return 0;
+        
+        
+    }
+}
+
 
 
 
