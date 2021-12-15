@@ -30,7 +30,7 @@ class MinStack {
     
     public int top() {
         return stack.peek().value;
-    }
+    }             
     
     public int getMin() {
         return stack.peek().curMin;
@@ -123,4 +123,127 @@ class MinStack {
         return head.min;
     }
 }
+
+
+
+
+
+
+// Phase3 self
+// m1 : stack + Pair
+class MinStack {
+    // M1: use one stack + pair in stake
+    Stack<Pair<Integer, Integer>> stack;
+
+    public MinStack() {
+        stack = new Stack<>();
+    }
+    
+    public void push(int val) {
+        if (stack.isEmpty()) {
+            stack.push(new Pair(val, val));
+        } else {
+            int prevMin = stack.peek().getValue();
+            prevMin = Math.min(prevMin, val);
+            stack.push(new Pair(val, prevMin));
+        }
+    }
+    
+    public void pop() {
+        stack.pop();
+    }
+    
+    public int top() {
+        return stack.peek().getKey();
+    }
+    
+    
+    public int getMin() {
+        return stack.peek().getValue();
+    }
+}
+
+// M2: use two stacks
+class MinStack {
+
+    Stack<Integer> stackNum;
+    Stack<Integer> stackMin;
+
+    public MinStack() {
+        stackNum = new Stack<>();
+        stackMin = new Stack<>();
+    }
+    
+    public void push(int val) {
+        int mini = val;
+        if (!stackMin.isEmpty()) {
+            mini = Math.min(mini, stackMin.peek());
+        } 
+        stackNum.push(val);
+        stackMin.push(mini);
+    }
+    
+    public void pop() {
+        stackMin.pop();
+        stackNum.pop();
+    }
+    
+    public int top() {
+        return stackNum.peek();
+    }
+    
+    
+    public int getMin() {
+        return stackMin.peek();
+    }
+}
+
+// M3: use self defined linkedList,element push to the head
+class MinStack {
+    
+    private class Node {
+        int num;
+        int min;
+        Node next;
+        
+        Node(int n, int m, Node nxt) {
+            num = n;
+            min = m;
+            next = nxt;
+        }
+    }
+    
+    private Node dummy;
+    
+
+    public MinStack() {
+        dummy = new Node(0, 0, null);
+    }
+    
+    public void push(int val) {
+        int mini = val;
+        if (dummy.next != null) {
+            mini = Math.min(mini, dummy.next.min);
+        } 
+        Node added = new Node(val, mini, dummy.next);
+        dummy.next = added;
+    }
+    
+    public void pop() {
+        dummy.next = dummy.next.next;
+    }
+    
+    public int top() {
+        return dummy.next.num;
+    }
+    
+    
+    public int getMin() {
+        return dummy.next.min;
+    }
+}
+
+
+
+
 

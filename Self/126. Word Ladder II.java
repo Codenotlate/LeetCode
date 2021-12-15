@@ -52,4 +52,5 @@ class Solution {
 }
 
 
-// can optimize using trace path by dfs
+// can optimize using trace path as the node to its parent node list (check idea from solution)
+// can also use bidirectional BFS, will do in the future
