@@ -48,3 +48,39 @@ class MyQueue {
  * int param_3 = obj.peek();
  * boolean param_4 = obj.empty();
  */
+
+// Phase3 self
+class MyQueue {
+    Stack<Integer> start, end;
+
+    public MyQueue() {
+        start = new Stack<>();
+        end = new Stack<>();
+    }
+    
+    public void push(int x) {
+        end.push(x);
+    }
+    
+    public int pop() {
+        if (start.isEmpty()) {
+            while (!end.isEmpty()) {
+                start.push(end.pop());
+            }
+        }
+        return start.pop();
+    }
+    
+    public int peek() {
+        if (start.isEmpty()) {
+            while (!end.isEmpty()) {
+                start.push(end.pop());
+            }
+        }
+        return start.peek();
+    }
+    
+    public boolean empty() {
+        return start.isEmpty() && end.isEmpty();
+    }
+}
