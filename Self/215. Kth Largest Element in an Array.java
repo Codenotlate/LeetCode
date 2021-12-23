@@ -110,3 +110,73 @@ class Solution {
     }
 }
 
+
+
+
+class Solution {
+    // phase 3 from solution
+    // use partition, the one at index = length - k  is the kth largest element
+    // worst case time O(n^2), average O(n), but with shuffle in advance, we can lower than probability of worse case
+    public int findKthLargest(int[] nums, int k) {
+        int low = 0;
+        int high = nums.length - 1;
+        while (low <= high)  {
+            int partitionIdx = partitionLway(nums, low, high);
+            if (partitionIdx == nums.length - k) {
+                return nums[partitionIdx];
+            } else if (partitionIdx < nums.length - k) {
+                low = partitionIdx + 1;
+            } else {
+                high = partitionIdx - 1;
+            }
+        }
+        // should not reach this row
+        return -1;      
+    }
+    
+    // use H-way: pivot from left, both i and j move towards center
+    private int partitionHway(int[] nums, int low, int high) {
+        int pivot = low;
+        int i = low;
+        int j = high;
+        while (true) {
+            while (i <= high && nums[i] <= nums[pivot]) {i++;}
+            while (j >= low && nums[j] > nums[pivot]) {j--;}
+            if (i >= j) {break;}
+            swap(nums, i, j);
+        }
+        swap(nums, j, pivot);
+        return j;        
+    }
+    
+    // Lway partition, use high as pivot, single i move from left to right
+    private int partitionLway(int[] nums, int low, int high) {
+        int pivot = high;
+        // left points to the (end position+1) position of sorted list that are <= pivot value 
+        int left = low;
+        
+        for (int i = low; i < high;i++) {
+            if (nums[i] <= nums[pivot]) {
+                swap(nums, i, left);
+                left++;
+            }
+        }
+        swap(nums, left, pivot);
+        return left;
+        
+    }
+    
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    
+    private void shuffle(int[] nums) {
+        Random rand = new Random();
+        for (int i = 0; i < nums.length; i++) {
+            swap(nums, i, rand.nextInt(nums.length));
+        }
+    }
+}
