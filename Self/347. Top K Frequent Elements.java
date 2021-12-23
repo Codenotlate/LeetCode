@@ -91,7 +91,7 @@ class Solution {
         i = 0;
         for(Map.Entry<Integer, Integer> e: map.entrySet()) {
         	if (e.getValue() >= freqForK) {
-        		res[i] = e.getKey();
+        		res[i] = e.getKey();  
         		i++;
         	}
         }
@@ -184,13 +184,137 @@ class Solution {
 }
 
 
+// Phase 3
+
+// M1: map + minHeap
+// time O(nlogk) space O(n + k)
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n: nums) {
+            map.put(n, map.getOrDefault(n,0) + 1);
+        }
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> map.get(a) - map.get(b));
+        for (int n: map.keySet()) {
+            pq.add(n);
+            if (pq.size() > k) {pq.poll();}
+        }
+        
+        int[] res = new int[k];
+        int i = 0;
+        while (!pq.isEmpty()) {
+            res[i++] = pq.poll();
+        }
+        return res;
+    }
+}
 
 
 
+// M2: map + map key partition, order on count in map
+// time aveO(n)/worst O(n^2) space O(n)
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n: nums) {
+            map.put(n, map.getOrDefault(n,0) + 1);
+        }
+        
+        // convert map keySet to an array: https://www.techiedelight.com/convert-set-to-array-java/
+        Integer[] keys = map.keySet().toArray(new Integer[0]);
+        
+        int low = 0;
+        int high = keys.length - 1;
+        int pIdx = 0;
+        while (low <= high) {
+            pIdx = partitionHway(keys, low, high, map);
+            if (pIdx == keys.length - k) {
+                break;
+            } else if (pIdx < keys.length - k) {
+                low = pIdx + 1;
+            } else {
+                high = pIdx - 1;
+            }
+        }
+        
+        int targetCount = map.get(keys[pIdx]);
+        
+        int[] res = new int[k];
+        int i = 0;
+        for (int num: map.keySet()) {
+            if (i >= k) {break;}
+            if (map.get(num) >= targetCount) {
+                res[i++] = num;
+            }          
+        }
+        return res;
+    }
+    
+    
+    private int partitionHway(Integer[] nums, int low, int high, Map<Integer, Integer> map) {
+        int pivot = low;
+        int i = low;
+        int j = high;
+        
+        while (true) {
+            while(i < nums.length && map.get(nums[i]) <= map.get(nums[pivot])) {i++;}
+            while(j >= 0 && map.get(nums[j]) > map.get(nums[pivot])) {j--;}
+            if (i >= j) {break;}
+            swap(nums, i, j);
+        }
+        swap(nums, j, pivot);
+        return j;
+    }
+    
+    private void swap(Integer[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
 
 
 
+// M3: map + bucket sort array
+// time O(n) space O(n)
 
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n: nums) {
+            map.put(n, map.getOrDefault(n,0) + 1);
+        }
+        
+        // bukcets[i] includes the list for all numbers with count = i
+        List<Integer>[] buckets = new List[nums.length + 1];
+        
+        // loop the map key and insert to buckets
+        for (int n: map.keySet()) {
+            if (buckets[map.get(n)] == null) {buckets[map.get(n)] = new ArrayList<>();}
+            buckets[map.get(n)].add(n);
+        }
+        
+        
+        int[] res = new int[k];
+        int j = 0;
+        for (int i = buckets.length - 1; i >= 0; i--) {
+            if (j >= k) {break;}
+            if (buckets[i] == null) {continue;}
+            for (int n: buckets[i]) {
+                res[j++] = n;
+            }
+        }
+        return res;
+    }
+    
+    
+   
+}
 
 
 
