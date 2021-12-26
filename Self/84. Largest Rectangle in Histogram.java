@@ -84,3 +84,40 @@ class Solution {
 
 //https://leetcode.com/problems/largest-rectangle-in-histogram/solution/
 // another divide and conquar method for later review
+
+
+// Phase3 from solution
+// Note: by using stack, we keep track of the first left bar has smaller height and first right bar has smaller height than current bar. Instead of searching every time for every bar.
+// Thus when each bar is popped out from the stack, we can use the left and right idx info to calculate the maxArea using the current bar's height, and update the maxArea.
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int maxArea = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        for (int i = 0; i < heights.length; i++) {
+            while (stack.peek() != -1 && heights[stack.peek()] > heights[i]) {
+                int height = heights[stack.pop()];
+                int width = i - stack.peek() - 1;
+                maxArea = Math.max(height * width, maxArea);
+            }
+            stack.push(i);
+        }
+        
+        // continue pop out ascending bars left in the stake, now the right side will be the end of the array
+        while (stack.peek() != -1) {
+            int height = heights[stack.pop()];
+            int width = heights.length - 1 - stack.peek();
+            maxArea = Math.max(height * width, maxArea);
+        }
+        return maxArea;
+    }
+}
+
+
+
+
+
+
+
+
+
