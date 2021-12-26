@@ -144,6 +144,77 @@ class Solution {
 }
 
 
+// Review
+class Solution {
+    // Review M1: n sorted arrays to find the kth element. Using a minHeap
+    public int kthSmallest(int[][] matrix, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((p1, p2) -> matrix[p1[0]][p1[1]] - matrix[p2[0]][p2[1]]);
+        for (int j = 0; j < matrix[0].length; j++) {
+            pq.add(new int[]{0, j});
+        }
+        
+        int popSize = 0;
+        int popNum = 0;
+        while (!pq.isEmpty() && popSize < k) {
+            int[] popPair = pq.poll();
+            int r = popPair[0];
+            int c = popPair[1];
+            if (r + 1 < matrix.length) {
+                pq.add(new int[]{r + 1, c});
+            }
+            popNum = matrix[r][c];
+            popSize++;
+        }
+        
+        if (popSize != k) {return -1;}
+        return popNum;
+    }
+}
+
+class Solution {
+    // use binary search on range, find the one num in matrix that has k elements in matrix that <= it.
+    // since O(log(max- min) time to do Binary search and with each search O(n) time to find count, total time is O(n * log(max - min))
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int low = matrix[0][0];
+        int high = matrix[n-1][n-1];
+        
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            int count = countMatrix(matrix, mid);
+            if (count < k) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;        
+    }
+    
+    private int countMatrix(int[][] matrix, int target) {
+        int n = matrix.length;
+        int r = 0;
+        int c = n - 1;
+        int res = 0;
+        while (r < n && c >= 0) {
+            if (target >= matrix[r][c]) {
+                res += c + 1;
+                r += 1;
+            } else {
+                c -= 1;
+            }
+        }
+        return res;
+    }   
+    
+}
+
+
+
+ 
+
+
+
 
 
 
