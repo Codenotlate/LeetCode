@@ -14,3 +14,21 @@ class Solution {
     	return res;
     }
 }
+
+
+// Phase3 review: similar as above M1
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        int curEnd = -1;
+        int group = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (i > curEnd) {
+                curEnd = Math.max(i, arr[i]);
+                group++;
+            } else {
+                curEnd = Math.max(curEnd, arr[i]);
+            }
+        }
+        return group;
+    }
+}

@@ -99,4 +99,49 @@ class Solution {
 }
 
 
+// Review M1
+class Solution {
+    // M1: use negative label and revert back before return in order to make it unmodified
+    public int findDuplicate(int[] nums) {
+        int dup = 0;
+        for (int n: nums) {
+            n = Math.abs(n);
+            if (nums[n-1] < 0) {
+                dup = n;
+                break;
+            }
+            nums[n - 1] *= -1;
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            nums[i] = Math.abs(nums[i]);
+        }
+        return dup;
+    }
+}
+// M2
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = nums[0];
+        int fast = nums[0];
+        while (true) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+            if (slow == fast) {
+                break;
+            }
+        }
+        
+        fast = nums[0];
+        while(slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        
+        return slow;
+    }
+}
+
+
+
 
