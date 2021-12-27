@@ -56,6 +56,38 @@ class Solution {
 
 
 
+// Phase3 self, one pass
+// actually no need to keep end position from last time, start position is enough for calculating length with current index i
+class Solution {
+    public int findShortestSubArray(int[] nums) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        int minLen = nums.length + 1;
+        int maxCount = 0;
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i])) {
+                int count = map.get(nums[i]).get(0);
+                map.get(nums[i]).set(0,count + 1);
+                if (count + 1 > maxCount) {
+                    maxCount = count + 1;
+                    minLen = i - map.get(nums[i]).get(1) + 1;
+                } else if (count + 1 == maxCount) {
+                    minLen = Math.min(minLen, i - map.get(nums[i]).get(1) + 1);
+                }
+                map.get(nums[i]).set(2,i);
+            } else {
+                map.put(nums[i], new LinkedList<Integer>());
+                map.get(nums[i]).add(1);
+                map.get(nums[i]).add(i);
+                map.get(nums[i]).add(i);
+            }
+        }
+        return minLen == nums.length + 1 ? 1 : minLen;
+        
+        
+    }
+}
+
 
 
 

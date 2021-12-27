@@ -32,3 +32,20 @@ class Solution {
         }
     }
 }
+
+// Review self
+class Solution {
+    public void moveZeroes(int[] nums) {
+        int endp = 0;
+        int i = 0;
+        while ( i < nums.length) {
+            if (nums[i] == 0) {i++;}
+            else {
+                int temp = nums[i];
+                nums[i] = nums[endp];
+                nums[endp++] = temp;
+                if (endp > i) {i = endp;}
+            }
+        }
+    }
+}
