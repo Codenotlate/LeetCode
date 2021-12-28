@@ -58,6 +58,35 @@ class Solution {
 }
 
 
+// phase3 self
+// M1: math way
+class Solution {
+    public int missingNumber(int[] nums) {
+        int n = nums.length;
+        int expect = (1 + n) * n / 2;
+        for (int num: nums) {expect -= num;}
+        return expect;
+    }
+}
+// M2: negative label
+// given it has element 0, thus we can't simply use -num, instead we use -nums[n] - 1
+// and we use 0 to n-1 index for 0 to n-1 value range, if all position is labeled in the end, then the missing value is n.
+class Solution {
+    public int missingNumber(int[] nums) {
+        for (int num: nums){
+            if (num < 0) {num = Math.abs(num + 1);}
+            if (num < nums.length) {nums[num] = -nums[num] - 1;}
+        }
+        int res = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 0) {nums[i] = Math.abs(nums[i] + 1);} // revert the change to the array back
+            else {res = i;}
+        }
+        return res;
+    }
+}
+
+
 
 
 

@@ -123,6 +123,44 @@ class Solution {
 }
 
 
+// Review self
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int accSum = nums[0];
+        int maxSum = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            if (accSum < 0) {accSum = 0;}
+            accSum += nums[i];
+            maxSum = Math.max(maxSum, accSum);
+        }
+        return maxSum;
+        
+    }
+}
+
+// Review self
+// divide and conquar way
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int[] res = maxSubHelper(nums, 0, nums.length - 1);
+        return res[0];
+    }
+    
+    private int[] maxSubHelper(int[] nums, int low, int high) {
+        if (low == high) {return new int[]{nums[low], nums[low], nums[low], nums[low]};}
+
+        int mid = low + (high - low) / 2;
+        int[] leftRes = maxSubHelper(nums, low, mid);
+        int[] rightRes = maxSubHelper(nums, mid + 1, high);
+        int maxSum = Math.max(Math.max(leftRes[0], rightRes[0]), leftRes[2] + rightRes[1]);
+        int maxPreSum = Math.max(leftRes[3] + rightRes[1], leftRes[1]);
+        int maxPostSum = Math.max(leftRes[2] + rightRes[3], rightRes[2]);
+        int totalSum = leftRes[3] + rightRes[3];
+        
+        return new int[]{maxSum, maxPreSum, maxPostSum, totalSum};
+
+    }
+}
 
 
 

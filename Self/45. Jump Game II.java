@@ -20,3 +20,23 @@ class Solution {
         return -1; // should not go to this line
     }
 }
+
+
+// review self
+class Solution {
+    public int jump(int[] nums) {
+        int farp = 0;
+        int count = 0;
+        int i = 0;
+        while(i < nums.length) {
+            if (farp >= nums.length - 1) {return count;}
+            int lastfarp = farp;
+            while (i <= lastfarp) {
+                farp = Math.max(farp, i + nums[i]);
+            }
+            count++;
+            
+        }
+        return count;
+    }
+}
