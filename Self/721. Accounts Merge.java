@@ -88,6 +88,8 @@ class Solution {
 
 
 
+// Whenever we must work with a set of elements (emails) that are connected (belong to the same user), we should always consider visualizing our input as a graph. 
+
 // Phase2 self M2: build graph + BFS/DFS
 class Solution {
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
@@ -132,7 +134,64 @@ class Solution {
 
 
 
-
+// Phase3 refer solution
+class Solution {
+    // build the graph and do dfs/bfs to search connect group
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        // build the graph and also track the email to name map
+        Map<String, Set<String>> graph = new HashMap<>();
+        Map<String, String> emailToName = new HashMap<>();
+        
+        for (List<String> acct: accounts) {
+            for (int i = 1; i < acct.size(); i++) {
+                graph.putIfAbsent(acct.get(i), new HashSet<>());
+                if (i >= 2) {
+                    String email1 = acct.get(1);
+                    String emailOther = acct.get(i);
+                    // build the double direction(undirectional) edge between the node
+                    graph.get(email1).add(emailOther);
+                    graph.get(emailOther).add(email1);
+                }
+                emailToName.put(acct.get(i), acct.get(0));
+            }
+        }
+        
+        
+        // start doing dfs on graph
+        Set<String> visited = new HashSet<>();
+        List<List<String>> res = new LinkedList<>();      
+        for (String email: graph.keySet()) {
+            List<String> curList = new LinkedList<>();
+            if (visited.contains(email)) {continue;}
+            dfs(graph, curList, email, visited);
+            Collections.sort(curList);
+            curList.add(0, emailToName.get(email));
+            res.add(new LinkedList(curList));         
+        }
+        return res;
+        
+    }
+    
+    private void dfs(Map<String, Set<String>> graph, List<String> curList, String email, Set<String> visited) {
+        visited.add(email);
+        curList.add(email);
+        for (String nextEmail: graph.get(email)) {
+            if (!visited.contains(nextEmail)) {
+                dfs(graph, curList, nextEmail, visited);
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+} 
+    
+   
 
 
 

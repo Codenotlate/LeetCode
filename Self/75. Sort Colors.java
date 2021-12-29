@@ -137,6 +137,34 @@ class Solution {
 }
 
 
+// review M1
+class Solution {
+    public void sortColors(int[] nums) {
+        int i = 0;
+        int sml = 0;
+        int lg = nums.length - 1;
+        int p = 1; // as pivot here
+        while (i <= lg) {
+            if (nums[i] > p) {
+                swap(nums, i, lg);
+                lg--;
+            } else if (nums[i] < p) {
+                swap(nums, i, sml);
+                sml++;
+                i++;
+            } else {
+                i++;
+            }
+        }
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
 
 
 

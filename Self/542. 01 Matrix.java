@@ -135,6 +135,82 @@ class Solution {
 
 
 
+// Phase3 self
+// similar to above M2
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < m;i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 0) {queue.add(new int[]{i, j});}
+            }
+        }
+                
+        // start BFS
+        int[][] res = new int[m][n];
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                res[cur[0]][cur[1]] = level;
+                
+                for (int[] dir: dirs) {
+                    int newr = cur[0] + dir[0];
+                    int newc = cur[1] + dir[1];
+                    if (newr >= 0 && newr < m && newc >= 0 && newc < n && mat[newr][newc] == 1 && res[newr][newc] == 0) {
+                        queue.add(new int[]{newr, newc});
+                        res[newr][newc] = -1;
+                    }
+                }
+                
+            }
+            level++;
+        }
+        return res;
+    }
+}
+
+
+class Solution {
+    // DP way
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] res = new int[m][n];
+        int max = m + n - 1;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 1) {
+                    int up = max;
+                    int left = max;
+                    if (i >= 1) {up = Math.min(up, res[i-1][j]);}
+                    if (j >= 1) {left = Math.min(left, res[i][j-1]);}
+                    res[i][j] = Math.min(left, up) + 1;
+                }
+            }
+        }
+        
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if (mat[i][j] == 1) {
+                    int down = max;
+                    int right = max;
+                    if (i < m-1) {down = Math.min(down, res[i+1][j]);}
+                    if (j < n-1) {right = Math.min(right, res[i][j+1]);}
+                    res[i][j] = Math.min(res[i][j],Math.min(down, right) + 1);
+                }
+            }
+        }
+        
+        return res;
+        
+    }
+}
+
 
 
 
