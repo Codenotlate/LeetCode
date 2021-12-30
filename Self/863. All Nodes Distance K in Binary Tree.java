@@ -128,6 +128,70 @@ class Solution {
 
 
 
+// Phase3 self: similar to above M2: only build the childToParent map
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        // first step is to traverse the tree and build childToParent map
+        Map<TreeNode, TreeNode> childToParent = new HashMap<>();
+        childToParent.put(root, null);
+        getParents(root, childToParent);
+        
+        // start BFS on target;
+        Queue<TreeNode> queue = new LinkedList<>();
+        Set<TreeNode> visited = new HashSet<>();
+        queue.add(target);
+        visited.add(target);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> levelNodes = new LinkedList<>();
+            k--;
+            while (size-- > 0) {
+                TreeNode curNode = queue.poll();
+                levelNodes.add(curNode.val);
+                Set<TreeNode> neighbors = new HashSet<>();
+                neighbors.add(childToParent.get(curNode));
+                neighbors.add(curNode.left);
+                neighbors.add(curNode.right);
+                for (TreeNode n: neighbors) {
+                    if (n != null && !visited.contains(n)) {
+                        queue.add(n);
+                        visited.add(n);
+                    }
+                }               
+            }
+            if (k < 0) {
+                return levelNodes;
+            }
+            
+        }
+        // not suppose to go here
+        return new LinkedList<Integer>();
+    }
+    
+    
+    private void getParents(TreeNode root, Map<TreeNode, TreeNode> map) {
+        if (root == null) {return;}
+        if (root.left != null) {
+            map.put(root.left, root);
+            getParents(root.left, map);
+        }
+        if (root.right != null) {
+            map.put(root.right, root);
+            getParents(root.right, map);
+        }
+    }
+}
+
+
 
 
 

@@ -1,3 +1,15 @@
+/*
+two ways of adjusting trees
+M1: simply connect the whole left subtree to be the left child of rightmost node in right subtree.
+M2: replace original node with leftmost node in right subtree, keep the height change minimum.
+similar idea as morris
+time O(H) space O(1)
+*/
+
+
+
+
+
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -69,3 +81,68 @@ class Solution {
 /*
 As for the case when both children of the node to be deleted are not null, I transplant the successor to replace the node to be deleted, which is a bit harder to implement than just transplant the left subtree of the node to the left child of its successor. The former way is used in many text books too. Why? My guess is that transplanting the successor can keep the height of the tree almost unchanged, while transplanting the whole left subtree could increase the height and thus making the tree more unbalanced.
 */
+
+
+
+// Phase3 self
+// Difference with above M1 is:
+// In M1, once we find the leftmost node, (assume target is the left child of its parent)we remove all target.leftsubtree as the left subtree of leftmost node, then parent.left = target.right.
+// In below method, we move leftmost node to replace the target, and adjust the right subtree of leftmost to connect to leftmost's parent. This way the height change of the BST is minimum.
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // step 1 find node with key and its parent
+        TreeNode parent = null;
+        TreeNode target = root;
+        while(target != null) {
+            if (target.val == key) {break;}
+            parent = target;
+            if (target.val < key) {target = target.right;}
+            else{target = target.left;}            
+        }
+        if (target == null) {return root;}
+        
+        // find the leftmost node in the right subtree of target
+        TreeNode leftmost = target.right;
+        TreeNode leftmostParent = target;
+        // if no right subtree
+        if (leftmost == null) {
+            if (parent == null) {return target.left;} // meaning target is the root itself
+            if (parent.left == target) {parent.left = target.left;}
+            else {parent.right = target.left;}
+            return root;
+        } 
+        // has right subtree
+        while(leftmost.left != null) {
+            leftmostParent = leftmost;
+            leftmost = leftmost.left; 
+        }
+        
+        if(leftmostParent.left == leftmost) {
+            leftmostParent.left = leftmost.right;
+        } else {
+            leftmostParent.right = leftmost.right;
+        }
+        if(parent != null) {
+            if (parent.left == target) {parent.left = leftmost;}
+            else {parent.right = leftmost;}
+        }
+        leftmost.left = target.left;
+        leftmost.right = target.right;
+        return parent == null ? leftmost : root;
+   }
+}

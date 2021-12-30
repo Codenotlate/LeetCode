@@ -176,6 +176,75 @@ class Solution {
 }
 
 
+// Phase3 self
+// similar as above M3
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int size1 = getSize(l1);
+        int size2 = getSize(l2);
+        // make sure l1 is the one with longer size
+        if (size1 < size2) {
+            ListNode temp = l1;
+            l1 = l2;
+            l2 = temp;
+        }
+        
+        ListNode p1 = l1;
+        ListNode p2 = l2;
+        int diff = Math.abs(size1 - size2);
+        ListNode midres = null;
+        while (p1 != null) {
+            if (diff-->0) {
+                midres = new ListNode(p1.val, midres);
+            } else {
+                midres = new ListNode(p1.val + p2.val, midres);
+                p2 = p2.next;
+            }
+            p1 = p1.next;          
+        }
+        
+        // now get the midres in reverse direction, next adjust the remaining and reverse the order at the same time
+        ListNode prev = null;
+        ListNode cur = midres;
+        int rem = 0;
+        while(cur != null) {
+            //adjust num and rem
+            int value = cur.val + rem;
+            cur.val = value % 10;
+            rem = value / 10;
+            // reverse the direction
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        
+        return rem == 0? prev : new ListNode(rem, prev);
+        
+        
+    }
+    
+    private int getSize(ListNode l) {
+        int size = 0;
+        while (l != null) {
+            size++;
+            l = l.next;
+        }
+        return size;
+    }
+}
+
+
 
 
 
