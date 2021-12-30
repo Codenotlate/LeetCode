@@ -49,7 +49,44 @@ class Solution {
 
 
 
+// Phase3 self: moving backwards: more intuitive than first two methods
+// time O(n) space O(n)
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] answer = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        stack.push(n-1);
+        for (int i = n - 2; i >= 0; i--) {
+            while (!stack.isEmpty() && temperatures[stack.peek()] <= temperatures[i]) {
+                stack.pop();
+            }
+            if(!stack.isEmpty()) {answer[i] = stack.peek() - i;}
+            stack.push(i);        
+        }
+        return answer;
+    }
+}
 
+
+// M2: use answer it self and a peekIdx to mimic the function of a stack, optimize space to O(1)
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] answer = new int[n];
+        int peekIdx = n - 1;
+        for (int i = n - 2; i >= 0; i--) {
+            while (peekIdx < n && temperatures[peekIdx] <= temperatures[i]) {
+            	// pay attention to when answer[peekIdx] is 0, meaning, the stack is empty
+                if(answer[peekIdx] == 0) {peekIdx = n;}
+                else {peekIdx += answer[peekIdx];}
+            }
+            if(peekIdx < n) {answer[i] = peekIdx - i;}
+            peekIdx = i;       
+        }
+        return answer;
+    }
+}
 
 
 

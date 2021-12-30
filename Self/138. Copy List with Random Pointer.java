@@ -59,3 +59,22 @@ class Solution {
         return copy;
     }
 }
+
+// Phase3 takes a long time to debug. "void" may not work, the node change may not be deep change. Thus change to return node directly. 
+class Solution {
+    public Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>();
+        return dfs(head, map);
+    }
+    
+    private Node dfs(Node oriCur, Map<Node, Node> map) {
+        if (oriCur == null) {return null;}
+        Node newCur = new Node(oriCur.val);
+        map.put(oriCur, newCur);
+        if (map.keySet().contains(oriCur.next)) {newCur.next = map.get(oriCur.next);}
+        else {newCur.next = dfs(oriCur.next, map);}
+        if (map.keySet().contains(oriCur.random)) {newCur.random = map.get(oriCur.random);}
+        else {newCur.random = dfs(oriCur.random, map);}
+        return newCur;
+    }
+}

@@ -88,6 +88,46 @@ class Solution {
 
 
 
+// Phase3 self
+class Solution {
+    // divide and conquar + dp record results
+    public List<Integer> diffWaysToCompute(String expression) {
+        int n = expression.length();
+        // dp[i][j] track all the results from expression[i][j], including j.
+        // Generic array creation error: List<Integer>[][] dp = new List<Integer>[n][n]; Thus try using a map
+        Map<int[], List<Integer>> dp = new HashMap<>();
+        return calHelper(expression, 0, n-1, dp);      
+    }
+    
+    private List<Integer> calHelper(String s, int start, int end, Map<int[], List<Integer>> dp) {
+        int[] key = new int[]{start, end};
+        if(dp.keySet().contains(key)) {return dp.get(key);}
+        List<Integer> res = new LinkedList<>();
+        // loop and divide when encounter operator
+        for(int i = start; i < end; i++) {          
+            char c = s.charAt(i);
+            if (c == '+' || c == '-' || c == '*') {
+                List<Integer> left = calHelper(s, start, i-1, dp);
+                List<Integer> right = calHelper(s, i+1, end, dp);
+                for(int l: left) {
+                    for(int r: right) {
+                        if (c == '+') {res.add(l + r);}
+                        else if (c == '-') {res.add(l - r);}
+                        else {res.add(l * r);}
+                    }
+                }
+            }
+        }
+        if (res.size() == 0) { // meaning just number, no operator contains
+            res.add(Integer.valueOf(s.substring(start, end + 1)));
+        }
+        dp.put(key, res);
+        return res;
+    }
+}
+
+
+
 
 
 
