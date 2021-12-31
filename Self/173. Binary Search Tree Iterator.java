@@ -57,6 +57,37 @@ That comes out to 2N * O(1) over N calls to next(), making it O(1) on average, o
 */
 // similar idea: https://leetcode.com/problems/binary-search-tree-iterator/discuss/52526/Ideal-Solution-using-Stack-(Java)
 
+// Phase 3 self
+// basically just same as plain inorder traverse, but seperate into each step
+// time average O(1) space O(h)
+
+class BSTIterator {
+    Stack<TreeNode> stack;
+    TreeNode cur;
+
+    public BSTIterator(TreeNode root) {
+        cur = root;
+        stack = new Stack<>();
+    }
+    
+    public int next() {
+        while(cur != null) {
+            stack.push(cur);
+            cur = cur.left;
+        }
+        TreeNode popped = stack.pop();
+        cur = popped.right;
+        return popped.val;
+            
+        
+    }
+    
+    public boolean hasNext() {
+        return cur!= null || !stack.isEmpty();
+    }
+}
+
+
 
 
 

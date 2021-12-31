@@ -154,21 +154,6 @@ class Solution {
 
 
 // self review - iterative way
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> res = new LinkedList<>();
@@ -189,6 +174,54 @@ class Solution {
         return res;
         
         
+    }
+}
+
+
+//Phase3 self
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    // M2: morris way, time O(n) space O(1)
+    public List<Integer> inorderTraversal(TreeNode root) {
+        TreeNode cur = root;
+        List<Integer> res = new LinkedList<>();
+        while (cur != null) {
+            // if has left subtree, find the rightmost node(diff process for first and second time)
+            if(cur.left!= null) {
+                TreeNode rightmost = cur.left;
+                while(rightmost.right!=null && rightmost.right != cur) {
+                    rightmost = rightmost.right;
+                }
+                if(rightmost.right == null) {
+                    // first round
+                    rightmost.right = cur;
+                    cur = cur.left;
+                } else {
+                    // second round
+                    res.add(cur.val);
+                    cur = cur.right;
+                    rightmost.right = null;
+                }
+            } else {
+                res.add(cur.val);
+                cur = cur.right;
+            }
+        }
+        return res;
     }
 }
 
