@@ -60,6 +60,36 @@ It is also possible, in some occasions to reduce space from o(n^2) to o(n).
 // https://leetcode.com/problems/coin-change-2/discuss/623953/Evolve-from-brute-force-to-dp
 
 
+// Phase3 self
+// pretty slow: time O(n * l) space O(n * l)
+class Solution {
+    // dfs + memo
+    public int change(int amount, int[] coins) {
+        int[][] memo = new int[amount + 1][coins.length];
+        for (int[] m: memo) {
+            Arrays.fill(m, -1);
+        }
+        Arrays.fill(memo[0],1);
+        calWay(amount, coins, 0, memo);
+        return memo[amount][0];
+    }
+    
+    
+    private int calWay(int amount, int[] coins, int idx, int[][] memo) {
+        if(memo[amount][idx] != -1) {return memo[amount][idx];}
+        int res = 0;
+        for (int i = idx; i < coins.length; i++) {
+            if(coins[i] <= amount) {
+                res += calWay(amount - coins[i], coins, i, memo);
+            }
+        }
+        memo[amount][idx] = res;
+        return res;   
+        
+    }
+}
+
+
 
 
 

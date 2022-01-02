@@ -44,6 +44,22 @@ class Solution {
     }
 }
 
+// Phase3 self
+class Solution {
+    public TreeNode pruneTree(TreeNode root) {
+        return isZeroTree(root) ? null : root;
+    }
+    
+    private boolean isZeroTree(TreeNode root) {
+        if(root == null) {return true;}
+        boolean left = isZeroTree(root.left);
+        boolean right = isZeroTree(root.right);
+        if (left) {root.left = null;}
+        if (right) {root.right = null;}
+        return left && right && root.val == 0;
+    }
+}
+
 
 
 
