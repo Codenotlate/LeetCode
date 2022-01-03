@@ -94,6 +94,30 @@ class Solution {
     }
 }
 
+// Phase3 self
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {return s;}
+        int startIdx = 0;
+        int gap = 2 * numRows - 2;
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            startIdx = 0;
+            while (startIdx < s.length()) {
+                if (startIdx + i < s.length()) {
+                    res.append(s.charAt(startIdx + i));
+                }
+                if (i > 0 && i < numRows - 1 && startIdx + gap -i < s.length()) {
+                    res.append(s.charAt(startIdx + gap - i));
+                }
+
+                startIdx += gap;
+            }
+        }
+        return res.toString();
+    }
+}
+
 
 
 

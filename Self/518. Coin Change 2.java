@@ -89,6 +89,25 @@ class Solution {
     }
 }
 
+// knapsack way
+class Solution {
+    // Knapsack problem
+    // items in coins and the max is amount
+    // dp[i][w] = dp[i-1][w-coins[i]] + dp[i-1][w]; optimize to 1d by omiting i
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for (int coin: coins) {
+            for (int w = 0; w <= amount; w++) {
+                if (w >= coin) {dp[w] += dp[w - coin];}            
+            }
+        }
+        return dp[amount];
+    }
+}
+// summary for knapsack problems
+//https://leetcode.com/discuss/study-guide/1200320/Thief-with-a-knapsack-a-series-of-crimes.
+
 
 
 

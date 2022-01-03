@@ -93,6 +93,30 @@ class Solution {
     }
 }
 
+// Phase3 self
+class Solution {
+    // using recursion, return 3 info: isBst,minVal, maxVal
+    public boolean isValidBST(TreeNode root) {
+        long[] res = isValidBSTHelper(root);
+        return res[0] == 1;
+    }
+    
+    
+    private long[] isValidBSTHelper(TreeNode root) {
+        if (root == null) {return new long[]{1, Long.MAX_VALUE, Long.MIN_VALUE};}
+        long[] left = isValidBSTHelper(root.left);
+        long[] right = isValidBSTHelper(root.right);
+        int isBST = 0;
+        if (left[0]== 1 && right[0]== 1 && root.val > left[2] && root.val < right[1]) {
+            isBST = 1;
+        }
+        long minval = left[1] == Long.MAX_VALUE? root.val : left[1];
+        long maxval = right[2] == Long.MIN_VALUE? root.val : right[2];
+        
+        return new long[]{isBST, minval, maxval};
+    }
+}
+
 
 
 
