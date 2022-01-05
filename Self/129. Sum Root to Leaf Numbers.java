@@ -105,6 +105,46 @@ class Solution {
 
 
 
+// Phase3 self
+class Solution {
+    public int sumNumbers(TreeNode root) {
+        int[] res = new int[1];
+        dfs(root, 0, res);
+        return res[0];
+    }
+    
+    private void dfs(TreeNode root, int pathSum, int[] res) {
+        if (root == null) {return;}
+        pathSum = pathSum * 10 + root.val;
+        if (root.left == null && root.right == null) {res[0] += pathSum; return;}
+        dfs(root.left, pathSum, res);
+        dfs(root.right, pathSum, res);   
+    }
+}
+
+class Solution {
+    // iterative way of implementing dfs using a stack with pair<Node, pathSum. input
+    public int sumNumbers(TreeNode root) {
+        int res = 0;
+        if (root == null) {return res;}
+        Stack<Pair<TreeNode, Integer>> stack = new Stack<>();
+        stack.push(new Pair(root, root.val));
+        
+        while (!stack.isEmpty()) {
+            Pair<TreeNode, Integer> curPair = stack.pop();
+            TreeNode node = curPair.getKey();
+            int pathSum = curPair.getValue();
+            if (node.left == null && node.right == null) {res += pathSum;}
+            else {
+                if (node.left != null) {stack.push(new Pair(node.left, pathSum * 10 + node.left.val));}
+                if (node.right != null) {stack.push(new Pair(node.right, pathSum * 10 + node.right.val));}
+            }
+        }
+        return res;
+    }
+}
+
+
 
 
 
