@@ -128,6 +128,58 @@ class Trie {
 
 
 
+// Reveiw 
+// https://leetcode.com/problems/implement-trie-prefix-tree/solution/
+class Trie {
+    private class TrieNode {
+        TrieNode[] links = new TrieNode[26];
+        boolean isEnd = false;
+    }
+    
+    private TrieNode root;
+
+
+    public Trie() {
+        root = new TrieNode(); 
+    }
+    
+    public void insert(String word) {
+        TrieNode curNode = root;
+        for (char c: word.toCharArray()) {
+            if (curNode.links[c - 'a'] == null) {
+                curNode.links[c- 'a'] = new TrieNode();
+            }
+            curNode = curNode.links[c - 'a'];
+        }
+        curNode.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        TrieNode resNode = searchHelper(word);
+        return resNode != null && resNode.isEnd;
+        
+    }
+    
+    public boolean startsWith(String prefix) {
+        TrieNode resNode = searchHelper(prefix);
+        return resNode != null;
+    }
+    
+    private TrieNode searchHelper(String prefix) {
+        TrieNode curNode = root;
+        for (char c: prefix.toCharArray()) {
+            if (curNode.links[c - 'a'] == null) {return null;}
+            curNode = curNode.links[c - 'a'];
+        }
+        return curNode;
+    }
+    
+
+}
+
+
+
+
 
 
 

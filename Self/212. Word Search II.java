@@ -1,4 +1,5 @@
 // phase 2: based on 79
+// this method now gets TLE in lc
 class Solution {
     public List<String> findWords(char[][] board, String[] words) {
         List<String> res = new LinkedList<>();
@@ -56,3 +57,148 @@ Now, how does this change for a trie? In the worst case, the words will share NO
 
 The runtime does get better in the best case, if all the words share the same prefix until their last letter, in which case you only have to iterate through one word basically and you get a runtime of O(m * n * min(4^wl, m * n)). However, this is slightly wrong because to create the trie you need to iterate through wl * num_words, so the runtime is actually O(m * n * min(4^wl, m * n) + wl * num_words). (Indeed, this factor was in the other runtimes too but it was insignificant and thus dropped there.)
 */
+
+
+// Phase3 self (pure dfs + backtracting -> TLE)
+class Solution {
+    public List<String> findWords(char[][] board, String[] words) {
+        int m = board.length;
+        int n = board[0].length;
+        Set<String> res = new HashSet<>();
+        int[][] visited = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                for (String word: words) {
+                    if (res.contains(word)) {continue;}
+                    dfs(board, i, j, word, 0, visited, res);
+                }
+            }
+        }
+        return new LinkedList(res);
+    }
+    
+    
+    private void dfs(char[][] board, int i, int j, String word, int idx, int[][] visited, Set<String> res) {
+        if (idx == word.length() - 1) {
+            if (board[i][j] == word.charAt(idx)) {
+                res.add(word);
+            }
+            return;
+        }
+        
+        if (board[i][j] != word.charAt(idx)) {return;}
+        visited[i][j] = 1;
+        int[][] dirs = new int[][] {{-1,0},{1,0},{0,-1}, {0, 1}};
+        for (int[] d: dirs) {
+            int newi = i + d[0];
+            int newj = j + d[1];
+            if (newi >= 0 && newi < board.length && newj >= 0 && newj < board[0].length && visited[newi][newj] == 0) {
+                dfs(board, newi, newj, word, idx+1, visited, res);
+            }
+        }
+        visited[i][j] = 0;
+        return;        
+    }
+}
+
+
+// phase3 solution: using Trie + dfs + backtracking
+// good solution article: https://leetcode.com/problems/word-search-ii/solution/
+class Solution {
+    private class Trie {
+        Trie[] links;
+        String word;
+        int childNum; // opt3
+
+
+        public Trie() {
+            links = new Trie[26];
+            word = null;
+            childNum = 0;
+        }
+    }
+    
+    
+    public List<String> findWords(char[][] board, String[] words) {
+        // step1 Build the Trie based on the words
+        Trie root = new Trie();
+        for (String word: words) {
+            Trie cur = root;
+            for (char c: word.toCharArray()) {
+                if (cur.links[c-'a'] == null) {cur.links[c-'a'] = new Trie(); cur.childNum++;}
+                cur = cur.links[c -'a'];
+            }
+            cur.word = word; // opt1
+        }
+        
+        // step2 dfs + backtracking each cell(i,j) in board with trie
+        List<String> res = new LinkedList<>();
+        int m = board.length;
+        int n = board[0].length;
+        int[][] visited = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                char c = board[i][j];
+                if (root.links[c-'a'] != null) {
+                    dfs(board, i, j, root, visited, res);
+                }
+            }
+        }
+        return res;
+    }
+    
+    
+    private void dfs(char[][] board, int i, int j, Trie parent, int[][] visited, List<String> res) {
+        char c = board[i][j];
+        Trie child = parent.links[c - 'a'];
+        
+        if (child.word != null) {
+            res.add(child.word);
+            child.word = null; // opt2
+        }
+        visited[i][j] = 1;
+        int[][] dirs = new int[][] {{-1,0},{1,0},{0,-1}, {0, 1}};
+        for (int[] d: dirs) {
+            int newi = i + d[0];
+            int newj = j + d[1];
+            if (newi >= 0 && newi < board.length && newj >= 0 && newj < board[0].length && visited[newi][newj] == 0 && child.links[board[newi][newj] - 'a'] != null) {
+                dfs(board, newi, newj, child, visited, res);
+            }
+        }
+        
+        visited[i][j] = 0;
+        // opt3: remove visited leaf node
+        
+        if (child.childNum == 0) {parent.links[c-'a'] = null;}       
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
