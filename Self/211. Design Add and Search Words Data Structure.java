@@ -63,6 +63,52 @@ class WordDictionary {
  * boolean param_2 = obj.search(word);
  */
 
+// Phase3 from solution
+class WordDictionary {
+    private class TrieNode {
+        TrieNode[] links = new TrieNode[26];
+        boolean isEnd = false;
+    }
+    
+    TrieNode root;
+
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+    
+    public void addWord(String word) {
+        TrieNode cur = root;
+        for (char c: word.toCharArray()) {
+            if (cur.links[c-'a'] == null) {cur.links[c-'a'] = new TrieNode();}
+            cur = cur.links[c-'a'];
+        }
+        cur.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        // considering the '.' case, if we encounter it, we will need to search every node in next level
+        return searchHelper(word, root);
+    }
+    
+    private boolean searchHelper(String word, TrieNode curNode) {
+        for (int i = 0; i < word.length();i++) {
+            char c = word.charAt(i);
+            if (c == '.') {
+                for (TrieNode nextNode: curNode.links) {
+                    if (nextNode != null && searchHelper(word.substring(i+1), nextNode)) {
+                        return true;   
+                    }
+                }
+                return false;
+            } else if (curNode.links[c-'a'] == null) {
+                return false;
+            }
+            curNode = curNode.links[c - 'a'];
+            
+        }
+        return curNode.isEnd;
+    }
+}
 
 
 

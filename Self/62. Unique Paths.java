@@ -52,3 +52,58 @@ class Solution {
         return dp[n - 1];
     }
 }
+
+
+// review self
+class Solution {
+    // view it starting from end position
+    // res[i,j] =  res[i+1, j] + res[i, j+1]
+    // init res[m-1][n-1] = 1; if out of scope then 0.
+    // what we want is res[0][0]
+    // naive way: time O(m*n) space O(m*n)
+    public int uniquePaths(int m, int n) {
+        int[][] res = new int[m][n];
+        res[m-1][n-1] = 1;
+        for (int i = m-1; i >=0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                int rightres = j == n - 1? 0 : res[i][j+1];
+                int downres = i == m-1? 0 : res[i+1][j];
+                res[i][j] += rightres + downres;
+            }
+        }
+        return res[0][0];
+    }
+}
+
+
+class Solution {
+    // view it starting from end position
+    // res[i,j] =  res[i+1, j] + res[i, j+1]
+    // init res[m-1][n-1] = 1; if out of scope then 0.
+    // what we want is res[0][0]
+    // optimize the space: for each cell we only need two cells, space O(n)
+    public int uniquePaths(int m, int n) {
+        int[] res = new int[n];
+        for (int i = m-1; i >=0; i--) {
+            res[n-1] = 1;
+            for (int j = n-2; j >= 0; j--) {
+                res[j] += res[j + 1];
+            }
+        }
+        return res[0];
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
