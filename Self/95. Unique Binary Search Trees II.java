@@ -101,6 +101,34 @@ class Solution {
 }
 
 
+// Phase3 self
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        return treeHelper(1, n);
+    }
+    
+    
+    private List<TreeNode> treeHelper(int start, int end) {
+        List<TreeNode> res = new LinkedList<>();
+        if (start > end) {res.add(null); return res;}
+        if (start == end) {res.add(new TreeNode(start)); return res;}
+        for (int i = start; i <= end; i++) {
+            List<TreeNode> leftTrees = treeHelper(start, i-1);
+            List<TreeNode> rightTrees = treeHelper(i+1, end);
+            for (TreeNode left: leftTrees){
+                for (TreeNode right: rightTrees) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = left;
+                    root.right = right;
+                    res.add(root);
+                }              
+            }
+        }
+        return res;
+    }
+}
+
+
 
 
 

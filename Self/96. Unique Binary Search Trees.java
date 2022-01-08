@@ -85,7 +85,28 @@ class Solution {
 // all Java solution summary
 //https://leetcode.com/problems/unique-binary-search-trees/discuss/409987/Summary-of-All-Solutions-in-Java-with-Explanations
 
-
+// Phase3 self
+class Solution {
+    // choose each number as the root node of the BST, and the recursively get the number of left side numbers and right side numbers, and times them together to get the final result
+    // possible repetitive work: 1-2 is the same as 2-3, so the number of nodes matters and leads to unique result
+    // M1: naive way + memo(end - start)
+    // time O(n^2) space O(n)
+    public int numTrees(int n) {
+        int[] memo = new int[n];
+        return numHelper(1,n, memo);
+    }
+    
+    private int numHelper(int start, int end, int[] memo) {
+        if (start > end) {return 1;}
+        if (memo[end - start] != 0) {return memo[end- start];}
+        int res = 0;
+        for (int i = start; i <= end; i++) {
+            res += numHelper(start, i-1, memo) * numHelper(i+1, end, memo);
+        }
+        memo[end- start] = res;
+        return res;
+    }
+}
 
 
 

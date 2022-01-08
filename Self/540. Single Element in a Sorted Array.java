@@ -47,5 +47,31 @@ public class Solution {
 // just adjust to mid in even position version
 // in this case, lo = mid + 2; h = mid.
 
+// phase3 self(above M1 is a better way)
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int low = 0;
+        int high = nums.length - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            // case1: if number in left and right side is even
+            if ((mid - low) % 2 == 0) {
+                if (nums[mid] == nums[mid - 1]) {
+                    high = mid - 2;
+                } else if (nums[mid] == nums[mid + 1]) {
+                    low = mid + 2;
+                } else {return nums[mid];}
+            } else { // number in both sides are odd
+                if (nums[mid] == nums[mid - 1]) {
+                    low = mid + 1;
+                } else if (nums[mid] == nums[mid + 1]) {
+                    high = mid - 1;
+                }             
+            }
+        }
+        return nums[low];
+    }
+}
+
 
 
