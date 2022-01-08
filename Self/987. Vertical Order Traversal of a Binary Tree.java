@@ -101,7 +101,61 @@ class Solution {
 
 
 
-
+// Phase3 solution
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        // use dfs or bfs to traverse the tree, and record a map<colNum,PQ<TreeNode, int[]{rowNum, colNum}>>
+        List<List<Integer>> res = new LinkedList<>();
+        if (root == null) {return res;}
+        Map<Integer, PriorityQueue<Pair<TreeNode,int[]>>> map = new HashMap<>();
+        int minColNum = 0;
+        int maxColNum = 0;
+        
+        // do bfs / dfs, here we try bfs
+        Queue<Pair<TreeNode, int[]>> queue = new LinkedList<>();
+        queue.add(new Pair(root, new int[]{0, 0}));
+        while (!queue.isEmpty()) {
+            Pair<TreeNode, int[]> curPair = queue.poll();
+            TreeNode curNode = curPair.getKey();
+            int[] pos = curPair.getValue();
+            map.putIfAbsent(pos[1], new PriorityQueue<Pair<TreeNode,int[]>>((p1, p2) -> (p1.getValue()[0] == p2.getValue()[0]? p1.getKey().val - p2.getKey().val : p1.getValue()[0] - p2.getValue()[0])));
+            map.get(pos[1]).add(curPair);
+            if (curNode.left != null) {queue.add(new Pair(curNode.left, new int[]{pos[0] + 1, pos[1] - 1})); minColNum = Math.min(minColNum, pos[1] - 1);}
+            if (curNode.right != null) {queue.add(new Pair(curNode.right, new int[]{pos[0] + 1, pos[1] + 1})); maxColNum = Math.max(maxColNum, pos[1] + 1);}
+            
+        }
+        
+        for (int i = minColNum; i <= maxColNum; i++) {
+            PriorityQueue<Pair<TreeNode,int[]>> pq = map.get(i);
+            List<Integer> curList = new LinkedList<>();
+            while (pq.size() > 0) {
+                curList.add(pq.poll().getKey().val);
+            }
+            res.add(curList);
+        }
+        
+        return res;
+        
+        
+        
+        
+    }
+}
 
 
 
