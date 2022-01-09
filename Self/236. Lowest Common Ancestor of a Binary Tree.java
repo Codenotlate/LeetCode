@@ -142,6 +142,54 @@ class Solution {
 
 
 
+// Phase3 self
+// time O(n) space O(n)
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+        // first find p and q, and record the parent of all nodes along the way
+        parentMap.put(root, null);
+        find(root, p, parentMap);
+        find(root, q, parentMap);
+        // build the parent set of p
+        Set<TreeNode> parentP = new HashSet<>();
+        // don't forget to add p itself to the set
+        while (p != null) {
+            parentP.add(p);
+            p = parentMap.get(p);
+        }
+        
+        while(!parentP.contains(q)) {
+            q = parentMap.get(q);
+        }
+        return q;       
+    }
+    
+    // can actually simplified as above, use whether map keys contain p q to decide whether find p, q
+    private boolean find(TreeNode root, TreeNode p, Map<TreeNode, TreeNode> map) {
+        if (root == p) {return true;}
+        if (root.left != null) {
+            if (!map.keySet().contains(root.left)) {map.put(root.left, root);}
+            if(find(root.left, p, map)) {return true;}          
+        }
+        if (root.right != null) {
+            if (!map.keySet().contains(root.right)) {map.put(root.right, root);}
+            if(find(root.right, p, map)) {return true;}         
+        }
+        return false;
+    }
+}
+
+class Solution {
+    // M2: recursive way
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) {return root;}
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left != null && right != null) {return root;}
+        return left == null? right : left;
+    }
+}
 
 
 

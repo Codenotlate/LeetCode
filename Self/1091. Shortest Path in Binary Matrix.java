@@ -105,3 +105,51 @@ class Solution {
 // can also use A* algo to optimize
 // https://leetcode.com/problems/shortest-path-in-binary-matrix/discuss/313347/A*-search-in-Python
 
+// Phase3 self
+// M1: same as above regular BFS
+// below M2: tried double directional BFS
+class Solution {
+    // try double side BFS
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        int n = grid.length;
+        if (grid[0][0] != 0 || grid[n-1][n-1] != 0) {return -1;}
+        if (n == 1) {return 1;}
+        int[][] dirs = new int[][]{{1, 0},{-1, 0},{0,1},{0,-1},{-1, -1},{1,1},{1, -1},{-1, 1}};
+        Set<Integer> startSet = new HashSet<>();
+        Set<Integer> endSet = new HashSet<>();
+        startSet.add(0);
+        endSet.add(n * n - 1);
+        int[][] visited = new int[n][n];
+        visited[0][0] = 1;
+        visited[n-1][n-1] = 1;
+        int level = 1;        
+        while (!startSet.isEmpty() && !endSet.isEmpty()) {
+            Set<Integer> tempSet = new HashSet<>();
+            if (startSet.size() > endSet.size()) {
+                tempSet = startSet;
+                startSet = endSet;
+                endSet = tempSet;
+            }
+            tempSet = new HashSet<>();
+            for (int pos: startSet) {
+                int i = pos / n;
+                int j = pos % n;
+                for (int[] d: dirs) {
+                    int newi = i + d[0];
+                    int newj = j + d[1];
+                    int newpos = newi * n + newj;
+                    if (newi >= 0 && newi < n && newj >= 0 && newj < n && endSet.contains(newpos)) {return level + 1;}
+                    if (newi >= 0 && newi < n && newj >= 0 && newj < n && grid[newi][newj] == 0 && visited[newi][newj] == 0) {
+                        tempSet.add(newpos);
+                        visited[newi][newj] = 1;
+                    }
+                }
+            }
+            
+            startSet = tempSet;
+            level++;           
+        }
+        return -1;
+    }
+}
+
