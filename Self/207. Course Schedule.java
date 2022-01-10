@@ -176,7 +176,74 @@ class Solution {
 }
 
 
+// phase3 BFS way: M1
+class Solution {
+    // time O(E + V) space O(E + v)
+    // bfs way, start with nodes indegree = 0
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] indegree = new int[numCourses];
+        // build the graph and count the indegree for each node
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] e: prerequisites) {
+            graph.putIfAbsent(e[1], new LinkedList<Integer>());
+            graph.get(e[1]).add(e[0]);
+            indegree[e[0]]++;
+        }
+        
+        // bfs, put indegree = 0 nodes into the queue
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {queue.add(i);}
+        }
+        int pollCount = 0;
+        while (!queue.isEmpty()) {
+            int cur = queue.poll();
+            pollCount++;
+            if (!graph.keySet().contains(cur)) {continue;}
+            for (int next: graph.get(cur)) {
+                indegree[next]--;
+                if (indegree[next] == 0) {queue.add(next);}               
+            }
+        }
+        return pollCount == numCourses;      
+    }
+}
 
+// Phase3 M2
+class Solution {
+    // time O(E + V) space O(E + v)
+    // dfs way: detect circles
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // build the graph
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        for (int[] e: prerequisites) {
+            graph.putIfAbsent(e[1], new LinkedList<Integer>());
+            graph.get(e[1]).add(e[0]);
+        }
+        
+        // dfs circle detect for each node
+        int[] memo = new int[numCourses]; // memo[i] = 1 means subgraph starting with node i has no cycle
+        Set<Integer> visited = new HashSet<>();
+        for (int i = 0; i < numCourses; i++){
+            if (hasCircle(graph, i, memo, visited)) {return false;}
+        }
+        return true;
+    }
+    
+    private boolean hasCircle(Map<Integer, List<Integer>> graph, int i, int[] memo, Set<Integer> visited) {
+        if (memo[i] == 1) {return false;}
+        if (visited.contains(i)) {return true;}
+        visited.add(i);
+        if (graph.keySet().contains(i)){
+            for (int next: graph.get(i)) {
+                if (hasCircle(graph, next, memo, visited)) {return true;}
+            }
+        }      
+        visited.remove(i);
+        memo[i] = 1;
+        return false;
+    }
+}
 
 
 

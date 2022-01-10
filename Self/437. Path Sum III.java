@@ -93,6 +93,31 @@ class Solution {
     }
 }
 
+// phase3 solution
+
+class Solution {
+    // note: set is not good enough here because you may have multiple path with the same pathSum in one dfs.
+    public int pathSum(TreeNode root, int targetSum) {
+        int[] count = new int[1];
+        Map<Integer, Integer> pathSumMap = new HashMap<>();
+        pathSumMap.put(0,1); // don't forget this line
+        dfs(root, targetSum, pathSumMap, 0, count);
+        return count[0];
+    }
+    
+    private void dfs(TreeNode root, int target, Map<Integer, Integer> sumMap, int cumSum, int[] res) {
+        if (root == null) {return;}
+        cumSum += root.val;
+        // note we will add all number of paths with that pathSum
+        res[0] += sumMap.getOrDefault(cumSum - target, 0);
+        sumMap.put(cumSum, sumMap.getOrDefault(cumSum, 0) + 1);
+        dfs(root.left, target, sumMap, cumSum, res);
+        dfs(root.right, target, sumMap, cumSum, res);
+        // backtracking
+        sumMap.put(cumSum, sumMap.getOrDefault(cumSum, 0) - 1);
+    }
+}
+
 
 
 

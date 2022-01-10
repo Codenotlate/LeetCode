@@ -37,7 +37,7 @@ class Solution {
 
 
 
-// another way: expand from all possible centers
+// M2: another way: expand from all possible centers
 // two types of center: single char(to odd-len) and two consecutive chars(to even-len)
 
 class Solution {
@@ -108,6 +108,56 @@ class Solution {
 }
 
 
+
+// Review self: similar to above M2: expand from all possible centers
+// two types of center: single char(to odd-len) and two consecutive chars(to even-len)
+// time O(n^2) space O(1)
+class Solution {
+    public int countSubstrings(String s) {
+        int res = 0;
+        for (int i = 0; i < s.length(); i++) {
+            res += countPalin(s, i, i);
+            if (i < s.length() - 1 && s.charAt(i) == s.charAt(i+1)) {
+                res += countPalin(s,i,i+1);
+            }
+        }
+        return res;
+    }
+    
+    private int countPalin(String s, int p1, int p2) {
+        int res = 1;
+        p1--;
+        p2++;
+        while (p1 >= 0 && p2 < s.length()) {
+            if (s.charAt(p1) == s.charAt(p2)) {res++; p1--; p2++;}
+            else {break;}
+        }
+        return res;
+    }
+}
+
+// try dp way
+// time O(n^2) space O(n)
+class Solution {
+    public int countSubstrings(String s) {
+        int n = s.length();
+        int[] dp = new int[n];
+        int res = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = n-1; j >= i; j--) {
+                if (i == j || (i == j - 1 && s.charAt(i) == s.charAt(j))) {
+                    dp[j] = 1;
+                } else {
+                    int count = s.charAt(i) == s.charAt(j) ? 0 : -1;
+                    dp[j] = dp[j - 1] + count;
+                }
+                if (dp[j] == 1) {res++;}
+
+            }
+        }
+        return res;
+    }
+}
 
 
 
