@@ -136,6 +136,61 @@ class Solution {
 }
 
 
+// review self
+class Solution {
+    // using dp to track dp[1] to dp[n]
+    // dp[i] = 1 + Math.min(dp[i - j * j] where 1 <=j * j <= i), init dp[0] = 1 since dp[i] = 0 when i = j * j
+    // time O(n*sqrt(n)) space (n)
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, n + 1);
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            int j = 1;
+            while (j * j <= i) {
+                dp[i] = Math.min(dp[i], 1 + dp[i - j*j]);
+                j++;
+            }
+        }
+        return dp[n];
+    }
+}
+//https://leetcode.com/problems/perfect-squares/solution/
+//5 kinds of solutions
+
+
+
+//https://leetcode.com/problems/perfect-squares/discuss/71488/Summary-of-4-different-solutions-(BFS-DP-static-DP-and-mathematics)
+// BFS Java way in first comment
+class Solution {
+    // try BFS way: one edge between two numbers with diff = perfect square numbers
+    // time O(sqrt(n)^h) space O(sqrt(n)^ h)
+    // start with 0, and build up the graph, if meet n, return current path len
+    public int numSquares(int n) {
+        Queue<Integer> queue = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        queue.add(0);
+        visited.add(0);
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int cur = queue.poll();
+                int j = 1;
+                while (j * j + cur <= n) {
+                    if (j * j + cur == n) {return level+1;}
+                    if (!visited.contains(cur +j * j)) {queue.add(cur + j * j); visited.add(cur+j*j);}        
+                    j++;
+                }
+            }
+            level++;            
+        }
+        return -1;
+    }
+}
+// This BFS starts at 0 to reach n, above M3 BFS starts at n to reach 0.
+
+
 
 
 

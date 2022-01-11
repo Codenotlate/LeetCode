@@ -199,9 +199,77 @@ class Solution {
 }
 
 
+// phase3 self
+class Solution {
+    // M1: BFS way
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = new List[numCourses];
+        int[] indegree = new int[numCourses];
+        // build the graph
+        for (int[] e:prerequisites) {
+            if(graph[e[1]] == null) {graph[e[1]] = new LinkedList<>();}
+            graph[e[1]].add(e[0]);
+            indegree[e[0]]++;
+        }
+        
+        // start BFS, put all indegree = 0 nodes int the queue
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {queue.add(i);}
+        }
+        int pollNum = 0;
+        int[] res = new int[numCourses];
+        while (!queue.isEmpty()) {
+            int cur = queue.poll();
+            res[pollNum] = cur;
+            pollNum++;
+            if (graph[cur] == null) {continue;}
+            for (int next: graph[cur]) {
+                indegree[next]--;
+                if (indegree[next] == 0) {queue.add(next);}
+            }
+        }
+        
+        return pollNum == numCourses? res: new int[0];       
+    }
+}
 
-
-
+class Solution {
+    // M2: DFS way, note the trick is to add the number to final result in a reverse postorder way (do it in hasCircle recursion)
+    // also use one arr to label two status of a node: 1 for isValid, 2 for isVisited
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = new List[numCourses];
+        // build the graph
+        for (int[] e:prerequisites) {
+            if(graph[e[1]] == null) {graph[e[1]] = new LinkedList<>();}
+            graph[e[1]].add(e[0]);
+        }
+        
+        int[] status = new int[numCourses];
+        int[] res = new int[numCourses];
+        int[] respos = new int[]{numCourses - 1}; // used to reverse the postorder,use array instead of integer, because the value needs to be passed along recursion
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCircle(graph, i, status, respos, res)) {return new int[0];}
+        }
+        
+        return res; // respos == -1 is guaranteed to this line       
+    }
+    
+    private boolean hasCircle(List<Integer>[] graph, int i, int[] status, int[] respos, int[] res) {
+        if (status[i] == 1) {return false;}
+        if (status[i] == 2) {return true;}
+        status[i] = 2;
+        if (graph[i] != null) {
+            for (int next: graph[i]) {
+                if (hasCircle(graph, next, status, respos, res)) {return true;}
+            }
+        }
+        // postorder add to res reversely
+        res[respos[0]--] = i;
+        status[i] = 1; // label as valid
+        return false;
+    }
+}
 
 
 

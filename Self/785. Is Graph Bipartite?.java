@@ -131,10 +131,54 @@ class Solution {
 
 
 
+// Phase3 self 
+// The traverse could be bfs or dfs
+// M1: bfs
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        int[] status = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (status[i] != 0) {continue;}
+            if (!traverse(graph, i, status, 1)) {return false;}
+        }
+        return true;
+    }
+    
+    // M1: bfs way
+    private boolean traverse(int[][] graph, int i, int[] status, int label) {
+        Queue<Integer> queue = new LinkedList<>();
+        status[i] = label;
+        queue.add(i);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int cur = queue.poll();
+                for (int next: graph[cur]) {
+                    if (status[next] == 0) {
+                        status[next] = -label;
+                        queue.add(next);
+                    } else if (status[next] == label) {return false;}
+                } 
+            }
+            label *= -1;
+        }
+        return true;
+    }
 
 
+    // M2: dfs way
+    private boolean traverse(int[][] graph, int i, int[] status, int label) {
+        if (status[i] != 0) {return status[i] == label;}
+        status[i] = label;
+        for (int next: graph[i]) {
+            if (!traverse(graph, next, status, -label)) {return false;}
+        }
+        return true;
+    }
 
 
+}
 
 
 
