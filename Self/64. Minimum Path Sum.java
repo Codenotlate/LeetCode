@@ -102,3 +102,46 @@ class Solution {
         return dp[n - 1];
     }
 }
+
+
+
+
+
+
+// Review self
+class Solution {
+    // M1: Top down dp, starting from right bottom pos, dp[i][j] represents pathSum from (i, j) to (m-1, n-2).
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[] dp = new int[n];
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if (i == m - 1 && j == n-1) {dp[j] = grid[i][j]; continue;}
+                int down = i == m-1? Integer.MAX_VALUE : dp[j];
+                int right = j == n-1? Integer.MAX_VALUE: dp[j+1];
+                dp[j] = grid[i][j] + Math.min(down, right);
+            }
+        }
+        return dp[0];
+    }
+}
+
+
+class Solution {
+    // M2: bottom up dp, starting from left upper pos, dp[i][j] represents pathSum from (0, 0) to (i, j).
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[] dp = new int[n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) {dp[j] = grid[i][j]; continue;}
+                int up = i == 0? Integer.MAX_VALUE : dp[j];
+                int left = j == 0? Integer.MAX_VALUE: dp[j-1];
+                dp[j] = grid[i][j] + Math.min(up, left);
+            }
+        }
+        return dp[n-1];
+    }
+}

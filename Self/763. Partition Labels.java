@@ -140,6 +140,57 @@ class Solution {
 
 
 
+// review self: similar as above M2
+// time O(n), space O(1)
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), i);
+        }
+        
+        List<Integer> res = new LinkedList<>();
+        int cur = 0;
+        int sumRes = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (i > cur) {
+                res.add(i-sumRes);
+                sumRes = i;
+                cur = map.get(s.charAt(i));
+            } else {
+                cur = Math.max(cur, map.get(s.charAt(i)));
+            }
+        }
+        res.add(s.length()-sumRes);
+        return res;
+    }
+}
+class Solution {
+    // try sliding window
+    public List<Integer> partitionLabels(String s) {
+        // first get the count of each char in s
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c: s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        // loop the s, use set to represent chars in current window, whenever the window is empty, meaning can start the next substring window
+        Set<Character> window = new HashSet<>();
+        int prevPos = 0;
+        List<Integer> res = new LinkedList<>();
+        for (int i = 0; i < s.length(); i++) {
+            window.add(s.charAt(i));
+            map.put(s.charAt(i), map.get(s.charAt(i)) - 1);
+            if (map.get(s.charAt(i)) == 0) {
+                window.remove(s.charAt(i));
+            }
+            if (window.isEmpty()) {
+                res.add(i - prevPos + 1);
+                prevPos = i + 1;
+            }
+        }
+        return res;
+    }
+}
 
 
 
