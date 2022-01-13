@@ -76,6 +76,55 @@ class Solution {
 
 
 
+// Review self
+class Solution {
+    // M1.1 DFS + backtracking way 1
+    // each level 2 choices, level # = target/min(arr)
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(candidates, target, 0, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int[] arr, int t, int i, List<Integer> curList, List<List<Integer>> res) {
+        if (i == arr.length || t == 0) {
+            if (t == 0) {res.add(new LinkedList(curList));}
+            return;
+        }
+        if (t >= arr[i]) {
+            curList.add(arr[i]);
+            dfs(arr, t - arr[i], i, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+        
+        dfs(arr, t, i+1, curList, res);
+    }
+}
+
+
+
+class Solution {
+    // M1.2 DFS + backtracking way 2
+    // each level choose one element from pos i to end of arr, level # = target/min(arr)
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(candidates, target, 0, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int[] arr, int t, int i, List<Integer> curList, List<List<Integer>> res) {
+        if (t == 0) {res.add(new LinkedList(curList)); return;}
+
+        for (int j = i; j < arr.length;j++) {
+            if (arr[j] <= t) {
+                curList.add(arr[j]);
+                dfs(arr, t-arr[j], j, curList, res);
+                curList.remove(curList.size() - 1);
+            }
+        }
+    }
+}
+
 
 
 

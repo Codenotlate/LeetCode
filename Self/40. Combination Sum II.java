@@ -121,9 +121,46 @@ class Solution {
 }
 
 
+// Review self
+class Solution {
+    // possible dup in the condidate arr, each element used only once
+    // DFS + backtracking
+    // require unique comb: sort the arr first, only choose the first element in [i, end] range that has duplicates, skip the rest of that element
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        Arrays.sort(candidates);
+        dfs(candidates, target, 0, new LinkedList<Integer>(),  res);
+        return res;
+    }
+    
+    private void dfs(int[] arr, int t, int i, List<Integer> curList, List<List<Integer>> res) {
+        if (t == 0) {res.add(new LinkedList(curList)); return;}
+        for (int j = i; j < arr.length; j++) {
+            if (j > i && arr[j] == arr[j-1]) {continue;}
+            if (arr[j] <= t) {
+                curList.add(arr[j]);
+                dfs(arr, t-arr[j], j+1, curList, res);
+                curList.remove(curList.size() - 1);
+            }
+        }
+    }
+}
 
 
+// time O(2^n) for this problem, why different with 39 time complexity:
+/*
+The runtime of this problem is bounded by the total number of possible combinations of "candidates", because we can only use the elements found in the list. The number of combinations of a list of size N is 2^N, you can google this.
 
+In Combination Sum 1, you are not bounded by the number of elements in the list. You can use any element in "candidates" an unlimited number of times. This makes the runtime complexity much trickier.
+
+If you think of all possible combinations in that problem as a tree, it has a branching factor of N (unique number of candidates). Additionally, the maximum possible height of the tree is the Target divided by the vale of the smallest Candidate i.e. the longest possible combination.
+
+For instance Target = 6, Candidates = [2,3,6] the longest possible combination is [2, 2, 2]. All valid combinations must be length 3 or shorter.
+
+Thus the height of the tree is limited to (T/M) and the branching factor is N. Thus the max possible nodes in the combinatorial tree is N ^ (T/M). You can google this relation between the height of a tree, branching factor and number of nodes.
+
+
+*/
 
 
 

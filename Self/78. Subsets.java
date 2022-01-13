@@ -181,3 +181,47 @@ class Solution {
         
     }
 }
+
+
+
+// Review self
+// similar to above M2
+class Solution {
+    // DFS + backtracking way 2: each level [i,end] choices or don't choose any of them, arr.len of levels
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(nums, 0, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int i, List<Integer> curList, List<List<Integer>> res) {
+        res.add(new LinkedList(curList));
+        if (i == nums.length) { return;}
+        
+        for (int j = i; j < nums.length; j++) {
+            curList.add(nums[j]);
+            dfs(nums, j+1, curList, res);
+            curList.remove(curList.size() - 1);
+        }
+    }
+}
+
+// similar to above M3
+class Solution {
+    // try BFS way
+    public List<List<Integer>> subsets(int[] nums) {
+        Queue<List<Integer>> queue = new LinkedList<>();
+        queue.add(new LinkedList<>());
+        for (int i = 0; i < nums.length; i++) {
+            int size = queue.size();
+            while (size-- > 0) {
+                List<Integer> curList = queue.poll();
+                queue.add(curList);
+                List<Integer> nextList = new LinkedList(curList);
+                nextList.add(nums[i]);
+                queue.add(nextList);
+            }
+        }
+        return (List)queue;
+    }
+}

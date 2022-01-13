@@ -98,6 +98,26 @@ class Solution {
     }
 }
 
+// Review self
+// similar to above M2
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(nums, 0, new LinkedList<Integer>(), res, false);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int i, List<Integer> curList, List<List<Integer>> res, boolean prevInclude) {   
+        if (i == nums.length) {res.add(new LinkedList(curList)); return;}
+        dfs(nums, i+1, curList, res, false);
+        if (i > 0 && nums[i] == nums[i-1] && !prevInclude) {return;}        
+        curList.add(nums[i]);
+        dfs(nums, i+1, curList, res, true);
+        curList.remove(curList.size() - 1);      
+    }
+}
+
 
 
 
