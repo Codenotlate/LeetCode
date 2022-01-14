@@ -145,6 +145,28 @@ class Solution {
 }
 
 
+// Review self
+class Solution {
+    // each node has 2 states: chosen and unchosen. And this status will impact its child
+    // root[chosen] = node.val + left[unchosen] + right[unchosen];
+    // root[unchosen] = max(left[chosen], left[unchosen]) + max(right[chosen], right[unchosen]);
+    // use DFS time O(n), space O(h)
+    public int rob(TreeNode root) {
+        int[] res = robHelper(root);
+        return res[0] > res[1] ? res[0] : res[1];
+    }
+    
+    private int[] robHelper(TreeNode root) {
+        if (root == null) {return new int[]{0,0};}
+        int[] left = robHelper(root.left);
+        int[] right = robHelper(root.right);
+        int chosen = root.val + left[1] + right[1];
+        int unchosen = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        return new int[]{chosen, unchosen};
+    }
+}
+
+
 
 
 
