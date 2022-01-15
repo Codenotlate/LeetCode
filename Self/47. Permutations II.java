@@ -200,6 +200,34 @@ class Solution {
 
 
 
+// Review M2
+class Solution {
+    // similar as 46, just use map count num in nums, and count minus 1 for visited. And use map.keySet() for each position to avoid dup
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n: nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+        dfs(map, nums.length, new LinkedList<Integer>(), res);
+        return res;
+        
+    }
+
+    private void dfs(Map<Integer, Integer> map, int len, List<Integer> curList, List<List<Integer>> res) {
+        if (curList.size() == len) {res.add(new LinkedList(curList)); return;}
+        for (int n: map.keySet()) {
+            if (map.get(n) == 0) {continue;}
+            curList.add(n);
+            map.put(n, map.get(n) - 1);
+            dfs(map, len, curList, res);
+            curList.remove(curList.size() - 1);
+            map.put(n, map.get(n) + 1);
+        }
+    } 
+}
+
+
 
 
 

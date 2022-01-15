@@ -66,6 +66,30 @@ class Solution {
 }
 
 
+// Review self
+class Solution {
+    // DFS + backtracting + visited
+    public List<List<Integer>> permute(int[] nums) {
+        Set<Integer> visited = new HashSet<>();
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(nums, visited, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    
+    private void dfs(int[] nums, Set<Integer> visited, List<Integer> curList, List<List<Integer>> res) {
+        if (curList.size() == nums.length) {res.add(new LinkedList(curList)); return;}
+        for (int n:nums) {
+            if (visited.contains(n)) {continue;}
+            curList.add(n);
+            visited.add(n);
+            dfs(nums, visited, curList, res);
+            curList.remove(curList.size() - 1);
+            visited.remove(n);
+        }
+    }
+}
+
 
 
 
