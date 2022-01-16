@@ -172,6 +172,64 @@ class Solution {
 }
 
 
+// Phase3 self
+// morris way time O(n) space O(1)
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    //Use Morris inorder traverse to make space O(1)
+    public void recoverTree(TreeNode root) {
+        TreeNode prevPoll = null, curPoll = null, lg = null, sm = null;
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.left == null) {
+                prevPoll = curPoll;
+                curPoll = cur;
+                if (prevPoll != null && prevPoll.val > curPoll.val) {
+                    if (sm == null) {lg=prevPoll;}
+                    sm = curPoll;
+                }
+                cur = cur.right;
+            } else {
+                TreeNode rightMost = cur.left;
+                while (rightMost.right!= null && rightMost.right != cur) {
+                    rightMost = rightMost.right;
+                }
+                if (rightMost.right == null) {
+                    rightMost.right = cur; 
+                    cur = cur.left;
+                }else {
+                    rightMost.right = null;
+                    prevPoll = curPoll;
+                    curPoll = cur;
+                    if (prevPoll.val > curPoll.val) {
+                        if (sm == null) {lg=prevPoll;}
+                        sm = curPoll;
+                    }
+                    cur = cur.right;
+                }
+            }
+        }
+        
+        
+        int tempval = lg.val;
+        lg.val = sm.val;
+        sm.val = tempval;
+    }
+}
 
 
 
