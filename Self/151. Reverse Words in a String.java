@@ -146,6 +146,65 @@ class Solution {
     }
 }
 
+// Review self
+class Solution {
+    // O(n) time and O(n) space
+    public String reverseWords(String s) {
+        s = s.strip(); // or s.trim()
+        String[] words = s.split(" ");
+        List<String> list = new LinkedList<>();
+        for (String word: words) {
+            if (word.isEmpty()) {continue;}
+            list.add(0, word);
+        }
+        return String.join(" ", list);       
+    }
+}
+
+// char array space O(1) way. similar to above O(1) way
+class Solution {
+    // convert to charArray first, try O(1) space way, without using any built-in string method
+    public String reverseWords(String s) {
+        char[] chars = s.toCharArray();
+        // reverse the entire string
+        reverse(chars, 0, chars.length - 1);
+        // reverse each word in the string
+        int i = 0;
+        while(i < chars.length) {
+            while (i < chars.length && chars[i] == ' ') {i++;}
+            int j = i+1;
+            while(j < chars.length && chars[j] !=' ') {j++;}
+            reverse(chars, i, j-1);
+            i = j;
+        }
+        // remove the extra spaces
+        int end = 0;
+        i = 0;
+        while(i < chars.length && chars[i] == ' ') {i++;}
+        while(i < chars.length) {
+            if (chars[i] == ' ' && chars[i-1] == ' ') {i++;continue;}
+            chars[end++] = chars[i];
+            i++;
+        }
+        // don't forget this line
+        if(chars[end-1] == ' ') {end--;}
+        
+        return new String(chars).substring(0, end);       
+    }
+    
+    
+    
+    private void reverse(char[] chars, int i, int j) {
+        while (i < j) {
+            char temp = chars[i];
+            chars[i] = chars[j];
+            chars[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}
+
 
 
 

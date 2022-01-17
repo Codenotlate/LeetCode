@@ -1,9 +1,13 @@
 // This problem needs review: still not very clear about the time complexity
 
+// For example a standard rule of thumb that is followed for solving shortest path problems is that we mostly use Breadth-first search for unweighted graphs and use Dijkstra's algorithm for weighted graphs. An implied condition to apply the Dijkstra's algorithm is that the weights of the graph must be positive. If the graph has negative weights and can have negative weighted cycles, we would have to employ another algorithm called the Bellman Ford's. The point here is that the properties of the graph and the goal define the kind of algorithms we might be able to use.
+// https://leetcode.com/problems/cheapest-flights-within-k-stops/solution/
+
+
 // -------------------- Dijkstra way ----------------------//
 // time O(V^k * log(V^k)) ? not sure (based on runtime in LC, it's not this slow)
 
-// Phase2 self M1
+// TLE, skip -- Phase2 self 
 class Solution {
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
         // build the graph
@@ -39,10 +43,10 @@ class Solution {
 }
 
 
-// Phase2 self M2: slightly improved from M1: add a map to store visited node and stops
+// Phase2 self M1: slightly improved from M1: add a map to store visited node and stops
 // use this map to skip adding the edges if the node has a larger stops number compare to what we have in the map
 // since if it's visited later, it definitely has larger dist, 
-// much faster than M1
+// much faster than above method
 class Solution {
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
         // build the graph
@@ -132,7 +136,7 @@ class Solution {
 }
 
 
-// -------------------- BellmanFord way ----------------------//
+// -------------------- M2: BellmanFord way ----------------------//
 // time: O(E * K)
 class Solution {
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
@@ -159,7 +163,7 @@ class Solution {
 
 
 
-// -------------------- DFS way ----------------------//
+// -------------------- M3: DFS way ----------------------//
 // time: O(V^K)
 
 class Solution {
@@ -196,7 +200,7 @@ class Solution {
 
 
 
-// -------------------- BFS way ----------------------//
+// -------------------- M4: BFS way ----------------------//
 // time: O(V^K) (will get TLE in LC)
 class Solution {
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
@@ -249,6 +253,44 @@ class Solution {
 
 
 
+//----------------------------------------------------------------
+
+// Phase3 self
+// Dijkstra modified version - similar as above M1 Dijkstra way
+// difference is above M1 don't check whether the neighbor is visited when add into PQ, and do the check when it's popped to skip it. Here we do the check before we add that node into the PQ. A already visited node will only be added to PQ, if its current stop is smaller than the stop number recorded in the visited map.
+class Solution {
+    // Dijkstra, but one modification: in normal Dij, if a node is already visited, we won't reconsider it to put it into the PQ. But here we have the constraints on number of stops. Thus we will reconsider the visited node if its stop# is smaller than the stop# when its earlier popped out of the PQ. 
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        // Build the graph
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+        for (int[] e: flights) {
+            graph.putIfAbsent(e[0], new LinkedList<int[]>());
+            graph.get(e[0]).add(new int[]{e[1], e[2]});
+        }
+        
+        // visited map to record the #stop of a node when its popped out of the PQ
+        Map<Integer, Integer> visited = new HashMap<>();
+        // PQ stores each node as int[node, dist, #stops];
+        PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> (e1[1] - e2[1]));
+        pq.add(new int[]{src, 0, 0});
+        k++;
+        while (!pq.isEmpty()) {
+            int[] curNode = pq.poll();
+            if (curNode[0] == dst) {return curNode[1];}
+            if (curNode[2] == k) {continue;}
+            // record curNode stop# into visited if smaller, and check its neighbors
+            visited.put(curNode[0], curNode[2]);
+            if (!graph.keySet().contains(curNode[0])) {continue;}
+            for (int[] next: graph.get(curNode[0])) {
+                int nextNode = next[0];
+                if (visited.keySet().contains(nextNode) && visited.get(nextNode) <= curNode[2] + 1) {continue;}
+                pq.add(new int[]{nextNode, curNode[1] + next[1], curNode[2]+1});
+            }
+            
+        }
+        return -1;
+    }
+}
 
 
 

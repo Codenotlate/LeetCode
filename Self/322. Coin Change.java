@@ -91,6 +91,23 @@ class Solution {
 
 
 
+// Review self : pay attention to the loop order of w and c and their direction
+class Solution {
+    // knapsack problem
+    // dp[i][w] = min(dp[i-1][w], dp[i-1][w-c] + 1)
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, amount+1);
+        dp[0] = 0;
+        for (int w=0; w<=amount; w++) {
+            for (int c:coins) {
+                if (w < c) {continue;}
+                dp[w] = Math.min(dp[w], dp[w-c] + 1);
+            }
+        }
+        return dp[amount] > amount? -1 : dp[amount];
+    }
+}
 
 
 
