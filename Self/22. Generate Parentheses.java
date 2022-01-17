@@ -36,6 +36,32 @@ class Solution {
 
 
 
+// Phase3 self: similar as above
+class Solution {
+    // at each pos, the current # of left parentheses should be >= right #, and left# should be <= n.
+    // dfs + backtracking
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new LinkedList<>();
+        dfs(n, 0, 0, new StringBuilder(), res);
+        return res;
+    }
+    
+    
+    private void dfs(int n, int leftNum, int rightNum, StringBuilder curList, List<String> res) {
+        if (curList.length() == 2 * n) {res.add(curList.toString()); return;}
+        if (leftNum > rightNum) {
+            curList.append(')');
+            dfs(n, leftNum, rightNum+1, curList, res);
+            curList.deleteCharAt(curList.length() - 1);
+        } 
+        if (leftNum < n) {
+            curList.append('(');
+            dfs(n, leftNum + 1, rightNum, curList, res);
+            curList.deleteCharAt(curList.length() - 1);
+        }
+    }
+}
+
 
 
 
