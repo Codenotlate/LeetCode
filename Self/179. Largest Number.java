@@ -245,15 +245,35 @@ class Solution {
     	
 
     }
-
-
-
-
 }
 
 
 
-
+// Phase3 self, use PQ with custom order
+// worse than above method in space, cause need extra space for PQ
+class Solution {
+    // basically sort the num: A>B if AB > BA
+    // use a priorityQueue and define the order rule
+    // convert number to string
+    public String largestNumber(int[] nums) {
+        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>(){
+            public int compare(String s1, String s2) {                
+                return (s2+s1).compareTo(s1+s2); // use this directly instead of compare the number value cause the number value may exceed integer range and difference returned could also larger than integer range
+            }
+        });
+        
+        
+        for (int n: nums) {
+            pq.add(Integer.toString(n));
+        }
+        
+        StringBuilder res = new StringBuilder();
+        while (!pq.isEmpty()) {res.append(pq.poll());}
+        // don't forget to deal with special case when starting with 0
+        if (res.charAt(0) == '0') {return "0";}
+        return res.toString();
+    }
+}
 
 
 

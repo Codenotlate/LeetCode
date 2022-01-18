@@ -73,8 +73,55 @@ class Solution {
 
 
 
+// Phase3 self
+class Solution {
+    // use dfs to traverse the original tree and then copy to new tree
+    // also the map can be adjust to Integer->Node like above method to speed up
+    public Node cloneGraph(Node node) {
+        Map<Node, Node> map = new HashMap<>();
+        return dfs(node, map);
+    }
+    
+    private Node dfs(Node oldnode, Map<Node, Node> map) {
+        if(oldnode == null) {return null;}
+        if(map.keySet().contains(oldnode)) {return map.get(oldnode);}
+        Node newnode = new Node(oldnode.val);
+        map.put(oldnode, newnode); // note this line should be put before next dfs level to speed up
+        for (Node oldnext: oldnode.neighbors) {
+            newnode.neighbors.add(dfs(oldnext, map));
+        }
+        
+        return newnode;
+    }
+}
 
-
+class Solution {
+    // similar to dfs, use bfs here, above bfs way is optimized
+    public Node cloneGraph(Node node) {
+        if (node == null) {return null;}
+        Queue<Pair<Node,Node>> queue = new LinkedList<>();
+        Map<Integer, Node> visited = new HashMap<>();
+        Node newnode = new Node(node.val);
+        queue.add(new Pair(node, newnode));
+        visited.put(node.val, newnode);
+        while (!queue.isEmpty()) {
+            Pair<Node, Node> curPair = queue.poll();
+            Node oldcur = curPair.getKey();
+            Node newcur = curPair.getValue();
+            for (Node oldnext: oldcur.neighbors) {
+                if (!visited.keySet().contains(oldnext.val)) {
+                    Node newnext = new Node(oldnext.val);
+                    queue.add(new Pair(oldnext, newnext));
+                    visited.put(oldnext.val, newnext);
+                } 
+                newcur.neighbors.add(visited.get(oldnext.val));
+                
+            }
+        }
+        return newnode;
+        
+    }
+}
 
 
 
