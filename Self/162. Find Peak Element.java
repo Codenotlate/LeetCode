@@ -49,3 +49,29 @@ class Solution {
         return start;
     }
 }
+
+
+// Phase3 self: similar as above, with self analysis below
+class Solution {
+    // O（logn) time => indicates binary search, and we can return index of any of the peak, meaning when we reduce range, we only need to make sure at least one peak is kept in remaining range.
+    // The key is to compare nums[mid-1], nums[mid] and nums[mid+1]
+    // also note nums[i] != nums[i+1] for all valid i
+    // always check two element special case for binary search to avoid infinite loop
+    
+    public int findPeakElement(int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            int left = mid >0? nums[mid-1]: Integer.MIN_VALUE;
+            int right = mid <= nums.length - 2? nums[mid+1]: Integer.MIN_VALUE;
+            if (nums[mid] > left && nums[mid] > right) {return mid;}
+            if (nums[mid] < right) {
+                start = mid + 1;
+            } else {
+                end = mid;
+            }            
+        }
+        return start;
+    }
+}

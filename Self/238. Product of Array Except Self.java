@@ -19,3 +19,25 @@ class Solution {
         return ans;
     }
 }
+
+
+// Review self: similar as above
+class Solution {
+    // two loops, first one to get preproduct for each position and stored in the result array, second one to go from end to start to get sufproduct, and multiplies with the preproduct for this position.
+    // time O(n) space O(1)
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] res = new int[n];
+        for (int i=0; i< n; i++) {
+            if(i == 0) {res[i] = 1; continue;}
+            res[i] = res[i-1] * nums[i-1];
+        }
+        int sufproduct = 1;
+        for (int i = n-1; i >= 0; i--) {
+            res[i] *= sufproduct;
+            sufproduct *= nums[i];
+        }
+        
+        return res;
+    }
+}

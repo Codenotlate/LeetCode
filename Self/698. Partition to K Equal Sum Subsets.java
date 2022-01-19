@@ -70,40 +70,4 @@ class Solution {
 
 
 
-// Phase3 self -- TLE
-class Solution {
-    public boolean canPartitionKSubsets(int[] nums, int k) {
-        int total = 0;
-        int maxn = 0;
-        for (int n: nums) {total += n; maxn = Math.max(maxn, n);}
-        if (total % k != 0 || total / k < maxn) {return false;}
-        int target = total / k;
-        int[] visited = new int[nums.length];
-        int[] memo = new int[k];
-        memo[0] = 1;
-        return dfs(nums, visited, target, 0, k);
-    }
-    
-    
-    private boolean dfs(int[] nums, int[] visited, int target, int curSum, int k, int[] memo) {
-        if (k == 1) {return true;}
-        if (memo[k-1] != 0) {return memo[k-1] == 1;}
-        if (curSum == target) {
-            boolean res = dfs(nums, 0, 0, target, k - 1, visited, memo);
-            memo[k-1] = res? 1: -1;
-            return res;
-        }
-        for (int i = 0; i < nums.length; i++){
-            if (visited[i] == 0 && curSum + nums[i] <= target) {
-                visited[i] = 1;
-                if (dfs(nums, visited, target, curSum + nums[i], k, memo)) {
-                    memo[k-1] = 1;
-                    return true;
-                }
-                visited[i] = 0;
-            }
-        }
-        memo[k-1] = -1;
-        return false;
-    }
-}
+// Phase3 self

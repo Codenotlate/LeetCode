@@ -66,6 +66,46 @@ What if there are zeroes in the array? Well, we can split the array into several
 */
 
 
+// Reveiw self
+// similar as above M1
+// time O(n) space O(n)
+class Solution { 
+    public int maxProduct(int[] nums) {
+        int[][] dp = new int[nums.length][2];
+        int max = nums[0];
+        dp[0] = new int[]{nums[0], nums[0]};
+        for (int i = 1; i < nums.length; i++) {
+            // for every position, keep track of the minproduct including current position as well as maxproduct. It is determined by (nums[i], dp[i-1][min] * nums[i], dp[i-1][max] * nums[i])
+            int prevlow = dp[i-1][0] * nums[i];
+            int prevhigh = dp[i-1][1] * nums[i];
+            dp[i][0] = Math.min(nums[i], Math.min(prevlow, prevhigh));
+            dp[i][1] = Math.max(nums[i], Math.max(prevlow, prevhigh));
+            max = Math.max(max, dp[i][1]);
+        }
+        return max;
+    }
+}
+
+// optimize above method space to O(1)
+class Solution { 
+    public int maxProduct(int[] nums) {
+        int max = nums[0];
+        int prevlow = nums[0];
+        int prevhigh = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            // for every position, keep track of the minproduct including current position as well as maxproduct. It is determined by (nums[i], dp[i-1][min] * nums[i], dp[i-1][max] * nums[i])
+            prevlow *= nums[i];
+            prevhigh *= nums[i];
+            int curlow = Math.min(nums[i], Math.min(prevlow, prevhigh));
+            prevhigh = Math.max(nums[i], Math.max(prevlow, prevhigh));
+            max = Math.max(max, prevhigh);
+            prevlow = curlow;
+        }
+        return max;
+    }
+}
+
+
 
 
 
