@@ -56,7 +56,7 @@ class Solution {
 
 
 class Solution {
-    // M2: Bottom-up: dp 
+    // M2: Bottom-up: dp space O(n) can be optimized
     public int numDecodings(String s) {
         int n = s.length();
         int[] dp = new int[n + 1];
@@ -77,3 +77,80 @@ class Solution {
         return dp[n];
     }
 } 
+
+
+
+// review self
+class Solution {
+    // M1: recursion + memo time O(n) space O(n)
+    // recur(s,i) = recur(s, i+1) + recur(s,i+2)
+    public int numDecodings(String s) {
+        int[] memo = new int[s.length()];
+        Arrays.fill(memo, -1);
+        return numHelper(s, 0, memo);
+    }
+    
+    
+    private int numHelper(String s, int i, int[] memo) {
+        if (i == s.length()) {return 1;}
+        if (memo[i] != -1) {return memo[i];}
+        int count1 = 0;
+        int count2 = 0;
+        if (s.charAt(i) >= '1' && s.charAt(i) <= '9') {
+            count1 = numHelper(s, i+1, memo);
+        }
+        
+        if (i + 2 <= s.length()) {
+            String substr = s.substring(i, i+2);
+            if (substr.compareTo("1") >= 0 && substr.compareTo("26") <= 0) {
+                count2 = numHelper(s, i+2, memo);
+            }
+        }
+        memo[i] = count1 + count2;
+        return memo[i];       
+    }
+}
+
+class Solution {
+    // M2: DP way
+    //dp[i] represents s[0:i] number result
+    // dp[i] = dp[i-1] + dp[i-2] if substring meets requirement
+    public int numDecodings(String s) {
+        Set<String> validSet = new HashSet<>();
+        for (int i = 1; i <= 26; i++) {validSet.add(Integer.toString(i));}
+        int[] dp = new int[s.length()];
+        dp[0] = validSet.contains(s.substring(0,1))? 1: 0;
+        for (int i = 1; i < s.length(); i++) {
+            int prev1 = validSet.contains(s.substring(i, i+1)) ? dp[i-1] : 0;
+            int prev2 = 0;
+            if(validSet.contains(s.substring(i-1, i+1))) {
+                prev2 = i == 1 ? 1: dp[i-2];               
+            }
+            dp[i] = prev1 + prev2;
+        }
+        return dp[s.length() - 1];
+        
+    }
+}
+
+
+
+class Solution {
+    // M2.1: DP way; optimize space to O(1)
+    //dp[i] represents s[0:i] number result
+    // dp[i] = dp[i-1] + dp[i-2] if substring meets requirement, since only need dp[i-1] and dp[i-2], thus can simply use two vars to record
+    public int numDecodings(String s) {
+        Set<String> validSet = new HashSet<>();
+        for (int i = 1; i <= 26; i++) {validSet.add(Integer.toString(i));}
+        int prev2  = 1; // represents dp[-1]
+        int prev1 = validSet.contains(s.substring(0,1))? 1: 0; // represents dp[0]
+        for (int i = 1; i < s.length(); i++) {
+            int cur1 = validSet.contains(s.substring(i, i+1)) ? prev1 : 0;
+            int cur2 = validSet.contains(s.substring(i-1, i+1)) ? prev2 : 0;
+            prev2= prev1;
+            prev1 = cur1 + cur2;
+        }
+        return prev1;
+        
+    }
+}

@@ -63,3 +63,47 @@ class Solution {
         }
     }
 }
+
+
+
+// Review self: similar to M2: use BS to find the first large element in the non-descending order array[i to n-1]
+// time still O(n), but the above M2 is O(n+n), whereas this method is O(n + logn)
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        int i = n - 1;
+        while(i > 0) {
+            if (nums[i] > nums[i-1]) {break;}
+            i--;
+        }
+        if (i!= 0) {
+            int p = bsfindFirstlarge(nums, nums[i-1], i, n - 1);
+            int temp = nums[i-1];
+            nums[i-1] = nums[p];
+            nums[p] = temp;
+        }
+        
+        reverse(nums, i, n-1);
+    }
+    
+    
+    private int bsfindFirstlarge(int[] nums, int target, int start, int end) {
+        while (start < end - 1) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] <= target) {end = mid - 1;}
+            else {start = mid;}
+        }
+        return nums[end] > target? end : start;
+    }
+    
+    private void reverse(int[] nums, int i, int j) {
+        while (i < j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+    }
+    
+}
