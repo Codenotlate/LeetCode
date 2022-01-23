@@ -33,3 +33,42 @@ class Solution {
 https://leetcode.com/problems/merge-intervals/discuss/355318/Fully-Explained-and-Clean-Interval-Tree-for-Facebook-Follow-Up-No-Sorting
 Question: How do you add intervals and merge them for a large stream of intervals? (Facebook Follow-up Question)
 */
+
+/*
+some ideas from discussion for the followup
+1. Cant we just do this with a priority queue ? As we have an incoming stream of intervals, we just need to keep them sorted and pop the smallest two intervals and check if we can merge them.
+
+
+*/
+
+
+
+
+// Phase3 self
+// two syntax to remember: sort with custom comparator; convert a list directly to an array.
+class Solution {
+    // M1: sort based on start position first, then merge one by one
+    // time O(nlogn) space O(1) if the sort algo is inplace. 
+    // regarding the space of the linkedlist: (from discussion)" I usually tell interviewers its technically O(N) but if we count the LinkedList as the returned object it is O(1)"
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (i1, i2) -> i1[0] - i2[0]);
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        List<int[]> reslist = new LinkedList<>();
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] > end) {
+                reslist.add(new int[]{start, end});
+                start = intervals[i][0];
+                end = intervals[i][1];
+            } else {
+                end = Math.max(end, intervals[i][1]);
+            }
+        }
+        reslist.add(new int[]{start, end});
+        // int[][] res = new int[reslist.size()][2];
+        // for (int i = 0; i < reslist.size(); i++) {
+        //     res[i] = reslist.get(i);
+        // }
+        return reslist.toArray(new int[reslist.size()][]);
+    }
+}

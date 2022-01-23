@@ -37,6 +37,23 @@ class Solution {
 
 
 
+//Phase3 self
+class Solution {
+    // use two pointer for start and end
+    // each time move one pointer, since the area = (end-start) * Min(nums[start], nums[end]), if we move one pointer towards center, (end-start) part will definitely be smaller, thus only move the pointer with smaller height can give us potential chance to get a larger area with smaller (end-start) width. 
+    public int maxArea(int[] height) {
+        int start = 0;
+        int end = height.length - 1;
+        int maxarea = 0;
+        while (start < end) {
+            maxarea = Math.max(maxarea, (end - start) * Math.min(height[start], height[end]));
+            if (height[start] < height[end]) {start++;}
+            else{end--;}
+        }
+        return maxarea;
+    }
+}
+
 
 
 

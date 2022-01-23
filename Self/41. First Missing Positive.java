@@ -69,3 +69,24 @@ class Solution {
 }
 
 
+// Phase3 self
+// similar to above M1: 3 loops
+class Solution {
+    // since require O(1) space, think about label in place
+    // Think about negative label, since we only care about [1,n]. Thus for original negative number in array, we can convert it to nums.len+1, so that it won't cause confusion for original positive numbers labeled as negative. (But in this case array is changed in place and can't revert back)
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0) {nums[i] = n+1; continue;}
+        }
+        for (int i = 0; i < n; i++) {
+            int num = Math.abs(nums[i]);
+            if (num <= n && nums[num-1] > 0) {nums[num-1] *= -1;}
+        }
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0) {return i+1;}
+        }
+        return n+1;
+        
+    }
+}
