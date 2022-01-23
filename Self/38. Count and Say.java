@@ -65,3 +65,38 @@ class Solution {
         return res.toString();
     }
 }
+
+
+
+// review self: similar idea, but clearer version of code implemented
+class Solution {
+    // base case: n=1 return "1"
+    // need to countAndSay for one string, then loop this function for n times. Can use two pointers to  countAndSay for each string
+    public String countAndSay(int n) {
+        if (n == 1) {return "1";}
+        String s = "1";
+        while(n-- > 1) {
+            s = countAndSaySingle(s);
+        }
+        return s;
+    }
+    
+    
+    private String countAndSaySingle(String s) {
+        StringBuilder res = new StringBuilder();
+        int count = 0;
+        char prev = '.';
+        int i = 0;
+        while (i < s.length()) {
+            if (prev != '.' && s.charAt(i) != prev) {
+                res.append(count).append(prev);
+                count = 0;
+            }
+            count++;
+            prev = s.charAt(i);
+            i++;
+        }
+        res.append(count).append(prev);
+        return res.toString();
+    }
+}
