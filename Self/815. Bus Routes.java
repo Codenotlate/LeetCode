@@ -124,4 +124,55 @@ class Solution {
 
 
 
+// Phase3: similar to above M2, this one is better than M1 (easier to understand)
+class Solution {
+    // initial idea is to build the graph, and do BFS starting source node. since we want the least number of bus, at each level we need to add all nodes sharing buses with current node. Thus the graph is actually a stopToBus map + the initial routes array.
+    // possible special case to consider: source or target not in the graph, or source and target are the same
+    public int numBusesToDestination(int[][] routes, int source, int target) {
+        if (source == target) {return 0;}
+        // build the stopToBus map
+        Map<Integer, List<Integer>> stopToBus = new HashMap<>();
+        for (int i = 0; i < routes.length; i++) {
+            for (int stop: routes[i]) {
+                stopToBus.putIfAbsent(stop, new LinkedList<>());
+                stopToBus.get(stop).add(i);
+            }
+        }
+        // special case: source / target not in the routes
+        if (!stopToBus.keySet().contains(source) || !stopToBus.keySet().contains(target)) {return -1;}
+        
+        // start BFS, each level add all nodes sharing buses with cur node
+        int level = 0;
+        Queue<Integer>queue = new LinkedList<>();
+        // visited can record bus instead of stop number
+        Set<Integer> visited = new HashSet<>();
+        
+        for (int bus: stopToBus.get(source)) {
+            if(visited.contains(bus)) {continue;}
+            visited.add(bus);
+            for (int stop: routes[bus]) {
+                queue.add(stop);
+            }
+        }
+        
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int curStop = queue.poll();
+                if (curStop == target) {return level+1;}
+                for (int bus: stopToBus.get(curStop)) {
+                    if(visited.contains(bus)) {continue;}
+                    visited.add(bus);
+                    for (int stop: routes[bus]) {
+                        queue.add(stop);
+                    }
+                }
+            }
+            level++;
+        }
+        return -1;
+    }
+}
+
+
 

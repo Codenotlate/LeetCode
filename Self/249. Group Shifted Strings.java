@@ -61,3 +61,29 @@ class Solution {
         return res.toString();
     }
 } 
+
+// Review self
+class Solution {
+    // since strings in the same group are got from shifting, the diff between each position should be the same for one group. Thus calculated that diff string for each string and add to a map. Convert to list in the end
+    // possible special case: diff is negative, convert it by adding 26 to convert it in the range [0, 25]
+    public List<List<String>> groupStrings(String[] strings) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s: strings) {
+            String diffCode = getDiffCode(s);
+            map.putIfAbsent(diffCode, new LinkedList<>());
+            map.get(diffCode).add(s);
+        }
+        
+        return new LinkedList(map.values());
+    }
+    
+    private String getDiffCode(String s) {
+        StringBuilder res = new StringBuilder();
+        for (int i = 1; i <s.length(); i++) {
+            int diff = s.charAt(i) - s.charAt(i-1);
+            if (diff < 0) {diff += 26;}
+            res.append(diff).append('.');
+        }
+        return res.toString();
+    }
+}
