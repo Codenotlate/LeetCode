@@ -75,6 +75,50 @@ The self review method can be optimized to the above M1. The basic idea is we se
 In our self review method, there's actually no need to keep track of excVal. Because if the max sum is produced by excVal, it must be recorded by maxTwoSides[0] in the lower level node recursions when that not is the root node of that recursion round.
 */
 
+// Review self
+/* Initial thought
+Think it in a recursive way. At root node of each recursive level, we want two information from each child node: the overall maxSum from that child subtree + the max single side sum(either left/right side and including the child node)
+The at the root level:
+singleSum = Max(root.val + leftsingleSum, root.val + rightsingleSum, root.val);
+maxSum = Max(leftmaxSum, rightmaxSum,root.val + leftsingleSum+rightsingleSum, singleSum)
+*/
+class Solution {
+    public int maxPathSum(TreeNode root) {
+        int[] res = maxSumHelper(root);
+        return res[0];
+    }
+    
+    private int[] maxSumHelper(TreeNode root) {
+        int[] res = new int[2]; // res[0] stores maxSum, res[1] stores singleSum
+        if (root == null) {res[0] = Integer.MIN_VALUE; return res;}
+        int[] left = maxSumHelper(root.left);
+        int[] right = maxSumHelper(root.right);
+        res[1] = Math.max(root.val, Math.max(left[1], right[1]) + root.val);
+        res[0] = Math.max(Math.max(root.val + left[1] + right[1], res[1]), Math.max(left[0], right[0]));
+        
+        return res;
+    }
+}
+// time complexity should be the same as above earlier method, but this method can be optimized a bit: there's no need to return res[0] each time, we can use a int[] parameter to record along the recursion like in earlier methods.
+// and above whether include left or right side singleSum can be simplified using below compare with 0.
+
+class Solution {
+    public int maxPathSum(TreeNode root) {
+        int[] maxSum = new int[]{Integer.MIN_VALUE};
+        maxSumHelper(root, maxSum);
+        return maxSum[0];
+    }
+    
+    // maxSumHelper now only return the largest singleSum including root
+    private int maxSumHelper(TreeNode root, int[] maxSum) {
+        if (root == null) {return 0;}
+        int leftSingle = Math.max(0,maxSumHelper(root.left, maxSum));
+        int rightSingle = Math.max(0, maxSumHelper(root.right, maxSum));
+        maxSum[0] = Math.max(maxSum[0], leftSingle+ root.val + rightSingle);      
+        return root.val + Math.max(leftSingle, rightSingle);
+    }
+}
+
 
 
 

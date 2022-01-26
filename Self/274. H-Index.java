@@ -46,6 +46,30 @@ Radix sort: Do bucket sort for each digit.
 */
 
 
+// Phase3 self
+class Solution {
+    /* initial thought
+    since the h value will be in the range of 0 to n, we can use a count array with length = n + 1, and count[i] represent number of papers with citations == i. For citations > n, we count it into count[n].
+    After the loop of citations array, we loop count array from right to left, and return the first i where cumSum from right >= i.
+    */
+    public int hIndex(int[] citations) {
+        int n = citations.length;
+        int[] count = new int[n+1];
+        for(int c: citations) {
+            if (c >= n) {count[n]++;}
+            else {count[c]++;}
+        }
+        
+        int cumSum = 0;
+        for (int i = n; i >= 0; i--) {
+            cumSum += count[i];
+            if (cumSum >= i) {return i;}
+        }
+        return 0;
+    }
+}
+
+
 
 
 
