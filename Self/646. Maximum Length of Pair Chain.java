@@ -51,3 +51,24 @@ class Solution {
         return res;
     }
 }
+
+
+// Phase3 self similar to m1, but sorted based on start position
+class Solution {
+    /* initial thought
+    kind of similar to meeting schedule problem. Sort based on start first. if curstart > prevend, len++ and prevend = curend; else prevend = min(prevend, curend).
+    time O(nlogn)  space O(1)
+    */
+    public int findLongestChain(int[][] pairs) {
+        int len = 0;
+        Arrays.sort(pairs, (p1,p2)->(p1[0]-p2[0]));
+        int prevend = -1001;
+        for (int[] p: pairs){
+            int curstart = p[0];
+            int curend = p[1];
+            if(curstart > prevend) {len++; prevend = curend;}
+            else {prevend = Math.min(prevend, curend);}
+        }
+        return len;
+    }
+}

@@ -123,3 +123,53 @@ else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])
 在最长递增子序列中，dp[i] 表示以 Si 为结尾的最长递增子序列长度，子序列必须包含 Si ；在最长公共子序列中，dp[i][j] 表示 S1 中前 i 个字符与 S2 中前 j 个字符的最长公共子序列长度，不一定包含 S1i 和 S2j。
 在求最终解时，最长公共子序列中 dp[N][M] 就是最终解，而最长递增子序列中 dp[N] 不是最终解，因为以 SN 为结尾的最长递增子序列不一定是整个序列最长递增子序列，需要遍历一遍 dp 数组找到最大者。
 */
+
+
+
+
+
+// review self
+class Solution {
+    /* initial thought
+    The longest possible answer is min(t1.len, t2.len). And there are alot of repetitive subproblems. Thus can consider dp or recursion+memo
+    i stands for pos in s1, and j for s2. Then:
+    dp[i][j] = s1[i] == s2[j] ? 1 + dp[i+1][j+1] : max(dp[i+1][j], dp[i][j+1])
+    where dp[i][j] represents the longestlen result for s1[i:] and s2[j:]
+    */
+    // M1: recursion + memo timeO(l1*l2) space O(l1 * l2)
+    public int longestCommonSubsequence(String text1, String text2) {
+        // if(text1.length() < text2.length()) {
+        //     String temp = text1;
+        //     text1 = text2;
+        //     text2 = temp;
+        // } // unnecessary
+        int[][] memo = new int[text1.length()][text2.length()];
+        for (int[] row: memo) {Arrays.fill(row, -1);}
+        return getlongestLen(text1, text2, 0, 0, memo);
+    }
+    
+    private int getlongestLen(String s1, String s2, int i, int j, int[][] memo) {
+        if(i >= s1.length() || j >= s2.length()) {return 0;}
+        if (memo[i][j] != -1) {return memo[i][j];}
+        memo[i][j] = s1.charAt(i) == s2.charAt(j) ? 1+getlongestLen(s1, s2, i+1, j+1, memo) : Math.max(getlongestLen(s1, s2, i+1, j, memo),getlongestLen(s1, s2, i, j+1, memo));
+        return memo[i][j];
+    }
+}
+
+class Solution {
+    // M2: dp timeO(l1*l2) space O(l1 * l2). Similar as above M3 but in backwards order
+    // from above formula we can see dp[i][j] depends on dp[i+1][j+1], dp[i+1][j], dp[i][j+1]. Thus we can optimize space from O(l1*l2) to O(min(l1, l2)). And dp direction should be i and j both backwards.
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[] memo = new int[text2.length()+1];
+        for (int i = text1.length() - 1; i >= 0; i--) {
+            int previ1j1 = 0;
+            for (int j = text2.length() - 1; j>=0; j--) {
+                int tempprev = memo[j];
+                memo[j] = text1.charAt(i) == text2.charAt(j) ? 1 + previ1j1 : Math.max(memo[j+1], memo[j]);
+                previ1j1 = tempprev;
+            }
+        }
+        
+        return memo[0];
+    }
+}
