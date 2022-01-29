@@ -60,7 +60,40 @@ class Solution {
 }
 
 
-
+//Phase3 self
+class Solution {
+    /*initial thought
+    Since only lower case letters and we need to count, using bucket counting.
+    To return lexi order, consider building the result iteratively. use StringBuilder res as a stack, if cur char is already in the res, skip it. Otherwise, compare cur char with last in res. while last > cur and count[last] > 0 , keep removing last. Then add cur char to res. Until all chars in s are processed.
+    time O(n) space O(26) = O(1)
+    */
+    
+    public String removeDuplicateLetters(String s) {
+        int[] count = new int[26];
+        for (char c: s.toCharArray()) {
+            count[c-'a']++;
+        }
+        StringBuilder res = new StringBuilder();
+        int[] visited = new int[26];
+        
+        for (char cur: s.toCharArray()) {
+            count[cur-'a']--;
+            if (visited[cur-'a'] != 0) {continue;}
+            while (res.length() > 0) {
+                char last = res.charAt(res.length()-1);
+                if (cur < last && count[last-'a']>0) {
+                    res.deleteCharAt(res.length() - 1);
+                    visited[last-'a']=0;
+                } else {break;}
+            } 
+            res.append(cur);
+            visited[cur-'a'] = 1;
+            
+        }
+        
+        return res.toString();
+    }
+}
 
 
 

@@ -115,6 +115,111 @@ class Solution {
 
 
 
+// Phase3 self
+class Solution {
+    /* initial thought
+    two BFS/DFS starts with 4 edges, one label for Pacific and another label for anlantic, add to res if one pos is labeled both
+    // time o(m*n) space O(m*n)    
+    */    
+    // try 2 BFS way first
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        List<List<Integer>> res = new LinkedList<>();
+        int m = heights.length;
+        int n = heights[0].length;
+        int[][] visited = new int[m][n]; // 0 for unvisited, 1 for p, 2 for a
+        Queue<int[]> queue = new LinkedList<>();
+
+        for (int i = 0; i<m; i++) {
+            queue.add(new int[]{i,0});
+            visited[i][0] = 1;
+        }
+        for (int j = 1; j < n; j++) {
+            queue.add(new int[]{0, j});
+            visited[0][j] = 1;
+        }
+        
+        int[][] dirs = new int[][]{{0, -1}, {0,1},{1,0},{-1,0}};
+        while(!queue.isEmpty()) {
+            int[] curpos = queue.poll();
+            for (int[] d: dirs) {
+                int newi = curpos[0] + d[0];
+                int newj = curpos[1] + d[1];
+                if (newi < 0 || newj < 0 || newi >=m || newj >= n || visited[newi][newj] == 1 || heights[newi][newj] < heights[curpos[0]][curpos[1]]) { continue;}
+                queue.add(new int[]{newi, newj});
+                visited[newi][newj] = 1;
+            }
+        }
+        
+        // another BFS for Altantic cells
+        for (int i = 0; i<m; i++) {
+            queue.add(new int[]{i,n-1});
+            if(visited[i][n-1] != 0) {res.add(Arrays.asList(i, n-1));}
+            visited[i][n-1] = 2;
+        }
+        for (int j = 0; j < n-1; j++) {
+            queue.add(new int[]{m-1, j});
+            if(visited[m-1][j] != 0) {res.add(Arrays.asList(m-1, j));}
+            visited[m-1][j] = 2;
+        }
+        
+        while (!queue.isEmpty()) {
+            int[] curpos = queue.poll();
+            for (int[] d: dirs) {
+                int newi = curpos[0] + d[0];
+                int newj = curpos[1] + d[1];
+                if (newi < 0 || newj < 0 || newi >=m || newj >= n || visited[newi][newj] == 2 || heights[newi][newj] < heights[curpos[0]][curpos[1]]) { continue;}
+                queue.add(new int[]{newi, newj});
+                if(visited[newi][newj] == 1) {res.add(Arrays.asList(newi, newj));}
+                visited[newi][newj] = 2;
+            }
+        }
+        
+        return res;
+    }
+}
+
+class Solution {  
+    // try dfs way 
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        List<List<Integer>> res = new LinkedList<>();
+        int m = heights.length;
+        int n = heights[0].length;
+        int[][] visited = new int[m][n]; // 0 for unvisited, 1 for p, 2 for a
+        for (int i = 0; i<m; i++) {
+            dfs(heights, i, 0, 1, visited, res);
+        }
+        for (int j = 1; j < n; j++) {
+            dfs(heights, 0, j, 1, visited, res);
+        }
+        for (int i = 0; i<m; i++) {
+            dfs(heights, i, n-1, 2, visited, res);
+        }
+        for (int j = 0; j < n-1; j++) {
+            dfs(heights, m-1, j, 2, visited, res);
+        }
+        
+        return res;
+    }
+    
+    
+    private void dfs(int[][] heights, int i, int j, int label, int[][] visited, List<List<Integer>> res) {
+        if (visited[i][j] == label) {return;} 
+        if (visited[i][j] != 0) {res.add(Arrays.asList(i, j));}
+        visited[i][j] = label;
+        int m = heights.length;
+        int n = heights[0].length;
+        int[][] dirs = new int[][]{{0, -1}, {0,1},{1,0},{-1,0}};
+        for (int[] d: dirs) {
+            int newi = i + d[0];
+            int newj = j + d[1];
+            if (newi < 0 || newj < 0 || newi >=m || newj >= n || heights[newi][newj] < heights[i][j]) { continue;}
+            dfs(heights, newi, newj, label, visited, res);
+            
+        }
+    }
+        
+        
+}
 
 
 
@@ -126,6 +231,8 @@ class Solution {
 
 
 
+// https://stackoverflow.com/questions/7488098/storing-arrays-in-set-and-avoiding-duplicates
+// don't use array as the key for hashset or hashmap
 
 
 
