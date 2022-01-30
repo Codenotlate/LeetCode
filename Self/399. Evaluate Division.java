@@ -55,4 +55,82 @@ this is the main difference from the general backtrack problem, where there may 
 // and when new query comes, we can directly calculate the answer by using the represented values of those chars
 // the path compression in find function here also updates dist map
 
-// need further review
+// need further review（22/1/29 memo: still not understand the UF way）
+
+
+
+// Review self
+class Solution {
+    /*
+    Build the double directional graph, then use dfs for each query's first node. return result as -1 if any of the nodes in the query is not in the graph.    
+    time O(n*(V+E))
+    */
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        Map<String, Map<String, Double>> graph = new HashMap<>();
+        // build the graph
+        for (int i = 0; i < values.length; i++) {
+            String node1 = equations.get(i).get(0);
+            String node2 = equations.get(i).get(1);
+            graph.putIfAbsent(node1, new HashMap<>());
+            graph.putIfAbsent(node2, new HashMap<>());
+            graph.get(node1).put(node2, values[i]);
+            graph.get(node2).put(node1, 1.0 / values[i]);
+        }
+        
+        double[] res = new double[queries.size()];
+        
+        // do dfs calculation for each query
+        for(int i = 0; i < queries.size(); i++) {
+            String node1 = queries.get(i).get(0);
+            String node2 = queries.get(i).get(1);
+            res[i] = dfs(graph, node1, node2, new HashSet<String>(), 1.0);
+        }
+        return res;
+    }
+    
+    
+    private double dfs(Map<String, Map<String, Double>> graph, String cur, String node2, Set<String> visited, double preNum) {
+        if(!graph.keySet().contains(node2) || !graph.keySet().contains(cur)) {return -1.0;}
+        if(cur.equals(node2)) {return preNum;}        
+        visited.add(cur);
+        for(String next: graph.get(cur).keySet()) {
+            double value = graph.get(cur).get(next);
+            if (!visited.contains(next)) {
+                double res = dfs(graph, next, node2, visited, preNum * value);
+                if(res!= -1) {return res;}
+            }
+        }
+        return -1;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,3 +22,28 @@ class Solution {
 
 // further thoughts
 // https://leetcode.com/problems/range-addition/solution/
+
+
+// Review self
+class Solution {
+    /* Initial thought
+    naive idea time O(len * n). Try to reduce len part: Instead of apply inc to each position in the range(i), we label the start of the range with +inc, and [end+1] with -inc. This only takes O(1) time for each range. In the end, we accumulate the sum of the inc in each position. Because we did -inc for range starting [end+1], when we do accum sum, the effect is actually no inc for positions on range starting [end+1].
+    time O(n) space O(1)    
+    */
+    public int[] getModifiedArray(int length, int[][] updates) {
+        int[] arr = new int[length];
+        for (int[] range: updates) {
+            int start = range[0];
+            int end = range[1];
+            int inc = range[2];
+            arr[start] += inc;
+            if(end+1 < length) {arr[end+1] -= inc;}            
+        }
+        
+        // accumulate sum
+        for (int i = 1; i < length; i++) {
+            arr[i] += arr[i-1]; 
+        }
+        return arr;
+    }
+}

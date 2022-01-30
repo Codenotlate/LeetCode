@@ -74,3 +74,95 @@ class Solution {
         return level * plainSum - dsum;
     }
 }
+
+// Phase3 self
+
+class Solution {
+    /* Initial thought
+    Use BFS to label the level of each position, i.e. its depth. If the polled out NestedInteger is not an integer, we get the list of nestedIntegers inside and add back to queue again. Record the level * number for number when it's an integer.
+    convert the formula for weightedSum: a1(D-d1+1) + a2(D-d2+1) +a3(D-d3+1) = (a1+a2+a3)*(D+1) -a1d1-a2d2-a3d3
+    thus we need to record element sum and MaxDepth along the way
+    time O(total sum of all elements' depth) space O(nestedList.size)?   
+    */
+    public int depthSumInverse(List<NestedInteger> nestedList) {
+        int weightedSum = 0;
+        int plainSum = 0;
+        Queue<NestedInteger> queue = new LinkedList<>();
+        queue.addAll(nestedList);
+        int level = 1;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                NestedInteger cur = queue.poll();
+                if (cur.isInteger()) {
+                    int curNum = cur.getInteger();
+                    plainSum += curNum;
+                    weightedSum += curNum * level;
+                } else {
+                    queue.addAll(cur.getList());
+                }
+            }
+            level++;           
+        }
+        return level * plainSum - weightedSum;
+    }
+}
+
+
+class Solution {
+    // Try DFS too
+    public int depthSumInverse(List<NestedInteger> nestedList) {
+        int[] tracks = new int[3]; //tracks[0] = weightedSum, track[1] = plainSum, track[2] = maxDepth
+        for (NestedInteger nest: nestedList) {
+            dfs(nest, 1, tracks);
+        }        
+        return tracks[1] * (tracks[2] + 1) - tracks[0];
+    }
+    
+    private void dfs(NestedInteger nest, int depth, int[] tracks) {
+        if (nest.isInteger()) {
+            tracks[0] += nest.getInteger() * depth;
+            tracks[1] += nest.getInteger();
+            tracks[2] = Math.max(tracks[2], depth);
+            return;            
+        }
+        for (NestedInteger next: nest.getList()) {
+            dfs(next, depth+1, tracks);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
