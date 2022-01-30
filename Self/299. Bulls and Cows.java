@@ -63,9 +63,60 @@ class Solution {
 
 
 
+//Review self: idea close to above M1 with slight difference
+class Solution {
+    /* initial thought
+    first pass: go through two strings to find bull number, and also count other char count in secret string using a count[10] array. Use a visited[len] array to label position counted as bull.
+    second pass: go through guess string, skip visited bull positions. Check if the number is in the count[] arr and count > 0. If yes increase the cows number.
+    time O(n) space O(n)
+    
+    */
+    public String getHint(String secret, String guess) {
+        int[] count = new int[10];
+        int[] visited = new int[secret.length()];
+        int bulls = 0;
+        int cows = 0;
+        for (int i = 0; i < secret.length(); i++) {
+            if (secret.charAt(i) == guess.charAt(i)) {bulls++; visited[i] = 1;}
+            else {count[secret.charAt(i) - '0']++;}
+        }
+        
+        for (int i = 0; i < guess.length(); i++) {
+            if (visited[i] != 0) {continue;}
+            if (count[guess.charAt(i)-'0'] > 0) {
+                count[guess.charAt(i) - '0']--;
+                cows++;
+            }
+        }
+        
+        StringBuilder res = new StringBuilder();
+        res.append(bulls).append("A").append(cows).append("B");
+        return res.toString();
+    }
+}
 
-
-
+// similar to above M2
+class Solution {
+    // Try one pass way, only use one count[10] array, secret and guess do ++ or -- in the same step. if s[i] = g[i], bulls++; Otherwise: if count[s[i]] < 0, then count[s[i]]++, cows++; if count[g[i]] > 0, then count[g[i]]--; cows++
+    // time O(n) space O(n)
+    public String getHint(String secret, String guess) {
+        int[] count = new int[10];
+        int bulls = 0;
+        int cows = 0;
+        for (int i = 0; i < secret.length(); i++) {
+            char s = secret.charAt(i);
+            char g = guess.charAt(i);
+            if (s == g) {bulls++;}
+            else {
+                count[s-'0']++;
+                if (count[s-'0'] <= 0) {cows++;}
+                count[g-'0']--;
+                if (count[g-'0'] >= 0) {cows++;}
+            }
+        }
+        return bulls + "A" + cows + "B";
+    }
+}
 
 
 
