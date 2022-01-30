@@ -46,3 +46,50 @@ class Solution {
         return prev;
     }
 }
+
+
+// Phase3 self: close idea to M1
+class Solution {
+    /* initial thought
+    find firsthead, firsttail, secondhead; reverse the secondhead till tail
+    insert the second half into the first half of the list
+    time O(n) space O(1) if use iterative reverse, O(n) is use recursive reverse
+    */
+    // try iterative reverse
+    public void reorderList(ListNode head) {
+        if (head.next == null || head.next.next == null) {return;}
+        ListNode firsttail = head;
+        ListNode secondhead = head;
+        while(secondhead.next != null && secondhead.next.next!= null) {
+            firsttail = firsttail.next;
+            secondhead = secondhead.next.next;
+        }
+        secondhead = firsttail.next;
+        firsttail.next = null;
+        secondhead = reverse(secondhead); // reverse iteratively
+        // combine first and second half
+        ListNode firsthead = head;
+        while(firsthead != null) {
+            ListNode firstnext = firsthead.next;
+            firsthead.next = secondhead;
+            if (secondhead == null) {break;}
+            ListNode secondnext = secondhead.next;
+            secondhead.next = firstnext;
+            secondhead = secondnext;
+            firsthead = firstnext;
+        }        
+    }
+    
+    // inplace reverse
+    private ListNode reverse(ListNode head) {
+        ListNode pre = null;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
+    }
+}

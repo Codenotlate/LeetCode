@@ -29,7 +29,6 @@
 class Solution {
     // phase3 self
     // M1 : dfs way
-    // time O(n) space O(n)
     public int depthSum(List<NestedInteger> nestedList) {
         return dfs(nestedList, 1);
     }
@@ -51,7 +50,6 @@ class Solution {
 class Solution {
     // phase3 self
     // M2 : BFS way
-    // time O(n) space O(n)
     public int depthSum(List<NestedInteger> nestedList) {
         int level = 1;
         int sum = 0;
@@ -75,4 +73,54 @@ class Solution {
     }
     
     
+}
+
+
+
+// Review self
+class Solution {
+    /*initial thought
+    BFS all nestedInteger, add to weighted sum when it's an integer, otherwise put all nestedInteger back to the queue
+    time O(sum of depth) space O(max # for elements in same depth)   
+    */
+    public int depthSum(List<NestedInteger> nestedList) {
+        int sum = 0;
+        Queue<NestedInteger> queue = new LinkedList<>();
+        queue.addAll(nestedList);
+        int level = 1;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                NestedInteger cur = queue.poll();
+                if (cur.isInteger()) {
+                    sum += cur.getInteger() * level;
+                } else {
+                    queue.addAll(cur.getList());
+                }
+            }
+            level++;
+        }
+        return sum;
+    }
+}
+
+
+class Solution {
+    // try DFS way
+    public int depthSum(List<NestedInteger> nestedList) {
+        int sum = 0;
+        for (NestedInteger nest: nestedList) {
+            sum += dfs(nest, 1);
+        }
+        return sum;        
+    }
+    
+    private int dfs(NestedInteger nest, int level) {
+        if (nest.isInteger()) {return nest.getInteger() * level;}
+        int sum = 0;
+        for (NestedInteger next: nest.getList()) {
+            sum += dfs(next, level+1);
+        }
+        return sum;
+    }
 }
