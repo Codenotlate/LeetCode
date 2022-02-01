@@ -204,8 +204,75 @@ class Solution {
 
 
 
+// Phase3 self
+class Solution {
+    /* initial thought
+    do BFS or DFS with 'O's on the border added to the queue. label those O's as 'N'. No need for an extra visited matrix, the board it self can be used as visited, call all visited O's will be labeled as 'N'.
+    do a second loop, convert 'O' to 'X', and then a third loop, convert 'N' to 'O' back
+    time O(m*n) space O(m*n)    
+    */
+    public void solve(char[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        for (int j = 0; j < n; j++) {
+            if (board[0][j] == 'O') {label(board, 0, j);}
+            if (board[m-1][j] == 'O') {label(board, m-1, j);}
+        }
+        
+        for(int i = 1; i < m-1; i++) {
+            if (board[i][0] == 'O') {label(board, i, 0);}
+            if (board[i][n-1] == 'O') {label(board, i, n-1);}
+        }
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O') {board[i][j] = 'X';}
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'N') {board[i][j] = 'O';}
+            }
+        }
+    }
+    
+    private void label(char[][] board, int i, int j) {
+        // M1: BFS
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{i, j});
+        board[i][j] = 'N';
+        int[][] dirs = new int[][]{{-1, 0}, {1,0}, {0, -1}, {0,1}};
+        while(!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (int[] d: dirs) {
+                int newi = cur[0] + d[0];
+                int newj = cur[1] + d[1];
+                if (newi >= 0 && newi < board.length && newj >= 0 && newj < board[0].length && board[newi][newj] == 'O') {
+                    queue.add(new int[]{newi, newj});
+                    board[newi][newj] = 'N';
+                }
+            }
+        }
+    }
+
+    private void label(char[][] board, int i, int j) {
+        // M2: DFS
+        board[i][j] = 'N';
+        int[][] dirs = new int[][]{{-1, 0}, {1,0}, {0, -1}, {0,1}};
+        
+        for (int[] d: dirs) {
+            int newi = i + d[0];
+            int newj = j + d[1];
+            if (newi >= 0 && newi < board.length && newj >= 0 && newj < board[0].length && board[newi][newj] == 'O') {
+                board[newi][newj] = 'N';
+                label(board, newi, newj);
+            }
+        }
+    }
+}
 
 
+// UF is not as easy as BFS/DFS
 
 
 

@@ -212,6 +212,83 @@ class Solution {
 }
 
 
+// Review self
+// can use this version as memorized version
+class Solution {
+    /* initial thought
+    merge sort for O(nlogn) If we do topdown, the space will be O(logn). So we need to do buttom up to have O(1) space
+    the length of the two separate arrays will increase from 1 to 2 to 4 etc
+    each time we label the first, second halves and also the next position waiting for iteration.    
+    */
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) {return head;}
+        // first figure out the length of the list
+        int size = 0;
+        ListNode cur = head;
+        while (cur != null) {size++; cur = cur.next;}
+        int halfLen = 1;
+        ListNode dummy = new ListNode(-1, head);
+        while (halfLen < size) {
+            ListNode prevTail = dummy;
+            ListNode first = dummy.next;
+            while (first != null) {               
+                ListNode second = split(first, halfLen);
+                ListNode next = split(second, halfLen);
+                prevTail = merge(first, second, prevTail);
+                first = next;      
+            }                  
+            halfLen *= 2;
+        }
+        return dummy.next;
+    }
+    
+    
+    private ListNode split(ListNode head, int len) {
+        if(head == null) {return null;}
+        ListNode cur = head;
+        for (int i = 0; i < len - 1; i++) {cur = cur.next; if(cur == null) {break;}}
+        if (cur == null) {return null;}
+        ListNode next = cur.next;
+        cur.next = null;
+        return next;        
+    }
+    
+    private ListNode merge(ListNode first, ListNode second, ListNode prevTail) {
+        ListNode p1 = first;
+        ListNode p2 = second;
+        while(p1 != null && p2 != null) {
+            if (p1.val > p2.val) {
+                prevTail.next = p2;
+                p2 = p2.next;
+            } else {
+                prevTail.next = p1;
+                p1 = p1.next;
+            }
+            prevTail = prevTail.next;
+        }
+        prevTail.next = p1 == null ? p2 : p1;
+        while (prevTail.next != null) {prevTail = prevTail.next;}
+        return prevTail;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
