@@ -59,3 +59,26 @@ class Solution {
         return Math.max(dp_i0, dp_i1);
     }
 }
+
+
+
+// Review self
+class Solution {
+    /* initial thought
+    At each position, we have two choices, rob or not rob
+    dp[i][0] = max(dp[i-1][1], dp[i-1][0]);
+    dp[i][1] = dp[i-1][0] + nums[i]
+    return max(dp[n-1][0], dp[n-1][1])
+    time O(n) space O(n) and can be optmized to O(1)
+    */
+    public int rob(int[] nums) {
+        int dp_i0 = 0;
+        int dp_i1 = -Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            int prev_i0 = dp_i0;
+            dp_i0 = Math.max(dp_i0, dp_i1);
+            dp_i1 = prev_i0 + nums[i];
+        }
+        return Math.max(dp_i0, dp_i1);
+    }
+}

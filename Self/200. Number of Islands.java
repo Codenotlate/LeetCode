@@ -173,7 +173,7 @@ class Solution {
 
 // phase3: improvement from solution
 // no need to use visited[][], can simply label those visited 1s as 0s in the grid itself.
-// This way, space for DFS is still O(mn), but for BFS the space is the max size of the queue, which is 
+// This way, space for DFS is still O(mn), but for BFS the space is the max size of the queue, which is O(min(M, N))
 
 
 class Solution {
@@ -230,6 +230,118 @@ class Solution {
 
 
 // can also do unionFind, omit here for now
+
+
+
+
+// Review self
+class Solution {
+    /* initial thought
+    Three ways: Dfs/BFS/UF 
+    and assume can change the origin grid data. Need to ask for clarify for this requirement in the interview.
+    */
+    // Try DFS/BFS way first: loop the grid, do DFS/BFS to label as visited if encounter 1 and skip those already visited. Count the number we do DFS/BFS.
+    // Time O(m *n) space O(m*n). For DFS, space comes from the  visited matrix and the recursion stack. For BFS, space comes from the visited matriax as O(mn), the queue is O()
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] visited = new int[m][n];
+        int count = 0;
+        for (int i = 0 ; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1' && visited[i][j] == 0) {
+                    label(grid, m, n, i, j, visited);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    // use DFS here, omit BFS way
+    private void label(char[][] grid, int m, int n, int i, int j, int[][] visited) {
+        visited[i][j] = 1;
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        for (int[] d: dirs) {
+            int newi = i + d[0];
+            int newj = j + d[1];
+            if (newi >= 0 && newi < m && newj >= 0 && newj < n && visited[newi][newj] != 1 && grid[newi][newj] == '1') {
+                label(grid, m, n, newi, newj, visited);
+            }
+        }
+    }
+}
+
+// UF way
+class Solution {
+    /* initial thought
+    Three ways: Dfs/BFS/UF 
+    and assume can change the origin grid data. Need to ask for clarify for this requirement in the interview.
+    */
+    // UF way: connect each 1 to its 4 neighbors if it's also 1. In the end count the cell with itself as parent. use i * n + j to represent pos[i][j]. use path compression in find and connect by rank.
+    // Time O(m *n) space O(m*n) - Note that Union operation takes essentially constant time[1] when UnionFind is implemented with both path compression and union by rank.
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[] parent = new int[m *n];
+        for (int i = 0; i < m*n; i++) {parent[i] = i;}
+        int[] rank = new int[m * n];
+        
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        
+
+        for (int i = 0 ; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    for (int[] d: dirs) {
+                        int newi = i + d[0];
+                        int newj = j + d[1];
+                        if (newi >= 0 && newi < m && newj >= 0 && newj < n && grid[newi][newj] == '1') {
+                            connect(i*n+j, newi*n+newj, parent, rank);
+                        }
+                    }
+                }
+            }
+        }
+        
+        int count = 0;
+        for (int i = 0; i < m*n; i++) {if(grid[i/n][i%n] == '1' && parent[i] == i) {count++;}}
+        return count;
+    }
+    
+    private void connect(int p1, int p2, int[] parent, int[] rank){
+        int p1root = find(p1, parent);
+        int p2root = find(p2, parent);
+        if (rank[p1root] > rank[p2root]) {
+            parent[p2root] = p1root;
+        } else {
+            parent[p1root] = p2root;
+            if(rank[p1root] == rank[p2root]) {rank[p2root]++;}
+        }
+    }
+    
+    private int find(int p, int[] parent) {
+        while(parent[p] != p) {
+            parent[p] = parent[parent[p]];
+            p = parent[p];
+        }
+        return p;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
