@@ -102,6 +102,45 @@ class Solution {
 
 
 
+// review simialr to above
+/* initial thought:
+dfs + backtracking.
+time O(n^2) space O(h)
+Time complexity is not O(N), sadly. DFS recursion is O(N) by itself, but appending the answer isn't.
+For this problem time complexity is purely governed by the maximum number of nodes we are going to return + O(N) traversal. It's O(N^2) for space and time.
+*/
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(root, targetSum, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(TreeNode root, int target, List<Integer> curList, List<List<Integer>> res) {
+        if (root == null) {return;}
+        curList.add(root.val);
+        if (root.left == null && root.right== null && root.val == target) {
+            res.add(new LinkedList(curList));
+            curList.remove(curList.size() - 1);
+            return;
+        }
+        dfs(root.left, target - root.val, curList, res);
+        dfs(root.right, target - root.val, curList, res);
+        curList.remove(curList.size() - 1);
+    }
+}
+
+
+// from solution:
+/*
+Why Breadth First Search is bad for this problem?
+
+We did touch briefly on this in the intuition section. BFS would solve this problem perfectly. However, note that the problem statement actually asks us to return a list of all the paths that add up to a particular sum. Breadth first search moves one level at a time. That means, we would have to maintain the pathNodes lists for all the paths till a particular level/depth at the same time.
+
+Say we are at the level 10 in the tree and that level has e.g. 20 nodes. BFS uses a queue for processing the nodes. Along with 20 nodes in the queue, we would also need to maintain 20 different pathNodes lists since there is no backtracking here. That is too much of a space overhead.
+
+The good thing about depth first search is that it uses recursion for processing one branch at a time and once we are done processing the nodes of a particular branch, we pop them from the pathNodes list thus saving on space. At a time, this list would only contain all the nodes in a single branch of the tree and nothing more. Had the problem statement asked us the total number of paths that add up to a particular sum (root to leaf), then breadth first search would be an equally viable approach.
+*/
 
 
 

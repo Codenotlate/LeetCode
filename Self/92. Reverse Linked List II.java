@@ -41,3 +41,31 @@ class Solution {
 
 // a more concise way in solution M2
 // https://leetcode.com/problems/reverse-linked-list-ii/solution/
+// below M2 is similar to solution M2, easier for me to understand
+
+// Phase3 self
+/* initial thought
+find the position of firstTail before the reversed range and the start of the reverse node, do reverse inplace until prev reaches the end of the reverse range. change firstTail.next.next = cur, firstTail.next = prev.
+need to setup a dummy in front, return dummy.next in the end.
+
+*/
+//M2
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        ListNode dummy = new ListNode(-1, head);
+        ListNode firstTail = dummy;
+        int step = left;
+        while(step-- > 1) {firstTail=firstTail.next;}
+        ListNode cur = firstTail.next;
+        ListNode prev = null;
+        while(right-- > left - 1) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        firstTail.next.next = cur;
+        firstTail.next = prev;
+        return dummy.next;
+    }
+}
