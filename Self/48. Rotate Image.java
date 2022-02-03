@@ -31,3 +31,33 @@ class Solution {
 }
 
 // another way: rotate 4 cells each time
+
+// Phase3 self
+class Solution {
+    /* initial thought
+    It's basically reverse rows first, the reverse via diagonal.   
+    */
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n / 2; i++) {
+            for (int j = 0; j < n; j++) {
+                swap(matrix, i, j, n-1-i,j);
+            }
+        }
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                swap(matrix, i, j, j,i);
+            }
+        }
+    }
+    
+    private void swap(int[][] matrix, int i1, int j1, int i2, int j2) {
+        int temp = matrix[i1][j1];
+        matrix[i1][j1] = matrix[i2][j2];
+        matrix[i2][j2] = temp;
+    }
+}
+
+
+

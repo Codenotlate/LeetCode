@@ -27,3 +27,28 @@ class Solution {
 
 // can also do bitmasking - using a 9 digits binary number to replace the array to label visited
 // don't think it's necessary to learn for now
+
+// Review self
+class Solution {
+    /* initial thought
+    since only filled cells need to be checked. We can maintain three arrays for each cell. one for row, one for col, and another one for 3*3 space it is in. If any of the cell has been visited in any of the array, return false.
+    time O(9*9) space O(3*9*9)
+    */
+    public boolean isValidSudoku(char[][] board) {
+        int[][] rows = new int[9][9];
+        int[][] cols = new int[9][9];
+        int[][] boxes = new int[9][9];
+        
+        for (int i = 0; i< board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == '.') {continue;}
+                int num = board[i][j] - '0' - 1;
+                if (rows[i][num] != 0 || cols[j][num] != 0 || boxes[i/3 *3 + j / 3][num] != 0) {return false;}
+                rows[i][num] = 1;
+                cols[j][num] = 1;
+                boxes[i/3*3+j/3][num] = 1;
+            }
+        }
+        return true;
+    }
+}
