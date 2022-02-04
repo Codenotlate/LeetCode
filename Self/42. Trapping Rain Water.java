@@ -48,6 +48,29 @@ class Solution {
 
 // omit M2
 
+// Review add M2
+class Solution {
+    // M2: three(two) pass time O(n)  space O(n)
+    public int trap(int[] height) {
+        int n = height.length;
+        if (n==0) {return 0;}
+        int[] leftmost = new int[n];
+        int[] rightmost = new int[n];
+        int s = 0;
+        leftmost[0] = height[0];
+        rightmost[n-1] = height[n-1];
+        for (int i = 1; i < n; i++) {
+            leftmost[i] = Math.max(leftmost[i-1], height[i]);
+            rightmost[n-1-i] = Math.max(rightmost[n-i], height[n-1-i]);
+        }
+        
+        for (int i = 0; i < n; i++) {
+            s += Math.min(leftmost[i], rightmost[i]) - height[i];
+        }
+        return s;
+    }
+}
+
 
 
 // M3: One pass way - key idea is the same as M2
@@ -83,6 +106,34 @@ class Solution {
     }
 }
 
+
+
+// Review M3:
+class Solution {    
+    // M3: one pass time O(n)  space O(n), each time we move the smaller pointer in left and right pointers. This moving rule guarantees when we reach a position i, if it is reached from left, then its leftmost < rightmost, s += leftmost - height[i]. And if reched from right, meaning its rightmost < leftmost, thus s += rightmost - height[i].
+    public int trap(int[] height) {
+        int n = height.length;
+        if (n==0) {return 0;}
+        int left = 0;
+        int right = n-1;
+        int s = 0;
+        int leftmost = height[left];
+        int rightmost = height[right];
+        while (left < right) {
+            if (height[left] < height[right]) {
+                left++;
+                leftmost = Math.max(leftmost, height[left]);
+                s += leftmost - height[left];
+            } else {
+                right--;
+                rightmost = Math.max(rightmost, height[right]);
+                s += rightmost - height[right];
+            }
+        }
+        
+        return s;
+    }
+}
 
 
 

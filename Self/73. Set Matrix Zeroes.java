@@ -46,3 +46,51 @@ class Solution {
         }
     }
 }
+
+
+
+// self review
+class Solution {
+    /*initial thought
+    obvious way is use a O(mn) extra space to label those cells need to become 0. And change the original matrix based on thie memo.
+    slightly improvement is to use O(m+n) extra space, one for label which rows need to become 0 and another one for columns.
+    best way is to use O(1) space, cases need to pay attention to: one cell is originally 0, and also label by another 0 cell as 0. Because matrix[i][j] in [integer.min, integer.max], thus can't use negative value to label inplace.
+    Use similar idea as O(m+n) way. instead of using extra O(m+n) space, we can directly use the first column and first row of the original matrix. But before that, we need to note down whether first row/col has zero. So we can adjust them later when they are done with being the label memo for all other cells in the matrix. 
+    */
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        boolean firstColZero = false;
+        boolean firstRowZero = false;
+        for (int c: matrix[0]) {
+            if (c== 0) {firstRowZero = true;}
+        }
+        for (int r = 0; r < m; r++) {
+            if (matrix[r][0] == 0) {firstColZero = true;}
+        }
+        
+        // label
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+        
+        // convert rest cells to zero
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        // convert first col and first cell based on firstRowZero and firstColZero
+        if (firstRowZero) {Arrays.fill(matrix[0], 0);}
+        if (firstColZero) {
+            for (int r = 0; r < m; r++) {matrix[r][0] = 0;}
+        }
+    }
+}
