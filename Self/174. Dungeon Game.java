@@ -35,7 +35,7 @@ class Solution {
 }
 
 
-// can also go with the solution in this post: directly use negative along the way.  ALso the discussion about why backwards instead of forwards from [0,0] tyo [r, c] That's because the result will change once we add one more row or column if go forwards, the result is not known for sure and subject to change in that case.
+// can also go with the solution in this post: directly use negative along the way.  ALso the discussion about why backwards instead of forwards from [0,0] to [r, c] That's because the result will change once we add one more row or column if go forwards, the result is not known for sure and subject to change in that case.
 // https://leetcode.com/problems/dungeon-game/discuss/745340/post-Dedicated-to-beginners-of-DP-or-have-no-clue-how-to-start
 
 
@@ -86,5 +86,30 @@ class Solution {
         
         return dp[0] >= 0 ? 1 : -dp[0] + 1;
         
+    }
+}
+
+
+// Review self
+class Solution {
+    /* initial thought
+    we have multiple paths to reach the bottomright corner and along the way the min accum sum is the health we needed for that path. We want the max{min accumsum of all paths}
+    At position (i,j) we want to know info: max min_accumsum of (i, j+1) to the end and max min_accumsum of (i+1, j) to the end.
+    one thing to note is that if dp[i][j+1] or dp[i+1][j] >0, then it should be count as 0, since we are not able to use the health from backwords cells.
+    dp[i][j] = max(min(0,dp[i][j+1]), min(0,dp[i+1][j])) + m[i][j]
+    time O(mn) space optimize to O(n)
+    */
+    public int calculateMinimumHP(int[][] dungeon) {
+        int m = dungeon.length;
+        int n = dungeon[0].length;
+        int[] dp = new int[n+1];
+        Arrays.fill(dp,Integer.MIN_VALUE);
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if (i == m-1 && j == n-1) {dp[j] = dungeon[i][j]; continue;}
+                dp[j] = Math.max(Math.min(0,dp[j+1]), Math.min(0,dp[j])) + dungeon[i][j];
+            }
+        }
+        return dp[0] <= 0 ? -dp[0] + 1 :  1;
     }
 }

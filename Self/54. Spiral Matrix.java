@@ -19,3 +19,37 @@ class Solution {
         return res;
     }
 }
+
+
+// Phase3 self
+// above iterative way has better space time complexity, but recursive way is easier to understand. Main idea is the same
+class Solution {
+    /* initial thought:
+    Use recursion. recur(matrix, lefti, leftj, rowlen, collen, resList). Each layer only need to take care of the numbers in 4 borders
+    time O(m*n)  space O(max(m, n))
+    */
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> resList = new LinkedList<>();
+        spiralHelper(matrix, 0, 0, matrix.length, matrix[0].length, resList);
+        return resList;
+    }
+    
+    private void spiralHelper(int[][] matrix, int i, int j, int m, int n, List<Integer> resList) {
+        // base case
+        if (m == 0 || n == 0) {return;}
+        if (m == 1 || n == 1) {
+            if (m == 1) {
+                for (int k = 0; k < n; k++) {resList.add(matrix[i][j+k]);}
+            } else {
+                for (int k = 0; k < m; k++) {resList.add(matrix[i+k][j]);}
+            }
+            return;
+        }
+        // deal with 4 borders
+        for (int k = 0; k < n; k++) {resList.add(matrix[i][j+k]);}
+        for (int k = 1; k < m-1; k++) {resList.add(matrix[i+k][j+n-1]);}
+        for (int k = n-1; k>= 0; k--) {resList.add(matrix[i+m-1][j+k]);}
+        for (int k = m-2; k>=1; k--) {resList.add(matrix[i+k][j]);}
+        spiralHelper(matrix, i+1, j+1, m-2, n-2, resList);
+    }
+}
