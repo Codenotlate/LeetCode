@@ -75,3 +75,42 @@ class Solution {
         }
     }
 }
+
+
+// Review self : similar idea as above M2. update the distance when the cell is added to the queue. This way we can avoid same cell being added by same prev level neighbors multiple times (comparing to M1)
+class Solution {
+    /*initial thought
+    multi source BFS. put all gates into the queue at first, then start the BFS, label each visited cell with level number as shorted path. Thus unvisited until queue is empty are the ones impossible to reach from a gate. So their value will stay INF.
+    time O(mn) space O(mn)
+    */
+    public void wallsAndGates(int[][] rooms) {
+        int m = rooms.length;
+        int n = rooms[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        // first pass to add all gates into the queue
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (rooms[i][j] == 0) {queue.add(new int[]{i, j});}
+            }
+        }
+        
+        // start the BFS
+        int[][] dirs = new int[][]{{-1, 0},{1,0},{0,1},{0,-1}};
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                for (int[] d: dirs) {
+                    int newi = cur[0] + d[0];
+                    int newj = cur[1] + d[1];
+                    if (newi >= 0 && newi < m && newj >= 0 && newj < n && rooms[newi][newj] == Integer.MAX_VALUE) {
+                        queue.add(new int[]{newi, newj});
+                        rooms[newi][newj] = level + 1;
+                    }
+                }                
+            }
+            level++;
+        }
+    }
+}
