@@ -44,3 +44,33 @@ class Solution {
         return dummy.next;
     }
 }
+
+
+// Review self
+class Solution {
+    /* Initial thought
+    first, when k is larger than List length, k = k % len. Then we need to find the (k+1)th node prevK from end and the end node. Then end.next = dum.next; dum.next = prevK.next; prevK.next = null. return dum.next.
+    The way we find the (k+1)th node from end and the end node is by slow/fast pointers.
+    time O(n) space O(1)
+    */
+    
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || head.next == null) {return head;}
+        ListNode cur = head;
+        int size = 0;
+        while(cur!= null) {cur = cur.next; size++;}
+        k %= size;
+        if (k == 0) {return head;}
+        
+        ListNode dum = new ListNode(0, head);
+        cur = head;
+        for(int i = 0; i < k; i++) {cur = cur.next;}
+        ListNode prevK = head;
+        while(cur.next != null) {prevK = prevK.next; cur = cur.next;}
+        
+        cur.next = dum.next;
+        dum.next = prevK.next;
+        prevK.next = null;
+        return dum.next;
+    }
+}

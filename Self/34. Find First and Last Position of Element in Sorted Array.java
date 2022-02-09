@@ -183,3 +183,36 @@ class Solution {
     }
     
 }
+
+
+
+// Review self
+// much consice code
+class Solution {
+    /* initial thought:
+    log(n) binary search. Can write two binary search functions, one for firstLte, another for lastLte. Or we can use one binary search firstLte. Then we use it for target and target+1.
+    check nums[p1] and nums[p2-1](if p2 == -1, then p2-1 = nums.len-1), return [-1,-1] if p1 == -1 or nums[p1] != target.
+    */
+    public int[] searchRange(int[] nums, int target) {
+        if(nums.length == 0) {return new int[]{-1, -1};}
+        int p1 = firstLte(nums, target);
+        if (p1 == -1 || nums[p1] != target) {return new int[]{-1,-1};}
+        int p2 = firstLte(nums, target+1);
+        p2 = p2 == -1? nums.length : p2;
+        return new int[]{p1, p2-1};
+    }
+    
+    private int firstLte(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length-1;
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] >= target) {
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return nums[start] >= target? start : -1;
+    }
+}

@@ -3,7 +3,7 @@
 
 // phase3 solution M1
 // Time O(T+ 2*S)= O(T+ S）
-// space O(T)
+// space O(T) since the countmap for window can only count the chars in t.
 class Solution {
     public String minWindow(String s, String t) {
         // build the freq map for t
@@ -153,6 +153,65 @@ class Solution {
 
 
 
+// Review Self
+// similar to above M1
+class Solution {
+    /* thought from solution
+    if s len smaller than t, return immediately
+    build the count map for t. Then have the window starts as both start and end pointers point to zero index. Expand the end pointer till the window contains count map for t. For this check, we need to keep a countmap for the current s window and we can use a integer to track the number of chars in the current window that has count >= the count of the char in t. If the number of chars equal to the total number of unique chars in t, then the current window contains t. 
+    Then we shrink the current window by moving start pointer until the number in current window won't match t, and we track the min substring along the way by tracking the start,end position of it.
+    When current window no longer satisfy the requirement of t, we repeat to expand the window by moving end pointer again. We repeat this process until end pointer reaches the end of s string.
+    time O(2 * s.len + t.len) space O(t.len)
+    */
+    public String minWindow(String s, String t) {
+        if (s.length() < t.length()) {return "";}
+        // build the countMap for t
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (char c: t.toCharArray()) {
+            tMap.putIfAbsent(c, 0);
+            tMap.put(c, tMap.get(c) + 1);
+        }
+        
+        // start the sliding window
+        int start = 0;
+        int end = 0;
+        Map<Character, Integer> sWindowMap = new HashMap<>();
+        int[] minRes = new int[]{0, s.length() + 1}; // used to record the smallest valid window start and end position
+        int matchCharNum = 0;
+        while (end < s.length()) {
+            // expand the end pointer to find the first valid window
+            while(end< s.length()) {
+                char c = s.charAt(end);
+                if (tMap.containsKey(c)) {
+                    sWindowMap.putIfAbsent(c, 0);
+                    sWindowMap.put(c, sWindowMap.get(c) + 1);
+                    if (sWindowMap.get(c).intValue() == tMap.get(c).intValue()) {matchCharNum++;}
+                    if (matchCharNum == tMap.keySet().size()) {break;}
+                }
+                end++;                
+            }
+            
+            if (end >= s.length()) {break;}
+            // otherwise, we have found the first valid window, now we shrink it by moving start pointer
+            while (start <= end) {
+                if (end - start < minRes[1] - minRes[0]) {minRes[0] = start; minRes[1] = end;}
+                char c = s.charAt(start);
+                if (tMap.containsKey(c)) {
+                    sWindowMap.put(c, sWindowMap.get(c) - 1);
+                    if (sWindowMap.get(c).intValue() < tMap.get(c).intValue()) {matchCharNum--; start++; break;}
+                }
+                start++;
+            }
+            // don't forget this line
+            end++;
+        }
+        
+        return minRes[1] == s.length() + 1? "" : s.substring(minRes[0], minRes[1]+1);
+        
+    }
+}
+
+// Try M2 optimized way next time
 
 
 
