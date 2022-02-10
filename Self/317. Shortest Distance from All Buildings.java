@@ -155,6 +155,92 @@ class Solution {
 
 
 
+// Review from solution, similar to above M2, but use visited matrix instead of inplace change the original grid matrix
+class Solution {
+    /* From solution
+    Do BFS for each 1 cell. Record the accumulated distance sum for each 0 cell after all BFS rounds. Label visited with round number to avoid visiting 0 cells that are unreachable in earlier rounds of BFS from other 1 cells.
+    find the smallest distance among 0 cells that are reachable by all 1 cells.
+    time O(m*n * m*n)
+    space O(m*n)    
+    */
+    public int shortestDistance(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] visited = new int[m][n];
+        int[][] distance = new int[m][n];
+        int roundNum = 1;
+        
+        for (int i = 0; i < m; i++) {
+            for(int j = 0; j <n; j++) {
+                if (grid[i][j] == 1) {
+                    bfs(grid, i, j, visited, distance, roundNum);
+                    roundNum++;
+                }
+            }
+        }
+        
+        int minDist = Integer.MAX_VALUE;
+        for (int i = 0; i < m; i++) {
+            for(int j = 0; j <n; j++) {
+                if (visited[i][j] == -roundNum + 1) {
+                    minDist = Math.min(minDist, distance[i][j]);
+                }
+            }
+        }
+        return minDist == Integer.MAX_VALUE? -1 : minDist;
+    }
+    
+    
+    private void bfs(int[][] grid, int i, int j, int[][] visited, int[][] distance, int roundNum) {
+        Queue<int[]> queue = new LinkedList<>();
+        int[][] dirs = new int[][]{{0, -1},{0,1},{1,0},{-1,0}};
+        queue.add(new int[]{i,j});
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                int curi = cur[0];
+                int curj = cur[1];
+                if (grid[curi][curj] == 0) {distance[curi][curj] += level;}
+                for (int[] d: dirs) {
+                    int newi = curi + d[0];
+                    int newj = curj + d[1];
+                    if (newi >= 0 && newi < grid.length && newj >= 0 && newj < grid[0].length && grid[newi][newj] == 0 && visited[newi][newj] == -roundNum+1) {
+                        queue.add(new int[]{newi, newj});
+                        visited[newi][newj] = -roundNum;
+                    }
+                }
+            }
+            level++;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
