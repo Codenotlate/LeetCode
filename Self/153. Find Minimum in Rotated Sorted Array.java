@@ -54,3 +54,6 @@ class Solution {
         return nums[start];
     }
 }
+
+// Another solution compares mid with mid+1
+// https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/solution/
