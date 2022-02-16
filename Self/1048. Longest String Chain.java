@@ -31,7 +31,7 @@ class Solution {
 }
 
 class Solution {
-    // dp way: use regular sort for now, time O(nlogn + n*len^2) space O()
+    // dp way: use regular sort for now, time O(nlogn + n*len^2) space O(n)
     public int longestStrChain(String[] words) {
         Arrays.sort(words,(a,b)->(a.length() - b.length()));
         Map<String, Integer> dp = new HashMap<>();
@@ -53,3 +53,6 @@ class Solution {
         return res;
     }
 }
+
+// good solution
+// https://leetcode.com/problems/longest-string-chain/discuss/294890/JavaC%2B%2BPython-DP-Solution
