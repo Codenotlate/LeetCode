@@ -46,7 +46,7 @@ class Solution {
             if (sum == target) {
                 res.add(Arrays.asList(nums[left++], nums[right--]));
                 // avoid dup
-                while(nums[left] == nums[left-1]) {left++;}
+                while(left < right && nums[left] == nums[left-1]) {left++;}
             } else if (sum > target) {
                 right--;
             } else {
