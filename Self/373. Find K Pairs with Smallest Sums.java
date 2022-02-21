@@ -1,6 +1,7 @@
 class Solution {
     // Phase3 from solution
     // view it as a 2d matrix, then it's a similar problem as 378: merge n sorted arrays using minHeap
+    // time O(klogk) space O(k)
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
         PriorityQueue<int[]> pq = new PriorityQueue<>((p1, p2) -> nums1[p1[0]] + nums2[p1[1]] - nums1[p2[0]] - nums2[p2[1]]);
         List<List<Integer>> res = new LinkedList<>();
@@ -29,3 +30,23 @@ class Solution {
 
 // some interesting discussion in the comment below
 // https://leetcode.com/problems/find-k-pairs-with-smallest-sums/discuss/84551/simple-Java-O(KlogK)-solution-with-explanation
+
+
+// Review: still from solution
+class Solution {
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<List<Integer>> res  = new LinkedList<>();
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a,b) -> (nums1[a[0]]+nums2[a[1]]-nums1[b[0]]-nums2[b[1]]));
+        // add the first row to the heap first
+        for (int j = 0; j < nums2.length; j++) {
+            minHeap.add(new int[]{0,j});
+        }
+        
+        while (res.size() < k && !minHeap.isEmpty()) {
+            int[] cur = minHeap.poll();
+            res.add(Arrays.asList(nums1[cur[0]], nums2[cur[1]]));
+            if (cur[0] < nums1.length - 1) {minHeap.add(new int[]{cur[0]+1, cur[1]});}
+        }
+        return res;
+    }
+}
