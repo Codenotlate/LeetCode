@@ -56,3 +56,4 @@ class Solution {
         return Integer.valueOf(new String(chars));
     }
 }
+// one pass similar idea: https://leetcode.com/problems/maximum-swap/discuss/107073/C%2B%2B-one-pass-simple-and-fast-solution%3A-1-3ms-O(n)-time
