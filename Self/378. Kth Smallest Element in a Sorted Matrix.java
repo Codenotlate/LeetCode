@@ -211,6 +211,67 @@ class Solution {
 
 
 
+// Review
+/* Initial thought
+    * naive way: put all n^2 values into an array and sort that array and return the number with rank k. time O(n^2log(n^2)) space O(n^2)
+    * another naive way: using a maxheap with size k, add every element into the heap. poll out the peek of maxheap if size is larger than k to maintain a k size. time O(n^2log(k)) space O(k)
+    * improved way1: consider the attribute of the matrix: rows and cols are sorted in ascending order. View this as merge n sorted array. put the first row into the queue, poll out the smallest, and add (cur[0]+1, cur[1]) to the queue. repeat the process till poll out k elements. time O(klog(min(n, k))) space O(min(n,k))
+    * improved way2: consider binary search. Our goal is to find a number in range [min, max] of matrix that has k elements <= it. binary search takes O(log(max-min)) round. Within each round, find how many elements <= target takes O(n). Thus total time O(nlog(max-min)) space O(1)
+    */
+// improved way 1
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a,b)->(matrix[a[0]][a[1]] - matrix[b[0]][b[1]]));
+        int n = matrix.length;
+        for (int j = 0; j < n; j++) {heap.add(new int[]{0,j});}
+        int[] polled = new int[2];
+        while(k-- > 0) {
+            polled = heap.poll();
+            if(polled[0] < n-1) {heap.add(new int[]{polled[0]+1, polled[1]});}         
+        }
+        return matrix[polled[0]][polled[1]];
+    }
+}
+// improved way 2
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int low = matrix[0][0];
+        int high = matrix[n-1][n-1];
+        
+        while(low < high) {
+            int mid = low + (high-low) / 2;
+            int count = countNum(matrix, mid);
+            // if (count == k) {return mid;} you can't have this line, because mid might not be the number in the matrix
+            if(count < k) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        
+        return low;
+    }
+    
+    private int countNum(int[][] matrix, int target) {
+        int n = matrix.length;
+        int r = 0;
+        int c = n-1;
+        int res = 0;
+        while (r < n && c >= 0) {
+            if (target >= matrix[r][c]) {
+                res += c + 1;
+                r++;
+            } else {
+                c--;
+            }
+        }
+        return res;
+    }
+}
+
+
+
  
 
 

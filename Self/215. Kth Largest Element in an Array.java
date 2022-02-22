@@ -180,3 +180,66 @@ class Solution {
         }
     }
 }
+
+
+
+// Review
+/* Thinking process
+naive way: sort and loop to the kth element. time O(nlogn) space O(1) based on sort
+improved way 1: keep a size k minheap. Add all number into it and return minheap.peek() in the end. time O(nlogk) space O(k)
+improved way 2: bucket sort. index as position and value as count. time O(max-min) space O(max-min) [Not mentioned in solution, this really depends on the min and max of the array]
+improved way 3 (hint from solution): quickSort. time average O(n) worst case O(n^2). 
+shuffle first to limit the chance of worst case scenario. After each quicksort, the array will be replaces into two part, all values <= pivot will be in the left of pivot, and all > pivot on the right. So if it's normal case(not worst one), we can eliminate search range for half each time. Add up to O(n)[a tree with n leaf nodes has in total 2n nodes].
+*/
+class Solution {                       
+    public int findKthLargest(int[] nums, int k) {
+        k = nums.length - k;
+        shuffle(nums);
+        int left = 0;
+        int right = nums.length - 1;
+        while (left < right) {
+            int pivotIdx = pivot(nums, left, right);
+            if (pivotIdx == k) {return nums[k];}
+            else if (pivotIdx < k) {
+                left = pivotIdx + 1;
+            } else {
+                right = pivotIdx - 1;
+            }
+        }
+        return nums[left]; // should not reach this line if an answer is guaranteed
+    }
+    
+    
+    private int pivot(int[] nums, int left, int right) {
+        int pivot = nums[left];
+        int start = left + 1;
+        int end = right;
+        while (start <= end) {
+            while (start <= end && nums[start] <= pivot) {start++;}
+            while (end >= start && nums[end] > pivot) {end--;}
+            if (start > end) {break;}
+            swap(nums, start, end);
+        }
+        swap(nums, start - 1, left);
+        return start - 1;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    
+    private void shuffle(int[] nums) {
+        Random rand = new Random();
+        for (int i = 0; i < nums.length; i++) {
+            int x = rand.nextInt(nums.length);
+            swap(nums, i, x);
+        }
+    }
+    
+    
+    
+    
+    
+}
