@@ -115,6 +115,58 @@ class Solution {
 
 
 
+// Review self
+/* similar idea as the above optimial stack solution. But not the most optimized way. We can convert the 3 pass into only 1 pass. Cause whenever an item is poped out of the leftStack, we actually alrady know its leftIdx and rightIdx. its leftIdx is stack.peek() after it pops out, and rightIdx is the curIdx, cause cur is the one make it pops out meaning curVal < its value.
+Thus in the first pass we can calcualte most of the bars maxArea, except those bars left in the stack which has their rightIdx = n. Thus we can pop them out and update maxArea. And when the stack is empty, the maxArea for all bars have been calculated.
+*/
+// self 3 pass way
+
+class Solution {
+    /* Thinking process
+    for each bar, we want to find the first one smaller than it on both left and right side. So that the area = curheight * (firstrightIdx-firstleftIdx-1). then we can update area for each bar to get max area.
+    To find the first one smaller on left and right side, we can use monotone stack twice, one starting from left and another one starting from right side.
+    firstleftIdx arr = [-1, -1, 1, 2, 1,4]
+    leftStack(idx(val)) = [-1(min), 0(2)[pop],1(1),2(5)[pop],3(6)[pop], 4(2), 5(3)
+    [1,6,4,4,6,6] = firstrightIdx arr
+      0(2),1(1),2(5)[pop],3(6)[pop],4(2)[pop],5(3)[pop],6(min)]= rightStack(idx(val)) 
+    maxArea = max([2 *1, 1 * 6, 5 * 2, 6 * 1, 2 * 4, 3 *1]) = 10
+
+    time O(n) space O(n)
+    */
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> leftStack = new Stack<>();
+        Stack<Integer> rightStack = new Stack<>();
+        int n = heights.length;
+        int[] leftIdx = new int[n];
+        int[] rightIdx = new int[n];
+        
+        leftStack.push(-1);
+        for (int i = 0; i < n; i++) {
+            int cur = heights[i];
+            while (leftStack.peek() != -1 && heights[leftStack.peek()] >= cur) {leftStack.pop();}
+            leftIdx[i] = leftStack.peek();
+            leftStack.push(i);
+        }
+        
+        rightStack.push(n);
+        for (int i = n-1; i>= 0; i--) {
+            int cur = heights[i];
+            while(rightStack.peek() != n && heights[rightStack.peek()] >= cur) {
+                rightStack.pop();
+            }
+            rightIdx[i] = rightStack.peek();
+            rightStack.push(i);
+        }
+        
+        int maxArea = 0;
+        for (int i = 0; i < n ; i++) {
+            maxArea = Math.max(maxArea, heights[i] * (rightIdx[i] - leftIdx[i] - 1));
+        }
+        return maxArea;
+    }
+}
+
+
 
 
 
