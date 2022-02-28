@@ -10,6 +10,10 @@ time O(n+max-min) space O(max-min)
 Another space saving way is to replace array with a map.
 time same, space O(min(max-min, n))
 
+https://leetcode.com/problems/delete-and-earn/discuss/109895/JavaC%2B%2B-Clean-Code-with-Explanation
+
+https://leetcode.com/problems/delete-and-earn/discuss/109891/Sharing-my-Simple-Straight-Forward-Java-O(n)-Solution-Explanation-Included
+
 */
 //M1
 class Solution {
