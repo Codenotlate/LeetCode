@@ -317,6 +317,39 @@ class Solution {
 }
 
 
+// Review
+/*initial thought
+O(nlogn) way is: count each element, sort each element based on count and return the first k. space O(n)
+O(n) way: count each element,  since count is in range[1, n]. Setup an array of integer list with length n+1.Loop the countMap, if num has count, arr[count].add(num).
+Iterate arr backwards, insert into the result till k. space O(n)
+*/
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int n:nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+        // note need to define arr of arraylist this way
+        ArrayList<Integer>[] arr = new ArrayList[nums.length + 1];
+        for (int num: map.keySet()) {
+            int count = map.get(num);
+            if (arr[count] == null) {arr[count] = new ArrayList<>();}
+            arr[count].add(num);
+        }
+        
+        int[] res = new int[k];
+        int i = 0;
+        for (int j = arr.length - 1; j >= 0; j--) {
+            if (arr[j] == null) {continue;}
+            for (int x: arr[j]) {
+                res[i++] = x;
+            }
+            if (i >= k) {break;}
+        }
+        return res;
+        
+    }
+}
 
 
 
