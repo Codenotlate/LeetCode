@@ -142,6 +142,33 @@ class Solution {
     }
 }
 
+// Review (Try binary search way next time, though time is worse(O(nlogn))
+/*Initial thought
+if allow modifying array, we can use negative label.
+Since not allow modifying array, and number in range[1,n]. If we connect each element i with arr[i], we will form a circle. Thus we can have slow and fast pointers to detect the circle.
+e.g. [1,3,4,2,2]
+1 -> 3 -> 2 -> 4 -> 2
+the dup number is the entrance of the circle
+
+*/
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = nums[0];
+        int fast = nums[0];
+        while(true) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+            if(slow == fast) {break;}
+        }
+        slow = nums[0];
+        while(slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
+    }
+}
+
 
 
 

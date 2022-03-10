@@ -345,7 +345,7 @@ class Solution {
                 res[i++] = x;
             }
             if (i >= k) {break;}
-        }
+        }   
         return res;
         
     }
