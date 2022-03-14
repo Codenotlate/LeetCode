@@ -40,3 +40,50 @@ class Solution {
         return count;
     }
 }
+
+
+// Review
+/*Initial thought
+dp way: dp[i] = 1 + min(dp[k]) where k in [i+1, i+nums[i]].
+[2,1,2,1,0] O(n^2) space O(n)
+improve it to O(n) using greedy way:
+[2, 3, 1, 1, 4] compare i + nums[i] with j + nums[j], choose the larger one
+cur i  j
+   cur i     j
+[2, 3, 0, 1, 4]
+cur
+   cur
+*/
+// M1: DP way O(n^2) time O(n) space
+class Solution {
+    public int jump(int[] nums) {
+        int[] dp = new int[nums.length];
+        for (int i = nums.length - 2; i >= 0 ; i--) {
+            int minNum = nums.length + 1;
+            for (int k = i+1; k < nums.length && k <= i + nums[i]; k++) {
+                minNum = Math.min(minNum, dp[k]);
+            }
+            dp[i] = 1 + minNum;
+        }
+        return dp[0];
+    }
+}
+// M2: Greedy way O(n) time O(1) space
+// similar idea as above BFS way, utilize i + nums[i].
+class Solution {
+    public int jump(int[] nums) {
+        int cur = 0;
+        int n = nums.length;
+        int steps = 0;
+        while(cur < n) {
+            if(cur + nums[cur] >= n-1) {break;}
+            int next = cur + 1;
+            for (int i = cur + 1; i <= cur + nums[cur] && i < n; i++) {
+                if (next + nums[next] < i + nums[i]) {next = i;}
+            }
+            cur = next;
+            steps++;
+        }
+        return n == 1 ? 0 : steps + 1;
+    }
+}

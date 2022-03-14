@@ -44,3 +44,19 @@ class Solution {
         return false;
     }
 }
+
+
+// Review (similar as above line 17 idea)
+/*Initial thought
+Here we only care about whether we can reach the last index. 
+Thus we can move backwards from the last index. And track the current smallest index that can reach the end. For each i, we only need to check if i + nums[i] can reach that smallest true index. If yes, update smallest to i. Move backwards till reach index 0.
+*/
+class Solution {
+    public boolean canJump(int[] nums) {
+        int minTrueIdx = nums.length - 1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (i + nums[i] >= minTrueIdx) {minTrueIdx = i;}
+        }
+        return minTrueIdx == 0;
+    }
+}
