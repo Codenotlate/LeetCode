@@ -129,15 +129,6 @@ class Solution {
 
 
 // Phase3 self: similar to above M2: only build the childToParent map
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
 class Solution {
     public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
         // first step is to traverse the tree and build childToParent map
@@ -188,6 +179,48 @@ class Solution {
             map.put(root.right, root);
             getParents(root.right, map);
         }
+    }
+}
+
+
+
+// Review: similar as above O(n) time and O(n) space
+class Solution {
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        Map<TreeNode, TreeNode> parentsMap = new HashMap<>();
+        parentsMap.put(root, null);
+        buildMap(root, parentsMap);
+        // then do BFS
+        Queue<TreeNode> queue = new LinkedList<>();
+        Set<TreeNode> visited = new HashSet<>();
+        queue.add(target);
+        visited.add(target);
+        
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> curLevel = new LinkedList<>();
+            while(size-- > 0) {
+                TreeNode cur = queue.poll();
+                curLevel.add(cur.val);
+                if (cur.left != null && !visited.contains(cur.left)) {queue.add(cur.left); visited.add(cur.left);}
+                if (cur.right != null && !visited.contains(cur.right)) {queue.add(cur.right); visited.add(cur.right);}
+                if (parentsMap.get(cur) != null && !visited.contains(parentsMap.get(cur))) {
+                    queue.add(parentsMap.get(cur));
+                    visited.add(parentsMap.get(cur));                    
+                }
+            }
+            if (k == 0) {return curLevel;}
+            k--;
+            
+        }
+        return new LinkedList<Integer>();        
+    }
+    
+    
+    private void buildMap(TreeNode root, Map<TreeNode, TreeNode> map) {
+        if (root == null) {return;}
+        if (root.left != null) {map.put(root.left, root); buildMap(root.left, map);}
+        if (root.right != null) {map.put(root.right, root); buildMap(root.right, map);}
     }
 }
 

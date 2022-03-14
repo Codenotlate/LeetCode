@@ -167,5 +167,57 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+Use the partition tech, basically need 3 pointers to label the end of each part. We may have different ways to set the init position of the pointers. One way is to have all three initialized at index 0. And each time we process an element, if it's in part2, then simply move part2 pointer. If it's in part1, then we need to move both part1 and part2 pointers. And if it's in part 0, then we need to move all three pointers together.
+Time O(n) with onew pass, and space O(1)
+Another way to init pointers is to have part0, part1 pointers starting at index 0 and part2 pointers starting at last position and move backwards. If current element(use part1 pointer) is in part2, swap the value and move part2 pointer--. If current element is in part 0, swap value with part0 pointer and move part0&part1 pointer++. If current element in part 1, just move part1 pointer++. Do this till part1 pointer > part2 pointer.
+*/
+
+class Solution {
+    public void sortColors(int[] nums) {
+        int p0 = 0, p1 = 0, p2 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                nums[p2++] = 2; 
+                nums[p1++] = 1;
+                nums[p0++] = 0;
+                              
+            } else if (nums[i] == 1) {
+                nums[p2++] = 2;
+                nums[p1++] = 1;
+            } else {
+                nums[p2++] = 2;
+            }
+        }
+    }
+}
+
+class Solution {
+    public void sortColors(int[] nums) {
+        int p0 = 0;
+        int p2 = nums.length - 1;
+        int i = 0;
+        while ( i <= p2) {
+            if (nums[i] > 1) {
+                swap(nums, i, p2);
+                p2--;
+            } else if (nums[i] < 1) {
+                swap(nums, i, p0);
+                p0++;
+                i++;
+            } else {
+                i++;
+            }
+        }
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
 
 

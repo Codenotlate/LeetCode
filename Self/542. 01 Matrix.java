@@ -213,7 +213,75 @@ class Solution {
 
 
 
+// Review
+// BFS way starting with all 0 cells. And we can use the result matrix as the visited matrix, all O cells have val = 0 and all 1 cells have init val = -1.
+// time O(mn) space O(mn)
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] res = new int[m][n];
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 0) {
+                    queue.add(new int[]{i,j});
+                } else {
+                    res[i][j] = -1;
+                }
+            }
+        }
+        int level = 0;
+        int[][] dirs = new int[][]{{-1, 0},{1, 0},{0, -1},{0,1}};
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                for (int[] d: dirs) {
+                    int newi = cur[0] + d[0];
+                    int newj = cur[1] + d[1];
+                    if (newi >= 0 && newi < m && newj >= 0 && newj < n && mat[newi][newj] == 1 && res[newi][newj] == -1) {
+                        res[newi][newj] = level + 1;
+                        queue.add(new int[]{newi, newj});
+                    }
+                }
+            }
+            level++;
+        }
+        return res;
+    }
+}
 
+
+// DP way
+// for each cell the dist is determined by its four neighbors, for mat[c] == 1: res[c] = min(res[x]) + 1 where x is the 4 neighbors of c. That's why we can do two pass, with the first one starting from top left, and the second one starting from bottom right.
+// time O(mn) space O(1)
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] res = new int[m][n];
+        // first pass
+        for (int i = 0; i < m ; i ++) {
+            for (int j = 0; j < n; j++) {
+                if(mat[i][j] == 0) {continue;}
+                int upper = i - 1 >= 0 ? res[i-1][j] : m * n;
+                int left =  j - 1 >= 0 ? res[i][j-1] : m * n;
+                res[i][j] = Math.min(upper, left) + 1;               
+            }
+        }
+        // second pass
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (mat[i][j] == 0) {continue;}
+                int lower = i + 1 < m ? res[i + 1][j] : m * n;
+                int right = j + 1 < n ? res[i][j+1] : m * n;
+                res[i][j] = Math.min(res[i][j], 1 + Math.min(right, lower));
+            }
+        }
+        return res;
+    }
+}
 
 
 
