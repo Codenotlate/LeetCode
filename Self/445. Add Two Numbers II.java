@@ -246,7 +246,66 @@ class Solution {
 
 
 
-
+// Review
+/*Initial thought
+The straightforward way is to reverse both arrays, get the result and reverse the result array to return.
+The other way is to loop the two input arrays first in forward way, and build the result array in reverse order, with each node containing original sum value even it's larger than 10. e.g. for 9->9->9 and 9, we will get 9<-9<-18
+Then we adjust the result array for the carry value to its next node and at the same time reverse the array iteratively. e.g. we will get 0->0->8. And if carry != 0, we add a head node with value as carry: 1->0->0->8.
+time O(max(l1, l2)) space O(1)
+*/
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // always make l1 the larger one
+        int len1 = getLen(l1);
+        int len2 = getLen(l2);
+        if(len1 < len2) {
+            ListNode temp = l2;
+            l2 = l1;
+            l1 = temp;
+            int tempLen = len1;
+            len1 = len2;
+            len2 = tempLen;
+        }
+        
+        ListNode head = null;        
+        while (len1 > 0) {
+            int v1 = l1.val;
+            int v2 =  len1 > len2 ? 0 : l2.val;
+            head = new ListNode(v1 + v2, head);
+            l1 = l1.next;
+            if (len1 <= len2) {l2 = l2.next;}
+            len1--;            
+        }
+        
+        // we get the raw result, we need to adjust the carry and reverse it
+        ListNode prev = null;
+        ListNode cur = head;
+        int carry = 0;
+        while(cur != null) {
+            // adjust the val
+            int num = cur.val + carry;
+            cur.val = num % 10;
+            carry = num / 10;
+            // reverse the order
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        
+        if(carry != 0) {ListNode res = new ListNode(carry, prev); return res;}
+        return prev;
+    }
+    
+    private int getLen(ListNode l) {
+        int len = 0;
+        while( l!=null) {
+            l = l.next;
+            len++;
+        }
+        return len;
+    }
+}
 
 
 

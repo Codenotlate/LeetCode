@@ -180,20 +180,61 @@ class Solution {
                 dfs(graph, curList, nextEmail, visited);
             }
         }
-    }
-    
-    
-    
-    
-    
-    
-    
+    }  
     
 } 
     
-   
 
 
+
+// Review: similar as above, but since we loop each account and check whether its first email has been visited, we can skip the emailToName map used above.
+/*Initial thought
+Build the graph, for each original account, only need to connect the rest with the first email. Later, traverse the graph by traverse each account's first email. We also need to track the visited emails.
+time O(nklog(nk))
+sapce O(nk)
+Another way is using UF. time and space the same as above method.
+*/
+// M1 graph way
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        Map<String, List<String>> graph = new HashMap<>();
+        for (List<String> acct: accounts) {
+            String firstEmail = acct.get(1);
+            graph.putIfAbsent(firstEmail, new LinkedList<>());
+            for (int i = 2; i < acct.size(); i++) {
+                graph.putIfAbsent(acct.get(i), new LinkedList<String>());
+                graph.get(firstEmail).add(acct.get(i));
+                graph.get(acct.get(i)).add(firstEmail);
+            }
+        }
+        // traverse the graph
+        Set<String> visited = new HashSet<>();
+        List<List<String>> res = new LinkedList<>();
+        for (List<String> acct: accounts) {
+            if (visited.contains(acct.get(1))) {continue;}
+            List<String> curList = dfs(graph, acct.get(1), visited);
+            Collections.sort(curList);
+            curList.add(0, acct.get(0));
+            res.add(curList);
+        }
+        return res;
+    }
+    
+    private List<String> dfs(Map<String, List<String>> graph, String node, Set<String> visited) {
+        List<String> res = new LinkedList<>();
+        if(visited.contains(node)) {return res;}
+        visited.add(node);
+        res.add(node);
+        for(String next: graph.get(node)) {
+            res.addAll(dfs(graph, next, visited));
+        }
+        return res;
+    }
+}
+
+// Try UF way next time. for each account, label all emails in that account with account index in accounts. Maintain a map <email, groupIdx>. If one email is already in the emailToId map, then we connect current idx with that groupIdx.
+// after traverse all accounts and build the disjoint sets. Traverse each account, find the root of current groupIdx and put all emails in the set of that root groupIdx. Note we need to use set here cause we will have dup existing in both accounts.
+// final step convert the list of set to the result, added the name using the groupIdx and in required order.
 
 
 
