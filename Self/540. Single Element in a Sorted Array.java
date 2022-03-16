@@ -74,4 +74,41 @@ class Solution {
 }
 
 
+// Review
+/* Initial thought
+require O(logn) time and the array is sorted -> hint for Binary search
+condition for half the searching range each time: compare nums[mid] with nums[mid-1] and nums[mid + 1].
+if not equal to both, return nums[mid]
+if nums[mid] == nums[mid-1]: if (end - mid) % 2 == 0,  then end = mid - 2;else start = mid + 1;
+similarly for nums[mid] == nums[mid +1].
+break when start == end, return nums[start]
+*/
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            boolean isEven = (end - mid) % 2 == 0;
+            if (nums[mid] == nums[mid - 1]) {
+                if (isEven) {
+                    end = mid - 2;
+                } else {
+                    start = mid + 1;
+                }
+            } else if (nums[mid] == nums[mid + 1]) {
+                if (isEven) {
+                    start = mid + 2;
+                } else {
+                    end = mid - 1;
+                }
+            } else {
+                return nums[mid];
+            }
+        }
+        return nums[start];
+    }
+}
+// Or like above M1 way. Always adjust mid to be at odd positions, so that we don't need to move differently based on even and odd cases.
+
 

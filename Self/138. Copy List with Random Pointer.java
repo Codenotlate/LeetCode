@@ -78,3 +78,80 @@ class Solution {
         return newCur;
     }
 }
+
+
+
+
+// Reveiw
+/*Initial thought
+This is a graph problem. each node has at most two neighbors. And we need to deep copy this graph. Meaning we need to search the whole graph, and at the same time maintain the map between old node and new node, and copy each edge and node in the new graph.
+*/
+// BFS way
+class Solution {
+    public Node copyRandomList(Node head) {
+        if (head == null) {return null;}
+        Map<Node, Node> map = new HashMap<>(); // its keyset can also be used as visited set
+        Node copyhead = new Node(head.val);
+        map.put(head, copyhead);
+        Stack<Node> stack = new Stack<>();
+        stack.push(head);
+        while(!stack.isEmpty()) {
+            Node cur = stack.pop();
+            if (cur.next != null) {
+                if(!map.containsKey(cur.next)) {
+                    Node nextcopy = new Node(cur.next.val);
+                    stack.push(cur.next);
+                    map.put(cur.next, nextcopy);
+                }               
+                map.get(cur).next = map.get(cur.next);                
+            }
+            if (cur.random != null) {
+                if(!map.containsKey(cur.random)) {
+                    Node randomcopy = new Node(cur.random.val);
+                    map.put(cur.random, randomcopy);
+                    stack.push(cur.random);
+                }
+                map.get(cur).random = map.get(cur.random);                
+            }
+        }
+        return map.get(head);
+    }
+}
+
+// DFS way - need further practice
+class Solution {
+    public Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>(); 
+        return dfs(head, map);
+    }
+    
+    private Node dfs(Node head, Map<Node, Node> map) {
+        if (head == null) {return null;}
+        if(map.containsKey(head)) {return map.get(head);}
+        Node copyHead = new Node(head.val);
+        map.put(head, copyHead);
+        copyHead.next = dfs(head.next, map);
+        copyHead.random = dfs(head.random, map);
+        return copyHead;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
