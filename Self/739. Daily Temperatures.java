@@ -90,8 +90,44 @@ class Solution {
 
 
 
-
-
+// Review
+/*Initial thought
+similar idea using monotone stack. Time O(n) space O(n)
+improved way with O(1) space: The key is to move backwards and for i, utilize the answer res[i+1] to skip the days in middle and directly jump to i + res[x].
+Also keep track of largest till now, so that if current val >= largest, then we can simply skip it and move backwards.
+*/
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Stack<Integer> stack = new Stack<>();
+        int[] res = new int[temperatures.length];
+        for (int i = 0; i < temperatures.length; i++) {
+            while(!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
+                int popIdx = stack.pop();
+                res[popIdx] = i - popIdx;
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+}
+// Need to review this method
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] res = new int[n];
+        int peekIdx = n - 1;
+        for (int i = n - 2;i >= 0; i--) {
+            while(peekIdx < n && temperatures[peekIdx] <= temperatures[i]) {
+                if (res[peekIdx] == 0) {peekIdx = n;}
+                else {peekIdx += res[peekIdx];}
+                
+            }
+            if (peekIdx < n) {res[i] = peekIdx - i;}
+            peekIdx = i;
+        }
+        return res;
+    }
+}
 
 
 

@@ -119,7 +119,59 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+recursive way. boolean recur(node, min, max). - time O(n) space O(n)
+inorder way. inorder traverse the tree, return false if cur element smaller than previous one. If we use normal inorder way, space will be O(n). If we use Morris way, also only to track the prev one, then space could be O(1), time O(n). 
+*/
+// recursive way
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return isValid(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+    
+    private boolean isValid(TreeNode root, long min, long max) {
+        if (root == null) {return true;}
+        boolean rootRes = root.val > min && root.val < max;
+        boolean leftRes = isValid(root.left, min, root.val);
+        boolean rightRes = isValid(root.right, root.val, max);
+        return rootRes && leftRes && rightRes;
+    }
+}
 
+// Morris way O(1) space: find the rightmost node in left subtree, and make its right pointing to cur node.
+// with the best space O(1) in all above methods
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        long prev = Long.MIN_VALUE;
+        TreeNode cur = root;
+        while(cur != null) {
+            // find rightmost node of left subtree
+            if(cur.left != null) {
+                TreeNode rightMost = cur.left;
+                while(rightMost.right != null && rightMost.right != cur) {rightMost = rightMost.right;}
+                if (rightMost.right == null) { // first time
+                    rightMost.right = cur;
+                    cur = cur.left;
+                } else {
+                    long curNum = cur.val;
+                    if (curNum <= prev) {return false;}
+                    prev = curNum;
+                    rightMost.right = null;
+                    cur = cur.right;
+                }
+            } else {
+                long curNum = cur.val;
+                if (curNum <= prev) {return false;}
+                prev = curNum;
+                cur = cur.right;
+            }
+        }
+        return true;
+        
+        
+    }   
+}
 
 
 
