@@ -90,7 +90,60 @@ class BSTIterator {
 
 
 
+// Review
+/*Initial thought
+1. If can use O(n) space, then it's simple, just do inorder traverse of the tree and store all the result in an array.
+2. To achieve O(h) space, we can consider only store the path from root to leftmost node and add into a stack.
+For hasNext, simply check whether stack is empty.
+For next, pop out the stack, and if that node has right node, add the path from that right node till the leftmost node into the stack.
+In this way, time O(1) on average for each node, space O(h)
+3. similar to 2, but just use the regular inorder iterative traverse, and separate it into each step.
 
+*/
+// M2
+class BSTIterator {
+    Stack<TreeNode> stack;
+
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<>();
+        while(root != null) {stack.add(root); root = root.left;}
+    }
+    
+    public int next() {
+        TreeNode pop = stack.pop();
+        TreeNode next = pop.right;
+        while(next != null) {stack.add(next); next = next.left;}
+        return pop.val;
+    }
+    
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+}
+// M3
+class BSTIterator {
+    Stack<TreeNode> stack;
+    TreeNode cur;
+
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<>();
+        cur = root;
+    }
+    
+    public int next() {
+        while(cur != null) {
+            stack.push(cur);
+            cur = cur.left;
+        }
+        TreeNode pop = stack.pop();
+        cur = pop.right;
+        return pop.val;
+    }
+    
+    public boolean hasNext() {
+        return !stack.isEmpty() || cur != null;
+    }
+}
 
 
 

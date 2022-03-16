@@ -141,6 +141,7 @@ class Solution {
 
 // Morris way O(1) space: find the rightmost node in left subtree, and make its right pointing to cur node.
 // with the best space O(1) in all above methods
+// similar idea: https://leetcode.com/problems/validate-binary-search-tree/discuss/1129042/Python-Morris-O(1)-space-approach
 class Solution {
     public boolean isValidBST(TreeNode root) {
         long prev = Long.MIN_VALUE;
