@@ -109,7 +109,39 @@ class Solution {
 //https://leetcode.com/discuss/study-guide/1200320/Thief-with-a-knapsack-a-series-of-crimes.
 
 
+// Review
+/* Initial thought
+similar to knapsack problem. dp(0,5) = dp(1,5) + dp(0,4)
+dp[i][w] represensts the result starting at coins[i: end] to sum to amount w. 
+dp[i][w] = dp[i+1][w] + dp[i][w-coins[i]];
+Thus i from large to small,
+*/
+class Solution {
+    public int change(int amount, int[] coins) {
+        int[] dp =new int[amount + 1];
+        dp[0] = 1;
+        for(int i = coins.length - 1; i >= 0; i--) {
+            for (int w = coins[i]; w <= amount; w++) {
+                dp[w] += dp[w - coins[i]];
+            }
+        }
+        return dp[amount];
+    }
+}
+// note if we use 2d array, doesn't matter who's the outer loop. But this way is not able to transform to 1d space version.(draw the matrix and check the loop order will see)
+// https://leetcode.com/problems/coin-change-2/discuss/1135391/Java-clean-2D-1D-Dynamic-Programming-Solution-oror-with-detailed-comments
+class Solution {
+    public int change(int amount, int[] coins) {
+        int[][] dp =new int[coins.length + 1][amount + 1];
+        for(int[] row: dp) {row[0] = 1;}
 
-
+        for(int w = 0; w <= amount; w++) {
+            for (int i = coins.length - 1; i >= 0; i--) {
+                dp[i][w] = dp[i+1][w] + (w >= coins[i] ? dp[i][w - coins[i]]:0);
+            }
+        }
+        return dp[0][amount];
+    }
+}
 
 

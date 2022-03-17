@@ -139,6 +139,43 @@ class WordDistance {
 }
 
 
+// Review
+/*Initial thought
+Build a map, for each word, maintains a list of sorted index.
+when do shortest, one slower way is for each num in l1, find the closest num in l2. time O(l1logl2). Another way is to use two pointers pointing to the two sorted array. track the minDiff along the way, always move the smaller one one step forward. if dist == 1, can return directly cause it's the smallest we can get.
+This way time O(l1 + l2) (or O(n))
+e.g.
+[0,5,6]
+[2,3,7]
+
+*/
+class WordDistance {
+    Map<String, List<Integer>> map;
+
+    public WordDistance(String[] wordsDict) {
+        map = new HashMap<>();
+        for (int i = 0; i < wordsDict.length; i++) {
+            map.putIfAbsent(wordsDict[i], new ArrayList<>());
+            map.get(wordsDict[i]).add(i);
+        }
+    }
+    
+    public int shortest(String word1, String word2) {
+        List<Integer> l1 = map.get(word1);
+        List<Integer> l2 = map.get(word2);
+        int p1 = 0, p2=0;
+        int minDist = Integer.MAX_VALUE;
+        while (p1 < l1.size() && p2 < l2.size()) {
+            int dist = l1.get(p1) - l2.get(p2);
+            minDist = Math.min(minDist, Math.abs(dist));
+            if(minDist == 1) {return minDist;}
+            if (dist < 0) {p1++;}
+            else {p2++;}
+        }
+        return minDist;
+    }
+}
+
 
 
 

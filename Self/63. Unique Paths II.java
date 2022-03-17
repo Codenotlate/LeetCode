@@ -71,4 +71,42 @@ class Solution {
 // interviewer may ask alternative approaches and the comparison between them. Another way could be dfs + memo
 
 
-
+// Reveiw
+/* Initial thought
+DP way. moving backwards from the bottomright pos. If encounter 1, then num = 0 for that cell. dp(i,j) = dp(i+1, j) + dp(i, j+1).
+special case: m,n=1 or 1 in grid[m-1][n-1]
+the space may be further optimized.
+*/
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] dp = new int[m+1][n+1];
+        if (obstacleGrid[m-1][n-1] == 1 || obstacleGrid[0][0] == 1) {return 0;}
+        dp[m-1][n-1] = 1;
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if(i == m-1 && j == n-1) {continue;}
+                dp[i][j] = obstacleGrid[i][j] == 1? 0: (dp[i+1][j] + dp[i][j+1]);
+            }
+        }
+        return dp[0][0];
+    }
+}
+// optimize space
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[] dp = new int[n+1];
+        if (obstacleGrid[m-1][n-1] == 1 || obstacleGrid[0][0] == 1) {return 0;}
+        dp[n-1] = 1;
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if(i == m-1 && j == n-1) {continue;}
+                dp[j] = obstacleGrid[i][j] == 1? 0: (dp[j] + dp[j+1]);
+            }
+        }
+        return dp[0];
+    }
+}
