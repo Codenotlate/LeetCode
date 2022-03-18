@@ -129,8 +129,44 @@ class Solution {
 }
 
 
-
-
+// Review: not elegant like above implementation.
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        return getTrees(1, n);
+    }
+    
+    private List<TreeNode> getTrees(int min, int max) {
+        List<TreeNode> res = new LinkedList<>();
+        if (min == max) {res.add(new TreeNode(min));}
+        if (min >= max) {return res;}
+        for (int i = min; i <= max; i++) {
+            List<TreeNode> left = getTrees(min, i-1);
+            List<TreeNode> right = getTrees(i+1, max);
+            if (left.size() != 0 && right.size() != 0) {
+                for (TreeNode l: left) {
+                    for (TreeNode r:right) {
+                        TreeNode root = new TreeNode(i);
+                        root.left = l;
+                        root.right = r;
+                        res.add(root);
+                    }                    
+                }
+            } else {
+                for (TreeNode l: left) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = l;
+                    res.add(root);
+                }
+                for (TreeNode r: right) {
+                    TreeNode root = new TreeNode(i);
+                    root.right = r;
+                    res.add(root);
+                }
+            }           
+        }
+        return res;
+    }
+}
 
 
 
