@@ -158,44 +158,52 @@ class Solution {
 }
 
 
-// time should be O(m * n * L)
-// but got time limit exceeded in lc, but I assume this is right
+
+// Review
+/*Initial thought
+starting with each cell in the board, do dfs and since each cell can only be used once, we need a visited set for each dfs for each cell and we need to do backtracking. 
+For dfs, the we compare the cell char with the current index in word, if they match, we move on to the next layer of dfs with the cell's neighbors and index+1 in word.
+time O(mn * 3^min(L,mn)) 
+Considering using the board itself to label as visited and use backtrack to change the label back. So the space is the length of the recursion, which is O(L)
+
+Note:
+[Wrong idea: We can also keep a map recording results for a cell and the index in the string,  so that we don't do repetitive dfs work.]
+// https://leetcode.com/problems/word-search/discuss/459937/Why-memorization-dees-not-work-here
+To put it in simple words, (x, y, index) is not exactly the state of the system.(x, y, index, visited) is the correct state.
+*/
 class Solution {
-    // try dfs + memo<cell(i,j), wordIdx> -> true/false;
     public boolean exist(char[][] board, String word) {
         int m = board.length;
         int n = board[0].length;
-        Map<Pair<int[][], Integer>,Integer> memo = new HashMap<>();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (board[i][j] == word.charAt(0)) {
-                    if (dfs(board, i, j, word, 0, new int[m][n], memo)) {return true;}
-                }
+                if (dfs(board, i, j, word, 0)) {return true;}
             }
         }
         return false;
     }
     
-    private boolean dfs(char[][] board, int i, int j, String word, int idx, int[][] visited, Map<Pair<int[][], Integer>,Integer> memo) {
-        Pair<int[][], Integer> mapKey = new Pair(new int[]{i, j}, idx);
-        if (memo.containsKey(mapKey)) {return memo.get(mapKey)==1;}
-        if (idx == word.length() - 1) {
-            if(board[i][j] == word.charAt(idx)) {memo.put(mapKey, 1); return true;}
-            else {memo.put(mapKey, 0); return false;}
-        }
-        if (board[i][j] != word.charAt(idx)) {memo.put(mapKey,0); return false;}
-        visited[i][j] = 1;
-        int[][] dirs = new int[][]{{-1, 0},{1, 0},{0,1}, {0, -1}};
-        for (int[] d: dirs) {
-            int newr = i + d[0];
-            int newc = j + d[1];
-            if (newr >= 0 && newr < board.length && newc >= 0 && newc < board[0].length && visited[newr][newc] == 0) {
-                if (dfs(board, newr, newc, word, idx+1, visited, memo)) {memo.put(mapKey, 1); return true;}
+    private boolean dfs(char[][] board, int i, int j, String word, int si) {
+        // base case
+        if (si >= word.length()) {return true;}
+        if (i < 0 || j < 0 || i >= board.length || j >= board[0].length || board[i][j] != word.charAt(si)){return false;}
+        boolean res = false;
+        if (word.charAt(si) == board[i][j]) {
+            int[][] dirs = new int[][]{{-1, 0},{0,1},{0,-1},{1, 0}};
+            board[i][j] = '#';
+            for (int[] dir: dirs) {
+                res = dfs(board, i + dir[0], j + dir[1], word, si+1);
+                if (res) {break;}
             }
+            board[i][j] = word.charAt(si);
         }
-        // backtracking !!!
-        visited[i][j] = 0;
-        memo.put(mapKey, 0);
-        return false;
+        return res;
     }
 }
+
+
+
+
+
+
+

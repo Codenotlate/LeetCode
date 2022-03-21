@@ -49,3 +49,33 @@ class Solution {
         return dp[0];
     }
 }
+
+
+// review
+/* Initial thought
+typical dp problem, if dp[i][j] represents the min path sum starting from (i, j). the transition equation is dp[i][j] = min(dp[i+1][j], dp[i+1][j+1]) + triangle[i][j];
+since require O(n) space, we can init an O(n) array, and the update it starting with last row to first row, and from left to right for each row.
+time O(n^2) space O(n)
+*/
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++) {res[i] = triangle.get(n-1).get(i);}
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = 0; j <= i; j++) {
+                res[j] = Math.min(res[j], res[j+1]) + triangle.get(i).get(j);
+            }
+        }
+        return res[0];
+    }
+}
+
+
+
+
+
+
+
+
+
