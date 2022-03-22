@@ -194,7 +194,51 @@ class Solution {
 
 
 
-
+// review
+/*Initial thought
+recursive way: if root is null return null; if root is either p or q, return root. Otherwise, check the result from recur(root.left, p,q) and recur(root.right, p, q). If both return not null, then return root. Otherwise, return the not-null value.
+iterative way: build the parent map for both p and q, then build the ancestor set for p and traverse the parent path for q, return the first ancestor pf q that is in p set.
+*/
+// iterative way
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        Map<TreeNode, TreeNode> parents = new HashMap<>();
+        find(root, p, q, parents);
+        Set<TreeNode> pSet = new HashSet<>();
+        while (p != null) {
+            pSet.add(p);
+            p = parents.get(p);
+        }
+        while (!pSet.contains(q)) {
+            q = parents.get(q);
+        }
+        return q;
+        
+    }
+    
+    // find can be either iterative or recursive
+    private void find(TreeNode root, TreeNode p, TreeNode q, Map<TreeNode, TreeNode> parents) {
+        if (root == null) {return;}
+        parents.put(root, null);
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while(!parents.containsKey(p) || !parents.containsKey(q)) {
+            TreeNode cur = queue.poll();
+            if(cur.left != null) {queue.add(cur.left); parents.put(cur.left, cur);}
+            if(cur.right != null) {queue.add(cur.right); parents.put(cur.right, cur);}
+        }
+    }
+}
+// recursive way
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) {return root;}
+        TreeNode leftres = lowestCommonAncestor(root.left, p, q);
+        TreeNode rightres = lowestCommonAncestor(root.right, p, q);
+        if (leftres != null && rightres != null) {return root;}
+        return leftres == null? rightres : leftres;
+    }
+}
 
 
 

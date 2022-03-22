@@ -120,6 +120,31 @@ class Solution {
 
 
 
+// review
+/*Initial thought
+dfs + backtracking + accumulated path sum. for each path, we keep the accum path sum in a map with count, and if current sum - targetSum is inside the map keyset, then res+=count. And we need to backtrack that sum from the map when move to another child node, cause here the path is required to be only from parent to its children.
+time O(n) space O(h)
+*/
+class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1); // don't forget this line
+        return getSum(root, map, 0, targetSum);
+    }
+    
+    private int getSum(TreeNode root, Map<Integer,Integer> map, int curSum, int targetSum) {
+        if (root == null) {return 0;}
+        int res = 0;
+        if (map.containsKey(curSum + root.val - targetSum)) {
+            res+=map.get(curSum + root.val - targetSum);
+        }
+        map.put(curSum + root.val, map.getOrDefault(curSum + root.val, 0)+1);
+        res += getSum(root.left, map, curSum + root.val, targetSum);
+        res += getSum(root.right, map, curSum + root.val, targetSum);
+        map.put(curSum + root.val, map.get(curSum + root.val) - 1);
+        return res;
+    }
+}
 
 
 

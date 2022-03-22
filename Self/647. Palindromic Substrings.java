@@ -162,6 +162,59 @@ class Solution {
 
 
 
+// review
+/*Initial thought
+naive way is to list out all substrings and traverse each of them to check if it's palindromic. This will take n + 2(n-1) + 3(n-2) + ---+ n(n-(n-1)) = O(n^3)
+improved way1: use regular dp. Since there's repetitive sub problems. dp[i][j] = dp[i+1][j-1] && s[i] == s[j]. There are two base cases: dp[i][i] = true; dp[i][i+1] = s[i] == s[i+1].And we assume i <= j, thus we loop for i from n-1 to 0, loop j from n-1 to i. And we can optimize the space to O(n).
+improved way2: two types of center - one letter or two dup letters. we can expand from the center. In total O(n) centers and the expansion took O(n) time for each center, thus the time is O(n^2). For each expandsion, we stop when the two sides don't match. And we only need to keep O(1) space.
+*/
+// dp way1: O(n^2) time O(n) space
+class Solution {
+    public int countSubstrings(String s) {
+        int res = 0;
+        int n = s.length();
+        boolean[] dp = new boolean[n];
+        // first base case: single char
+        dp[n-1] = true;
+        res++;
+        for (int i = n-2; i >= 0; i--) {
+            for (int j = n-1; j >= i+2; j--) {
+                dp[j] = dp[j-1] && s.charAt(i) == s.charAt(j);
+                if (dp[j]) {res++;}
+            }
+            dp[i] = true;
+            res++;
+            dp[i+1] = s.charAt(i) == s.charAt(i+1);
+            if (dp[i+1]){res++;}
+            
+        }
+        return res;
+    }
+}
+// dp way2: O(n^2) time O(1) space
+class Solution {
+    public int countSubstrings(String s) {
+        int res = 0;
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            res += count(s, i, i);
+            if (i < n - 1 && s.charAt(i) == s.charAt(i+1)) {res += count(s, i, i+1);}
+        }
+        return res;
+    }
+    
+    private int count(String s, int i, int j) {
+        int res = 0;
+        while(i >= 0 && j <= s.length() - 1 && s.charAt(i) == s.charAt(j)) {
+            res++;
+            i--;
+            j++;
+        }
+        return res;
+    }
+}
+
+
 
 
 
