@@ -93,5 +93,34 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+dfs + backtracking
+for each position in the result, n choices (skip visited ones).
+
+*/
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        int[] visited = new int[nums.length];
+        dfs(nums, 0, visited, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(int[] nums, int i, int[] visited, List<Integer> curList, List<List<Integer>> res) {
+        if (i >= nums.length) {res.add(new LinkedList(curList)); return;}
+        for (int j = 0; j < nums.length; j++) {
+            if (visited[j] != 0 ) {continue;}
+            curList.add(nums[j]);
+            visited[j] = 1;
+            dfs(nums, i+1, visited, curList, res);
+            visited[j] = 0;
+            curList.remove(curList.size() - 1);
+        }
+        
+    }
+}
+
+
 
 

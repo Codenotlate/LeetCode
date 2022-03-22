@@ -197,6 +197,34 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+Get the end pos for each char. Then traverse the second time, update the end pos of the window based on current char until current pos = updated end pos. Add current pos - the sum pos added to res list to the res list.reset end = 0 and continue with next window.
+time O(n) space O(26)
+*/
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        List<Integer> res = new LinkedList<>();
+        int lastAdded = -1;
+        // first round to get end pos for each char
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), i);
+        }
+        // second round to partition
+        int curEnd = 0;
+        for (int i = 0; i < s.length(); i++) {
+            curEnd = Math.max(curEnd, map.get(s.charAt(i)));
+            if (i == curEnd) {
+                res.add(i - lastAdded);
+                lastAdded = i;
+                curEnd = 0;
+            }
+        }
+        return res;
+    }
+}
+
 
 
 

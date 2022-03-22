@@ -182,3 +182,41 @@ class Solution {
 
 
 
+
+// Review
+/*Initial thought
+BFS with label. for odd levels we label it as -1 and for even levels we label it as 1. Then if we encounter one node with diff labels, return false. Otherwise, return true, if we searched the whole graph without failures.
+time O(n + E) 
+space O(n)
+*/
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        int[] visited = new int[n]; // used for visited/unvisited(!=0) and also for the label (1/-1)
+        Queue<Integer> queue = new LinkedList<>();
+        int label = 1;
+        for (int i = 0; i < n; i++) {
+            if (visited[i] != 0) { continue;}
+            queue.add(i);
+            visited[i] = label;
+            label *= -1;
+            while (!queue.isEmpty()) {
+                int size = queue.size();
+                while (size -- > 0) {
+                    int cur = queue.poll();
+                    for (int next: graph[cur]) {
+                        if (visited[next] == -label) {return false;}
+                        if (visited[next] == 0) {
+                            queue.add(next);
+                            visited[next] = label;
+                        }
+                    }
+                }
+                label *= -1;
+            }
+        }
+        return true;
+        
+    }
+}
+
