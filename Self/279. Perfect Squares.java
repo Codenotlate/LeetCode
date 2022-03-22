@@ -193,6 +193,59 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+DP. for i = k * k, dp[i] = 1. for other i, dp[i] = min(dp(i-k*k)) + 1
+dp(12) = min(dp(12-9), dp(12-4), dp(12-1)) + 1
+time O(n* sqrt(n)) space O(n)
+
+Another way hint from solution, view this as an n-nary tree, where the edge between each node is the perfect square number diff between the two nodes number. Then we use BFS to find the shortest path from node n to node 0. There are (sqrt(n)) nodes each layer and the height if the shortest height required to get n. Thus time O(sqrt(n) * h) space O(h)
+*/
+
+// way1: DP
+class Solution {
+    public int numSquares(int n) {
+        int[] dp =new int[n+1];
+        Arrays.fill(dp, n+1);
+        dp[0] = 0;
+        for (int i =1; i <= n; i++) {
+            int k = 1;
+            while (k * k <= i) {
+                dp[i] = Math.min(dp[i], 1 + dp[i - k * k]);
+                k++;
+            }
+        }
+        return dp[n];
+    }
+}
+
+// way2: n-nary tree, two ways, can start from node 0 to reach node n, or start with node n and reach node 0. Here choose the second way.
+class Solution {
+    public int numSquares(int n) {
+        Queue<Integer> queue = new LinkedList<>();
+        Set<Integer> set = new HashSet<>();
+        queue.add(n);
+        set.add(n);
+        int level = 0;
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            while(size-->0) {
+                int cur = queue.poll();
+                if (cur == 0) {return level;}
+                int k = 1;
+                while(k * k <= cur) {
+                    int next = cur - k * k;
+                    if (set.contains(next)) {k++;continue;}
+                    queue.add(next);
+                    set.add(next);
+                    k++;
+                }
+            }
+            level++;
+        }
+        return -1; // should not reach this line
+    }
+}
 
 
 

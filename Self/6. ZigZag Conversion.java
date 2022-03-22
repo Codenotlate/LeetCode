@@ -121,7 +121,63 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+PAYPALISHIRING num = 3
+01210121012101
 
+PAYPALISHIRING num = 4
+01232101232101
+Need to find the pattern for the new rownum for each original index in s.
+choose the pivot, we choose 0 over num-1 because the end part may not contain num-1. Each pivot responsible for the followed range with length =  2* (num - 1), For each pivot 0, index1 will be appear at p0 + 1 and p0 + length - 1, index2 will appear at p0 +2 and p0 + length - 2,..., index(n-2) will appear at p0 + n - 2 and p0 + length - (n-2). Then index (n-1) will appear at p0 + n - 1.
+
+time O(n) space O(n)
+*/
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {return s;}
+        StringBuilder res = new StringBuilder();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        int p0 = 0;
+        int size = 2 *(numRows - 1);
+        while (p0 < s.length()) {
+            map.putIfAbsent(0, new LinkedList<>());
+            map.get(0).add(p0);
+            for (int i = 1; i <= numRows - 1; i++) {
+                map.putIfAbsent(i, new LinkedList<>());
+                if (p0 + i < s.length()) {map.get(i).add(p0 + i);}
+                if (i !=  numRows - 1 && p0 + size - i < s.length()) {map.get(i).add(p0 + size - i);}
+            }
+            p0 += size;
+        }
+        for (int i = 0; i < numRows; i++) {
+            for (int pos: map.get(i)) {
+                res.append(s.charAt(pos));
+            }            
+        }
+        return res.toString();
+    }
+}
+
+// Actually is we reverse the loop order, i.e. with numRows as outer loop and j + size as inner loop, we don't need the map, can directly append the result to stringbuilder. As below
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {return s;}
+        StringBuilder res = new StringBuilder();
+        int size = 2 *(numRows - 1);
+        for (int i = 0; i < numRows; i++) {
+            int p0 = 0;
+            while(p0 + i < s.length()) {
+                res.append(s.charAt(p0 + i));
+                if (i != 0 && i !=  numRows - 1 && p0 + size - i < s.length()) {res.append(s.charAt(p0 + size - i));}
+                p0 += size;
+            }
+            
+        }
+        
+        return res.toString();
+    }
+}
 
 
 

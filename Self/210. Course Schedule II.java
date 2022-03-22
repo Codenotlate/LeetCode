@@ -276,6 +276,43 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+Build the graph. pair[a,b] means there is an directed edge from b to a. 
+M1: Do topological search. use a queue, put all nodes with inCount = 0. pop out along the way and adjust the inCount for its neighbors. Until queue is empty.If the search ends with less then numCourses, then meaning there's impossible to do it and return empty array. Otherwise the order of the nodes popped out of the queue is the order in the final result.
+time O(V + E) space O(V + E)
+M2: DFS + 3 status to detect cycle and add result in reverse order. Try next time.
+*/
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        int[] inCounts = new int[numCourses];
+        // build the graph
+        for (int[] edge: prerequisites) {
+            graph.putIfAbsent(edge[1], new LinkedList<>());
+            graph.get(edge[1]).add(edge[0]);
+            inCounts[edge[0]]++;
+        }
+        
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {if(inCounts[i] == 0) {queue.add(i);}}
+        int[] res = new int[numCourses];
+        int resIdx = 0;
+        while (!queue.isEmpty()) {
+            int cur = queue.poll();
+            res[resIdx++] = cur;
+            for (int next: graph.getOrDefault(cur, new LinkedList<>())) {
+                inCounts[next]--;
+                if (inCounts[next] == 0) {queue.add(next);} 
+            }
+        }
+        
+        return resIdx == numCourses ? res : new int[0];
+    }
+}
+
+
+
 
 
 
