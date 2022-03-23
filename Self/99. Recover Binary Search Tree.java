@@ -235,7 +235,52 @@ class Solution {
 
 
 
-
+// Reveiw
+/*Initial thought
+since BST, inorder traverse should get sorted array. In this problem, one pair in the sorted array is swapped. Set the left side to be min and right side to be max, we need to find the first reverse order pair and track the nodes, and replace the smaller nodes with the smaller one in the second pair fo reverse order pair if there exists.
+regular inorder traverse require O(n) space for the stack. Since here requires O(1) space, we can use Morris traverse here. Along the way only need to track the prev searched node.
+time O(n) space O(1)
+3 2 1
+1 3 2 4
+1 2 5 4 3 6
+*/
+class Solution {
+    public void recoverTree(TreeNode root) {
+        TreeNode smallNode = null, largeNode = null;
+        TreeNode cur = root;
+        TreeNode prev = null;
+        while (cur != null) {
+            if (cur.left != null) {
+                TreeNode rightMost = cur.left;
+                while(rightMost.right != null && rightMost.right != cur) {rightMost = rightMost.right;}
+                if(rightMost.right == null) {
+                    rightMost.right = cur; 
+                    cur = cur.left;
+                }
+                else {
+                    rightMost.right = null;
+                    if (prev != null && cur.val < prev.val) {
+                        if(smallNode == null) {largeNode = prev;}
+                        smallNode = cur;
+                    }
+                    prev = cur;
+                    cur = cur.right;
+                }
+            } else {
+                if (prev != null && cur.val < prev.val) {
+                    if(smallNode == null) {largeNode = prev;}
+                    smallNode = cur;
+                }
+                prev = cur;
+                cur = cur.right;
+            }
+        }
+        
+        int temp = smallNode.val;
+        smallNode.val = largeNode.val;
+        largeNode.val = temp;
+    }
+}
 
 
 

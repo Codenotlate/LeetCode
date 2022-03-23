@@ -345,6 +345,67 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+M1/M2: iterate the total grid, then start search and update the maxArea of each island. The search can be either BFS or DFS.
+time O(mn) space O(mn)
+M3: UF way. union by size instead of by rank.
+*/
+class Solution {
+    public int maxAreaOfIsland(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] visited = new int[m][n];
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1 && visited[i][j] != 1) {
+                    res = Math.max(res, search(grid, i, j, visited));
+                }
+            }
+        }
+        return res;
+    }
+    
+    // M1: BFS way
+    private int search(int[][] grid, int i, int j, int[][] visited) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{i,j});
+        visited[i][j] = 1;
+        int area = 0;
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            area++;
+            for (int[] d: dirs) {
+                int newi = cur[0] + d[0];
+                int newj = cur[1] + d[1];
+                if (newi >=0 && newi < grid.length && newj >= 0 && newj < grid[0].length && visited[newi][newj] != 1 && grid[newi][newj] == 1) {
+                    queue.add(new int[]{newi, newj});
+                    visited[newi][newj] = 1;
+                }
+            }
+            
+        }
+        return area;
+    }
+
+    // M2: DFS way
+    private int search(int[][] grid, int i, int j, int[][] visited) {
+        int area = 0;
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || visited[i][j] == 1 || grid[i][j] != 1) {return area;}
+        visited[i][j] = 1;
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        for (int[] d: dirs) {
+            area += search(grid, i+d[0], j+d[1], visited);
+        }      
+        return area + 1;
+    }
+}
+
+
+
+
 
 
 
