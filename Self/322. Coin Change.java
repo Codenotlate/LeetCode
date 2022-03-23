@@ -111,7 +111,27 @@ class Solution {
 
 
 
-
+// Review
+/*Initial thought
+M1 way: since requires fewest number of coins, we can view this as a n-nary tree and do BFS. time O(n^h) where n is coins.len, h is the fewest number to reach amount. h is at most amount. Thus time is possible as O(n^amount). space O(n^h) for the queue size.
+M2 way: consider dp. for each position, we have two choices, choose or not choose. dp[i][w] = min(1+d[i][w-coins[i]], dp[i+1][w]). This is a knapsack problem. time O(n*amount) space O(amount) with optimization.
+*/
+// dp way
+// actually given the amount range, we don't need to use integer.max below, set to amount+1 should be good enough
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp,Integer.MAX_VALUE);
+        dp[0] = 0;
+        for (int i = coins.length - 1; i >= 0; i--) {
+            for (int w = coins[i]; w <= amount; w++) {
+                int choose = dp[w-coins[i]] == Integer.MAX_VALUE ? Integer.MAX_VALUE : 1 + dp[w-coins[i]];
+                dp[w] = Math.min(choose, dp[w]);
+            }
+        }
+        return dp[amount] == Integer.MAX_VALUE? -1: dp[amount] ;
+    }
+}
 
 
 

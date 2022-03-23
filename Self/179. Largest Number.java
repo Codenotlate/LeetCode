@@ -282,10 +282,28 @@ class Solution {
 
 
 
+// Review
 
 
-
-
+/*Initial thought
+brutal force way is to have all combinations and find the max. O(n!)
+improved way: sort the num first. The rule for comparin two string is: for s1,s2. if s1+s2 > s2 + s1, then s1 is better than s2.
+time O(nklogn) where n is nums.len, and k is the average digit length of num in nums.
+space O(n)
+*/
+class Solution {
+    public String largestNumber(int[] nums) {
+        String[] numstrs = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {numstrs[i]= String.valueOf(nums[i]);}
+        Arrays.sort(numstrs, (s1,s2)->((s2+s1).compareTo(s1+s2)));
+        // special case with starting 0
+        if(numstrs[0].equals("0")) {return "0";}
+        StringBuilder res = new StringBuilder();
+        for (String s: numstrs) {res.append(s);}
+        
+        return res.toString();
+    }
+}
 
 
 

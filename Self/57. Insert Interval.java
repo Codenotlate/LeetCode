@@ -98,3 +98,39 @@ class Solution {
        
 }
 
+
+
+// Review
+/*Initial thought
+comparing each interval with the newitv. 
+Three cases: 
+if curend < newstart, then add curitv to res.
+else if curstart > newend, add [newstart, newend] to res. newstart = curstart, newend = curend.
+else newstart = min(newstart, curstart), newend = max(newend, curend).
+In the end, add [newstart, newend] to res.
+Because the original intervals array is sorted, by processing them in order, we can guarantee the res is still sorted.
+time O(n) space O(min(n,reslen))
+
+*/
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> resList = new LinkedList<>();
+        int newstart = newInterval[0];
+        int newend = newInterval[1];
+        for (int[] curitv: intervals) {
+            if (curitv[1] < newstart) {resList.add(curitv);}
+            else if (curitv[0] > newend) {
+                resList.add(new int[]{newstart,newend}); 
+                newstart = curitv[0];
+                newend = curitv[1];
+            } else {
+                newstart = Math.min(newstart, curitv[0]);
+                newend = Math.max(newend, curitv[1]);
+            }
+        }
+        resList.add(new int[]{newstart, newend});
+        int[][] res = new int[resList.size()][2];
+        for (int i = 0; i < res.length; i++) {res[i] = resList.get(i);}
+        return res;
+    }
+}
