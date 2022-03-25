@@ -75,3 +75,27 @@ class Solution {
         return start;
     }
 }
+
+
+
+
+
+// Review - more elegant than above ways
+/*Initial thought
+require O(logn) time, thus thinking about binary search. Since we assume nums[-1] = nums[n] = -inf and nums[i] != nums[i+1]. Thus when nums[mid] < nums[mid+1], we can guarantee at least one peek value in range[mid+1, end], and when nums[mid] > nums[mid+1], we can guarantee at least one peek value in range[start, mid].
+*/
+class Solution {
+    public int findPeakElement(int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] < nums[mid + 1]) {
+                start = mid +1;
+            } else {
+                end = mid;
+            }
+        }
+        return start;
+    }
+}

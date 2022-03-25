@@ -208,6 +208,55 @@ class Solution {
 
 
 
+// Review
+/*Initial thought: assume the string is mutable by converting it to char array
+if not require O(1) space, can use trim to delete space at the beginning and end, then split based on space to get an string array. Then reverse the string array and join them with space for the result. This way time O(n) space O(n)
+Since now require O(1) space(view it as char array)
+e.g. s = "   the sky is blue "
+reverse the whole array first: " eulb si yks eht   "
+then reverse each word group by finding them, reverse them and insert in to the array from left inplace:"blue is sky the"
+This way time O(n) space O(1) if we view s as mutable char array
+*/
+
+class Solution {
+    public String reverseWords(String s) {
+        char[] chars = s.toCharArray();
+        reverse(chars, 0, chars.length-1);
+        int resIdx = 0;
+        int left = 0;
+        int right = 0;
+        while (left < chars.length) {
+            while (left < chars.length && chars[left] == ' ') {left++;}
+            if(left >= chars.length) {break;}
+            right = left;
+            while(right < chars.length && chars[right] != ' ') {right++;}
+            // reverse this part
+            reverse(chars, left, right-1);
+            // insert from left
+            for (int i = left; i < right; i++) {
+                chars[resIdx++] = chars[i];
+            }
+            if (resIdx <chars.length) {chars[resIdx++] = ' ';}
+            left = right;
+        }
+        // remove the final space only when there's extra space to add space in the end
+        if(resIdx <= chars.length && chars[resIdx-1] == ' ') {resIdx--;}
+        return new String(chars, 0, resIdx);
+    }
+    
+    private void reverse(char[] chars, int i, int j) {
+        while (i < j) {
+            char temp = chars[i];
+            chars[i] = chars[j];
+            chars[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}
+
+
+
 
 
 

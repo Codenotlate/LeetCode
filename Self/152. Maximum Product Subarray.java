@@ -108,7 +108,53 @@ class Solution {
 
 
 
+// Review
 
+/*Initial thought
+we can't elimate negative elements from the window like in the max sum case, cause though they are negative they still have potential to generate the max product later. 
+There are two ways:
+M1 way: using DP.dp[i] represent the result for nums[0:i]. But in this case, we need two info from previous position: maxProduct, minProduct. Cause they all have potentil to produce the max product for current position. And for current position. maxProduct = max(prev maxproduct * nums[i], prev minproduct * nums[i], nums[i]). minProduct = min(prev maxproduct * nums[i], prev minproduct * nums[i],nums[i]).  Here we take nums[i] itself into account is because there could be 0 in th array and in that case accumulated product may not be larger than the single nums[i]. And since for each current position, we only need max and min from previous position, the space of this dp can be optimized to O(1). time is O(n)
+
+M2 way: using math proof to show that if there's no 0 in the nums, then the max product will either include the start of nums or the end of nums. Now if we consider 0 in the array, we can separate the original array into several non-zero parts by restarting the accumulated product after encounter 0. This way time is still O(n) and space O(1).
+*/
+// M1 way:
+class Solution {
+    public int maxProduct(int[] nums) {
+        int maxres = Integer.MIN_VALUE;
+        int prevmin = 1;
+        int prevmax = 1;
+        for (int i = 0; i < nums.length; i++) {
+            prevmin *= nums[i];
+            prevmax *= nums[i];
+            int curmin = Math.min(nums[i],Math.min(prevmin, prevmax));
+            prevmax = Math.max(nums[i], Math.max(prevmin, prevmax));
+            maxres = Math.max(maxres, prevmax);
+            prevmin = curmin;
+        }
+        return maxres;
+        
+    }
+}
+// M2 way:
+class Solution {
+    public int maxProduct(int[] nums) {
+        int maxres = Integer.MIN_VALUE;
+        int accumres = 1;
+        for (int i = 0; i < nums.length; i++) {
+            accumres *= nums[i];
+            maxres = Math.max(maxres, accumres);
+            if(accumres == 0) {accumres = 1;}
+        }
+        accumres = 1;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            accumres *= nums[i];
+            maxres = Math.max(maxres, accumres);
+            if(accumres == 0) {accumres = 1;}
+        }
+        return maxres;
+        
+    }
+}
 
 
 
