@@ -109,3 +109,52 @@ class Solution {
         return root;
     }
 }
+
+
+
+
+// Review
+/*Initial thought
+M1 way: iterative way. loop nodes level by level, for each cur level check its leftmost child, and use it for next level iteration. In current level, iterate till curnode == null by curnode = curnode.next. And for each curnode, connect its left child and right child and update child level tail node to the right child. Move on to next curnode in the cur level. This way has time O(n) space O(1)
+M2 way: recursive way. similar as iterative way, in the cur level, we connect cur.left.next = cur.right, and also cur.right.next = cur.next.left.
+
+
+*/
+// M1 iterative way
+class Solution {
+    public Node connect(Node root) {
+        if(root == null) {return root;}
+        Node curHead = root;
+        while(curHead.left != null) {
+            Node nextHead = curHead.left;
+            while(curHead != null) {
+                curHead.left.next = curHead.right;
+                if(curHead.next != null) {curHead.right.next = curHead.next.left;}
+                curHead = curHead.next;
+            }
+            curHead = nextHead;
+        }
+        return root;
+    }
+}
+// M2 recursive way
+class Solution {
+    public Node connect(Node root) {
+        if(root == null) {return root;}
+        if(root.left != null) {
+            root.left.next = root.right;
+            if (root.next != null) {root.right.next = root.next.left;}
+        }
+        root.left = connect(root.left);
+        root.right = connect(root.right);
+        return root;
+    }
+}
+
+
+
+
+
+
+
+

@@ -95,7 +95,41 @@ class Solution {
 }
 
 
-
+// Review
+/*Initial thought
+The anagram group can all be represented using a string of chars and corresponding count of that char. We can loop every str and generated its charCount representation, and then put the ones with same charCount string into one list in a map.
+time O(L) where l is the total chars number in strs.
+space O(L) 
+*/
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s: strs) {
+            String symbol = getSymbol(s);
+            map.putIfAbsent(symbol, new LinkedList<String>());
+            map.get(symbol).add(s);
+        }
+        List<List<String>> res = new LinkedList<>();
+        for (List<String> l: map.values()) {res.add(l);}
+        return res;
+    }
+    
+    private String getSymbol(String s) {
+        int[] count = new int[26];
+        for (char c: s.toCharArray()) {
+            count[c-'a']++;
+        }
+        StringBuilder symbol = new StringBuilder();
+        for (int i  = 0; i < 26; i++) {
+            if(count[i] != 0) {
+                symbol.append((char) ('a' + i));
+                symbol.append(count[i]);
+            }
+        }
+        
+        return symbol.toString();
+    }
+}
 
 
 
