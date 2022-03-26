@@ -145,6 +145,102 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+If we know the 1island size as the neighbor for each 0 cell. Then we can get the max island by adding the two neighboring 1 island of it. But other than the size of the island, we also need to label different island to avoid adding the same island twice.
+loop the matrix, if encounter cell 1, get the size of the island, label those cells with group id, and use a map to store groupID: islandsize.
+loop the matrix, if encounter cell 0. check its 4 neighbors, sum up the island size of the distinct group size. And update the max result.
+time O(n^2)
+space O(n^2)
+*/
+class Solution {
+    public int largestIsland(int[][] grid) {
+        int n = grid.length;
+        int[][] visited = new int[n][n];
+        int groupId = 1;
+        Map<Integer, Integer> idSize = new HashMap<>();
+        // first part
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1 && visited[i][j] == 0) {
+                    search(grid, i, j, visited, groupId, idSize);
+                    groupId++;
+                }
+            }
+        }
+        
+        // second part
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    int area = getMaxArea(n, i, j, visited, idSize);
+                    res = Math.max(res, area);
+                }
+            }
+        }
+        return res == 0 ? n*n: res;
+    }
+    
+    // can use BFS or DFS, choose to use BFS here
+    private void search(int[][] grid, int i, int j, int[][] visited, int groupId, Map<Integer, Integer> map) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{i, j});
+        visited[i][j] = groupId;
+        int size = 0;
+        int[][] dirs = new int[][]{{0,1},{0, -1},{1, 0},{-1, 0}};
+        while(!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            size++;
+            for (int[] d: dirs) {
+                int newi = cur[0]+d[0];
+                int newj = cur[1]+d[1];
+                if (newi >= 0 && newi < grid.length && newj>=0 && newj <grid.length && grid[newi][newj] == 1 && visited[newi][newj] == 0) {
+                    queue.add(new int[]{newi, newj});
+                    visited[newi][newj] = groupId;
+                }
+            }
+        }
+        map.put(groupId, size);
+    }
+    
+    
+    
+    private int getMaxArea(int n, int i, int j, int[][] visited, Map<Integer, Integer> map) {
+        Set<Integer> groups = new HashSet<>();
+        int[][] dirs = new int[][]{{0,1},{0, -1},{1, 0},{-1, 0}};
+        int area = 1;
+        for (int[] d: dirs) {
+            int newi = i+d[0];
+            int newj = j+d[1];
+            if (newi >= 0 && newi < n && newj>=0 && newj <n && !groups.contains(visited[newi][newj])) {
+                area += map.getOrDefault(visited[newi][newj],0);
+                groups.add(visited[newi][newj]);
+            }
+        }
+        return area;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

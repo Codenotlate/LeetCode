@@ -154,3 +154,27 @@ class Solution {
         
     }
 }
+
+
+// Review
+/*Initial thought
+DP way. for each position, there are two choices.transfer to char using current one digit or use two digits together(in the range of [1,26]). One special case is if current digit is 0, the answer is just 0. If two digits are in valid range, then the formula is dp[i] = dp[i+1] + dp[i+2]. Otherwise dp[i] = dp[i+1], where dp[i] represents the number of ways for s[i:end].
+Since we only need two info, the space can be optimized to O(1) by moving backwards. And dp[s.len] and dp[s.len - 1] init as 1.
+time O(n) space O(1)
+*/
+class Solution {
+    public int numDecodings(String s) {
+        int dp_prev2 = 1;
+        int dp_prev1 = s.charAt(s.length() -1) == '0' ? 0 : 1;
+        for (int i = s.length() - 2; i>= 0; i--) {
+            int temp = dp_prev1;
+            int num = (s.charAt(i) - '0') * 10 + (s.charAt(i+1) - '0');
+            if (s.charAt(i) == '0') {dp_prev1 = 0;}
+            else if(num >= 10 && num <= 26) {
+                dp_prev1 += dp_prev2;
+            }
+            dp_prev2 = temp;
+        }
+        return dp_prev1;
+    }
+}
