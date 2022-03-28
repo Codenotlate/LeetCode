@@ -132,5 +132,43 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+Need to be contiguous, thus can't sort. process element one by one using sliding window. using two pointers, left and right. left and right both init as 0. windowSum = 0. At each round, if windowSum < target, right++, windowSum += nums[right]; else update minRes with (right - left + 1). then left++, windowSum -= nums[left-1]. Also if minRes = 1 we can return directly since 1 is the minimum possible valid answer. And since there could be no answer, we need to init minRes = nums.length + 1. And if in the end minRes still == nums.length + 1, then we return 0. This way, time O(n) space O(1)
+e.g. target = 7, nums = [2,3,1,2,4,3]
+2,3,1,2 => 4
+3,1,2,4 => 4
+1,2,4 => 3
+2,4,3 => 3
+4,3 => 2
+3
+
+
+followup: find a O(nlogn) way. Have accumulated sum [2,5,6,8,12,15]. for each num in pos i, use binary search to find the first pos with value >= (target - nums[i] + accumsum[i]) in sorted array sum[i+1:end]. [The first method above]
+*/
+// similar as above sliding window way, but each time only move one position. Easier to remeber and implement.
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int left = 0;
+        int right = 0;
+        int minres = nums.length + 1;
+        int windowSum = nums[0];
+        while (right < nums.length) {
+            if(windowSum < target) {
+                right++;
+                if(right >= nums.length) {break;}
+                windowSum += nums[right];
+            } else {
+                minres = Math.min(minres, right - left + 1);
+                if(minres == 1) {return minres;}
+                left++;
+                windowSum -= nums[left-1];
+            }
+        }
+        return minres == nums.length + 1 ? 0 : minres;
+    }
+}
+
+
 
 

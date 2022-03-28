@@ -57,8 +57,25 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+Naive way: for each bar, calculate the size with the rest bars. time O(n^2)
+Improved way: notice if we start with the wider width, the only motivation for us to move inside with a smaller width is that we can improve current height, i.e. improve the min(left, right). Thus we can use greeady with two pointers starting at start and end of the array. And each time only move the pointer with smaller height.(if both sides have same height, we can move either side, cause the we can't improve the area size no matter which side we move). This way time O(n) space O(1)
 
-
+*/
+class Solution {
+    public int maxArea(int[] height) {
+        int res = 0;
+        int start = 0;
+        int end = height.length-1;
+        while(start < end) {
+            res = Math.max(res, Math.min(height[start], height[end])*(end-start));
+            if(height[start] < height[end]) {start++;}
+            else {end--;}
+        }
+        return res;
+    }
+}
 
 
 

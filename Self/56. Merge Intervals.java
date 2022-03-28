@@ -72,3 +72,40 @@ class Solution {
         return reslist.toArray(new int[reslist.size()][]);
     }
 }
+
+
+// Review
+/*Initial thought
+sort the intervals based on start. Then process one by one, by comparing their end value. Add prev start and end to res when cur start > prev end.
+time O(nlogn) space O(n) for the intermediate list.
+
+*/
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (i1, i2) -> (i1[0] - i2[0]));
+        int prevstart = -1;
+        int prevend = -1;
+        List<int[]> resList = new LinkedList<>();
+        for (int[] cur: intervals) {
+            if(prevstart == -1) {
+                prevstart = cur[0];
+                prevend = cur[1];
+                continue;   
+            }
+            if(cur[0] > prevend) {
+                resList.add(new int[]{prevstart, prevend});
+                prevstart = cur[0];
+                prevend = cur[1];
+            } else {
+                prevend = Math.max(prevend, cur[1]);
+            }
+        }
+        resList.add(new int[]{prevstart, prevend});
+        // int[][] res = new int[resList.size()][2];
+        // for (int i = 0; i < res.length; i++) {res[i] = resList.get(i);}
+        // return res;
+        return resList.toArray(new int[resList.size()][]); // much faster than above way
+    }
+}
+
+// check above followup question idea
