@@ -103,3 +103,30 @@ class Solution {
         return dp_i_0;
     }
 }
+
+
+
+// Review
+/*Initial thought
+DP problem. At each day, we have two status, with a stock or without, and we have three actions buy or sell or do nothing. Use dp[i][1] to represent the profit at ith day with stock, and dp[i][0] without stock.
+dp[i][0] = Math.max(dp[i-1][1] + p[i], dp[i-1][0])
+dp[i][1] = Math.max(dp[i-1][0] - p[i], dp[i-1][1]) since we have 1 day cooldown, dp[i-1][0] = dp[i-2][0] => 
+dp[i][0] = Math.max(dp[i-1][1] + p[i], dp[i-1][0])
+dp[i][1] = Math.max(dp[i-2][0] - p[i], dp[i-1][1])
+traditional way time O(n), space O(n)
+optimized space to O(1)
+*/
+class Solution {
+    public int maxProfit(int[] prices) {
+        int dp_10 = 0;
+        int dp_11 = Integer.MIN_VALUE;
+        int dp_20 = 0;
+        for (int p : prices) {
+            int temp = dp_10;
+            dp_10 = Math.max(dp_11 + p, dp_10);
+            dp_11 = Math.max(dp_20 - p, dp_11);
+            dp_20 = temp;
+        }
+        return Math.max(dp_11, dp_10);
+    }
+}

@@ -123,6 +123,101 @@ class Solution {
 
 
 
+// Review - similar way as above M1, but use BFS to search instead of dfs
+/*Initial thought
+Asking for smallest number -> using BFS.
+traverse the grid, if encounter 1, search all connected 1 cells. And put into the queue to prepare for BFS.Also label them as visited. Then do BFS, if we encounter unvisited 1 cell. Then that is the cell from the other 1 island, and the current level is the number of 0's need to be flipped.
+time O(n^2)
+space O(n^2)
+*/
+class Solution {
+    public int shortestBridge(int[][] grid) {
+        int n = grid.length;
+        int[][] visited = new int[n][n];
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    search(grid, i, j, visited, queue);
+                    break;
+                }
+            }
+            if (queue.size() > 0) {break;}
+        }
+        
+        // start BFS
+        int level = 0;
+        int[][] dirs = new int[][]{{0,-1},{0,1},{1,0},{-1,0}};
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while(size-- > 0) {
+                int[] cur = queue.poll();
+                for (int[] d: dirs) {
+                    int newi = cur[0] + d[0];
+                    int newj = cur[1] + d[1];
+                    if(newi < 0 || newi >= n || newj < 0 || newj >= n) {continue;}
+                    if (grid[newi][newj] == 1 && visited[newi][newj] != 1) {return level;}
+                    if (grid[newi][newj] == 0 && visited[newi][newj] != 1) {
+                        queue.add(new int[]{newi,newj});
+                        visited[newi][newj] = 1;
+                    }                   
+                }
+            }
+            level++;            
+        }
+        return level; // should not reach this line if there are two islands guaranteed.
+    }
+    
+    
+    private void search(int[][] grid, int i, int j, int[][] visited, Queue<int[]> originalQueue) {
+        int[][] dirs = new int[][]{{0,-1},{0,1},{1,0},{-1,0}};
+        int n = grid.length;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{i, j});
+        visited[i][j] = 1;
+        while(!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            originalQueue.add(cur);
+            for (int[] d: dirs) {
+                int newi = cur[0] + d[0];
+                int newj = cur[1] + d[1];
+                if(newi < 0 || newi >= n || newj < 0 || newj >= n) {continue;}
+                if (grid[newi][newj] == 1 && visited[newi][newj] != 1) {
+                    queue.add(new int[]{newi,newj});
+                    visited[newi][newj] = 1;
+                }                   
+            }
+        }
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

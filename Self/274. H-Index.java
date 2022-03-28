@@ -71,5 +71,43 @@ class Solution {
 
 
 
+// Review
+/*Initial thought
+M1 way: sort the array first, then move from backwards. find the first i having len - i > nums[i], return len-i-1. time O(nlogn) space O(sort space)
+[0,1,4,5,6] [0,0,4,4]
+M2 way: try to improve to O(n) time. Use counting sort idea, init a n+1 size array and get the count for each h = index. We init the count array size here as n instead of maxh is because the maximum answer here is n, and for any h value > n, we can simply combine the count into the position with h value = n.
+Again move backwards of the count array, find the first i having 
+accumSum(i) >= i.
+This way time O(n) space O(n)
+[1,1,0,1,0,2]
+*/
+// M1 way: sort
+class Solution {
+    public int hIndex(int[] citations) {
+        Arrays.sort(citations);
+        for (int i = citations.length - 1; i >= 0; i--) {
+            if(citations.length - i > citations[i]) {return citations.length - i-1;}
+        }
+        return citations.length;
+    }
+}
+
+// M2 way: counting sort
+class Solution {
+    public int hIndex(int[] citations) {
+        int n = citations.length;
+        int[] count = new int[n+1];
+        for (int num: citations){
+            int idx = Math.min(num, n);
+            count[idx]++;
+        }
+        int accumsum = 0;
+        for (int i = n; i >= 0; i--) {
+            accumsum += count[i];
+            if (accumsum >= i) {return i;}
+        }
+        return -1; // should not reach this line
+    }
+}
 
 
