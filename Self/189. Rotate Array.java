@@ -108,3 +108,60 @@ class Solution {
 // add: https://leetcode.com/problems/rotate-array/solution/
 // approach 3 in solution is similar to above M2, but optimize into O(1) space solution. Basically each circle represents all the positions having n % k = some constant. And when we reach the original starting position of the circle we will move to the next circle. Until we process all the circle groups.
 // try self implement this next time
+
+
+
+
+// Review
+/*Intial thought
+M0 way: brute force. rotate elements by 1 unit at each step and do k steps. time O(n * k) space O(1)
+M1 way: If we can use O(n) space, we can just fill it in the order we desired to a new array and copy back. About the order, we can start with len-k and follow with 0 to len-k-1, or start with 0 by converting the index as (i + k) % n.
+M2 way: O(1) space way. reverse twice inplace. The first time reverse  [len-k,len-1] and [0, len-k-1], then reverse the whole array.
+M3 way: O(1) space way. Use cyclic replacement
+[1,2,3,4,5,6,7] k = 3
+1 -> 4 ->7 ->3 ->6 ->2 ->5 count == len, stop
+Could be another case: where we stay in the same circle but didn't visit all element. In this case, we need to move the starting pointer to the next one until count == n.
+[1,2,3,4,5,6] k = 2
+1->3->5->1
+2->4->6->2 if idx == init idx && count == n return.
+[1,2,3,4,5,6，7，8，9] k = 3
+*/
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int len = nums.length;
+        k %= len;
+        reverse(nums, 0, len-k-1);
+        reverse(nums, len-k, len - 1);
+        reverse(nums, 0, len - 1);
+    }
+    
+    private void reverse(int[] nums, int i, int j) {
+        while(i < j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}
+// M3 cyclic way
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int count = 0;
+        k %= nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            int cur = i;
+            int prev = nums[cur];
+            do {
+                int next = (cur + k) % nums.length;
+                int temp = nums[next];
+                nums[next] = prev;
+                prev = temp;
+                cur = next;  
+                count++;
+                if(count == nums.length) {return;}
+            } while(cur != i);
+        }        
+    }    
+}

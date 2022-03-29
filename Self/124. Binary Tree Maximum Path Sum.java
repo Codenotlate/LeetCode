@@ -123,7 +123,29 @@ class Solution {
 
 
 
-
+// review
+/*Initial thought
+bottom-up recursion way. At each cur node, we need third info from its children node. First is the maxSum(it may not contain the child node). Second is max left Sum till left child, and third is max right sum till right child.
+Then for current node maxSum = max(maxleft, maxright, (max(leftsum,0) + max(rightsum, 0) + cur.val)). maxleft/maxright = max(maxleft/maxright,0) + cur.val
+time O(n) space O(n)
+*/
+class Solution {
+    public int maxPathSum(TreeNode root) {
+        int[] maxres = new int[]{Integer.MIN_VALUE};
+        maxHelper(root, maxres);
+        return maxres[0];
+    }
+    
+    private int maxHelper(TreeNode root, int[] maxres) {
+        int res = Integer.MIN_VALUE;
+        if(root == null) {return res;}
+        int maxleft = maxHelper(root.left, maxres);
+        int maxright = maxHelper(root.right,maxres);
+        int curmax = Math.max(0, maxleft) + Math.max(0,maxright) + root.val;
+        maxres[0] = Math.max(maxres[0], curmax);
+        return Math.max(Math.max(maxleft, 0) + root.val, Math.max(maxright, 0) + root.val);
+    }
+}
 
 
 

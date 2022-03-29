@@ -173,3 +173,41 @@ class Solution {
         return memo[0];
     }
 }
+
+
+
+
+
+// Review
+/*Initial thought
+assume text1 always longer than text2. Then two pointers starting 0 for two string. if they equal, p1++, p2++;  if not equal, either p1++ or p2++. This can be converted to a dp problem. dp[i][j] = 1+dp[i+1][j+1] if text1[i] == text2[j]; dp[i][j] = max(dp[i+1][j], dp[i][j+1])
+Thus time O(m*n) space can be optimized to O(min(m,n)).
+
+*/
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        if (text1.length() < text2.length()) {
+            String temp = text1;
+            text1 = text2;
+            text2 = temp;
+        }
+        int m = text1.length();
+        int n = text2.length();
+        int[] dp = new int[n + 1];
+        int dp_prev = 0;
+        for (int i = m-1; i >= 0; i--) {
+            // don't forget to reset
+            dp_prev = 0;
+            for(int j = n-1; j >= 0; j--) {
+                int temp = dp[j];
+                if(text1.charAt(i) == text2.charAt(j)) {
+                    dp[j] = 1 + dp_prev;
+                } else {
+                    dp[j] = Math.max(dp[j], dp[j+1]);
+                }
+                dp_prev = temp;
+            }
+        }
+        return dp[0];
+    }
+}
