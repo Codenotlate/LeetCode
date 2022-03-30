@@ -135,7 +135,37 @@ class Solution {
 
 
 
-
+// Reveiw - can also try above BFS and DFS other implementation
+/*Initial thought
+a1*(maxD - d1 + 1) + a2*(maxD - d2 + 1) + a3*(maxD - d3 + 1) => (a1+a2+a3) *(maxD + 1) - (a1d1+a2d2+a3d3)
+Use recursive functions to get element*depth sum for an nestedlist object. So the recursive function will keep track of three vars: plainSum, maxD, weightedSum.
+*/
+class Solution {
+    public int depthSumInverse(List<NestedInteger> nestedList) {
+        int[] res = new int[3];
+        helper(nestedList, 0, res);
+        int plainSum = res[0];
+        int maxD = res[1];
+        int weightedSum = res[2];
+        return  plainSum * (maxD + 1) - weightedSum;
+    }
+    
+    
+    private void helper(List<NestedInteger> list, int depth, int[] res) {
+        for (NestedInteger l: list) {
+            if (l.isInteger()) {
+                int num = l.getInteger();
+                res[0] += num;
+                res[1] = Math.max(res[1], depth);
+                res[2] += num * depth;
+            } else {
+                helper(l.getList(), depth+1, res);
+            }
+            
+        }
+        
+    }
+}
 
 
 
