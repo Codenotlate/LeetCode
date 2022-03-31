@@ -90,3 +90,68 @@ class Solution {
 
 
 
+
+
+
+// Review
+/*Initial thought
+since it's a circular path. We view the array as double size original one. Iterate one by one (i % n). have extra init as 0. If(extra + gas[i] - cost[i] < 0), meaning we can't move on from current position. So we go to next position and reset extra as 0. Otherwise we keep on moving to next pos and if we get back to the current position(i % n), meaning we can succeed, then we return cur pos.
+time O(n) space O(1)
+*/
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int cur = 0;
+        int n = gas.length;
+        int extra = 0;
+        while (cur < 2 * n) {
+            int k = cur;
+            while(k < 2 * n && extra + gas[k%n] - cost[k%n] >= 0) {
+                extra = extra + gas[k%n] - cost[k%n];
+                k++;
+                if(k%n == cur%n) {return cur%n;}
+            }
+            extra = 0;
+            cur = k + 1;
+        }
+        return -1;
+    }
+}
+/*Improved from 2n to n by using math: When we are able to reach the end of the array, we don't need to move further for the circular part as long as we compare the sum(gas) - sum(cost) with 0. If it's >= 0, then its guaranteed we can make a successful circle.*/
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int cur = 0;
+        int n = gas.length;
+        int extra = 0;
+        int totalDiff = 0;
+        while (cur < n) {
+            int k = cur;
+            totalDiff += gas[k] - cost[k];
+            while(k < n && extra + gas[k] - cost[k] >= 0) {
+                extra = extra + gas[k] - cost[k];
+                k++;
+                if(k == n) {return totalDiff >= 0 ? cur : -1;}
+                totalDiff += gas[k] - cost[k];
+            }
+            extra = 0;
+            cur = k + 1;
+        }
+        return -1;
+    }
+}
+// above code not elegant enough - below with same idea
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int totalDiff = 0;
+        int curDiff = 0;
+        int startIdx = 0;
+        for (int i = 0; i < gas.length; i++) {
+            totalDiff += gas[i] - cost[i];
+            curDiff += gas[i] - cost[i];
+            if (curDiff < 0) {
+                curDiff = 0;
+                startIdx = i + 1;
+            }
+        }
+        return totalDiff < 0 ? -1 : startIdx;
+    }
+}

@@ -159,8 +159,10 @@ class Solution {
 
 
 
-
-
+// Review without implementation
+/* similar to 314, but here for nodes in same row and same same col, we order by value this time. Thus we can either use BFS or DFS to add to the map. We will always need to sort the value list by row number then node val when add to final result list. Thus the element in map value list should contain rowNum and root val.
+time O(k * llogl) space O(n)
+*/
 
 
 
