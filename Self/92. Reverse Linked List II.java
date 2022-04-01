@@ -69,3 +69,40 @@ class Solution {
         return dummy.next;
     }
 }
+
+
+
+
+
+// review
+/*Initial thought
+If no need for one pass, we can have three pointers pointing to prevnode of left, right node and next node of right using the first pass. And then do the second pass to reverse the LL between p1.next and right. The reverse can be either recursively or iteratively.
+For one pass way, we can combine above two steps, do the label and reverse simultaneously.
+Note need to pay attention to edge case, when left is head or right is end node.
+time O(n) space O(1)
+e.g. [1,2,3,4,5] left = 1 right = 3
+*/
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if(left == right) {return head;}
+        int curpos = 0;
+        ListNode dummy = new ListNode(-1, head);
+        ListNode p1 = dummy;
+        ListNode cur = head;
+        ListNode prev = null;
+        while(curpos < right) {
+            curpos++;
+            if (curpos < left - 1) {cur = cur.next; continue;}
+            else if (curpos == left - 1) {p1 = cur; cur = cur.next;}
+            else { // do reverse here
+                ListNode next = cur.next;
+                cur.next = prev;
+                prev = cur;
+                cur = next;
+            }           
+        }
+        p1.next.next = cur;
+        p1.next = prev;
+        return dummy.next;
+    }
+}

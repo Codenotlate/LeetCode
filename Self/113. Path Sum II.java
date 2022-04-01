@@ -146,6 +146,39 @@ The good thing about depth first search is that it uses recursion for processing
 
 
 
+// Review: similar way as above
+/*Initial thought
+dfs + backtracking. One tricky note: for the base case we should not set it as null node + targetSum == 0, because here we require root-to-leaf path, and null node can't guarantee its parent nod is a leaf node. So the base case here should be set as a lead node  + targetSum == node.val.
+We also need to do backtracking to remove the val added to the curlist.
+time O(n^2) since we need to copy curlist to res in the end. space O(height)
+*/
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new LinkedList<>();
+        if(root == null) {return res;}
+        dfs(root, targetSum, new LinkedList<Integer>(), res);
+        return res;
+    }
+    
+    private void dfs(TreeNode root, int target, List<Integer> curList, List<List<Integer>> res) {
+        if (root.left == null && root.right == null) {
+            if(target == root.val) {
+                curList.add(root.val);
+                res.add(new LinkedList(curList));
+                curList.remove(curList.size() - 1);
+            }
+            return;
+        }
+        
+        curList.add(root.val);
+        if(root.left != null) {dfs(root.left, target - root.val, curList, res);}
+        if(root.right != null) {dfs(root.right, target - root.val, curList, res);}
+        curList.remove(curList.size() - 1);
+    }
+}
+
+
+
 
 
 

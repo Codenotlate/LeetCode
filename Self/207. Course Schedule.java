@@ -176,7 +176,7 @@ class Solution {
 }
 
 
-// phase3 BFS way: M1
+// phase3 topological way: M1
 class Solution {
     // time O(E + V) space O(E + v)
     // bfs way, start with nodes indegree = 0
@@ -246,6 +246,70 @@ class Solution {
 }
 
 
+
+
+// Review
+/*Initial thought
+This is a typical topological sort problem. We first need to build the graph with directed edges. Then first way is to use topological sort and check whether the final size is equal to numCourses. Another way is to if there are cycles inside the graph by using dfs.
+*/
+// M1 topological way
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        int[] inCounts = new int[numCourses];
+        // build the directional graph
+        for (int[] e: prerequisites) {
+            graph.putIfAbsent(e[1], new LinkedList<>());
+            graph.get(e[1]).add(e[0]);
+            inCounts[e[0]]++;
+        }
+        
+        // topological sort using queue
+        Queue<Integer> queue = new LinkedList<>();
+        int count = 0; // track how many courses searched
+        for (int i = 0; i < numCourses; i++) {
+            if(inCounts[i] == 0) {queue.add(i);}
+        }
+        while(!queue.isEmpty()) {
+            int cur = queue.poll();
+            count++;
+            for (int next: graph.getOrDefault(cur, new LinkedList<Integer>())) {
+                inCounts[next]--;
+                if (inCounts[next] == 0) {queue.add(next);}
+            }
+        }
+        return count == numCourses;
+        
+    }
+}
+// M2 dfs cycle detect way. Original way is too slow, we can use memo to note down whether hasCycle for the subgraph starting at that node.
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        // build the directional graph
+        for (int[] e: prerequisites) {
+            graph.putIfAbsent(e[1], new LinkedList<>());
+            graph.get(e[1]).add(e[0]);
+        }
+        
+        // need memo to reduce time: we can utilize visited array, to record 3 status: 0 - unvisited in current dfs; 1 - visited in current dfs; 2 - noCycle starting this node.        
+        for(int i = 0; i < numCourses; i++) {
+            if(hasCycle(graph, i, new int[numCourses])) {return false;}
+        }
+        return true;       
+    }
+    
+    
+    private boolean hasCycle(Map<Integer, List<Integer>> graph, int i, int[] visited) {
+        if (visited[i] != 0) {return visited[i] != 2;}
+        visited[i] = 1;
+        for (int next: graph.getOrDefault(i, new LinkedList<Integer>())) {
+            if(hasCycle(graph, next, visited)) {return true;}
+        }
+        visited[i] = 2;
+        return false;
+    }
+}
 
 
 
