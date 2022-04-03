@@ -98,3 +98,35 @@ class Solution {
         
     }
 }
+
+
+
+
+
+
+// Review
+/*Thought
+DP problem. Assume dp[i][j] representsthe maxSquare edge length with cell(i,j) as the bottom right corner. The we have dp[i][j] = min(dp[i-1][j-1], dp[i][j-1], dp[i-1][j]) + 1 if mat[i][j] == 1. Otherwise dp[i][j] = 0. Keep track of the largest square edge length has appeared and return its square as the final result. DP space can be optimized from O(mn) to O(n). time O(mn)
+*/
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[] dp = new int[n+1];
+        int maxLen = 0;
+        for (int i = 0; i < m; i++) {
+            int prev_ij = 0;
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    int temp = dp[j+1];
+                    dp[j+1] = Math.min(dp[j+1], Math.min(dp[j], prev_ij)) + 1;
+                    maxLen = Math.max(dp[j+1], maxLen);
+                    prev_ij = temp;
+                } else {
+                    dp[j+1] = 0;
+                }
+            }
+        }
+        return maxLen * maxLen;
+    }
+}

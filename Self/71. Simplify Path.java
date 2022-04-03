@@ -75,3 +75,34 @@ class Solution {
         return res.length() == 0? "/" :res.toString();
     }
 }
+
+
+
+
+
+
+
+
+// Review
+/*Thought
+A pattern to use stack. And consider get the final result in a easier way, consider replace stack with double sides deque.So that when we are processing, we can focus on the end side, and when return the final result we can poll out from the start side.
+First split the path by '/' into an array of string.
+if cur string is "." or "", skip cur. Else if cur string is "..", pop out the last value of deque. Otherwise, add the string. After process all strings, poll out the remaining strings from the start of the deque into a stringBuilder, and separated by '/'.
+time O(n) space O(n)
+*/
+class Solution {
+    public String simplifyPath(String path) {
+        String[] splits = path.split("/");
+        Deque<String> deque = new LinkedList<>();
+        for (String s: splits) {
+            if (s.equals("") || s.equals(".")) {continue;}
+            else if (s.equals("..")) {deque.pollLast();}
+            else {deque.add(s);}
+        }
+        StringBuilder res = new StringBuilder();
+        while(!deque.isEmpty()) {
+            res.append("/").append(deque.pollFirst());
+        }
+        return res.length() == 0? "/" : res.toString();
+    }
+}
