@@ -113,3 +113,33 @@ class Solution {
         return dp[0] <= 0 ? -dp[0] + 1 :  1;
     }
 }
+
+
+
+
+
+
+
+// Review
+/*Thought
+A DP problem. want to find the max negative accumSum from start to end for all paths. Not a very clear way from topleft to bottomright. So we check backwards. Have dp[i][j] represents the max pathSum from cell(i,j) to end position(bottom right). 
+Then dp[i][j] = max(min(dp[i-1][j],0), min(0,dp[i][j-1])) + dungeon[i][j]. Given it only moves rightward and downward. And final result would be max(0,-dp[0][0]) + 1.
+space can be optimized to O(n)
+time O(mn)
+*/
+class Solution {
+    public int calculateMinimumHP(int[][] dungeon) {
+        int m = dungeon.length;
+        int n = dungeon[0].length;
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MIN_VALUE);
+        for (int i = m-1; i >= 0; i--) {
+            for(int j = n-1; j >= 0; j--) {
+                if(i == m-1 && j == n-1) {dp[j] = dungeon[i][j]; continue;}
+                dp[j] = Math.max(Math.min(dp[j],0), Math.min(dp[j+1],0)) + dungeon[i][j];
+            }
+        }
+        
+        return Math.max(0, -dp[0]) + 1;
+    }
+}

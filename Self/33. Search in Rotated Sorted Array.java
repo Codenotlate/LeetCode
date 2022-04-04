@@ -87,3 +87,45 @@ class Solution {
         return -1;
     }
 }
+
+
+
+
+
+
+
+
+// Review
+/*Thought
+Require O(logn) time and with sorted array, think about using binary search. The key is to find the sorted part and eliminate half of the range each time. There are three type of arrays. First type without rotation. Second type with rotation and mid is on first part. Third type with rotation and mid is on second part. By drawing out the graph we will notice for each condition(target > nums[mid] or target < nums[mid]), we will have one special case moving start/end poistions differently comparing to the other cases.
+*/
+class Solution {
+    public int search(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+        while(start < end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {return mid;}
+            else if (nums[mid] > target) {
+                if(target < nums[start] && nums[mid] > nums[end]) {start = mid + 1;}
+                else {end = mid - 1;}
+            } else {
+                if(target >= nums[start] && nums[start] > nums[mid]) {end = mid - 1;}
+                else {start = mid + 1;}
+            }            
+        }
+        return nums[start] == target? start: -1;
+    }
+}
+
+/* Another idea instead of listing out all cases
+Formula: If a sorted array is shifted, if you take the middle, always one side will be sorted. Take the recursion according to that rule.
+
+1- take the middle and compare with target, if matches return.
+2- if middle is bigger than left side, it means left is sorted
+2a- if [left] < target < [middle] then do recursion with left, middle - 1 (right)
+2b- left side is sorted, but target not in here, search on right side middle + 1 (left), right
+3- if middle is less than right side, it means right is sorted
+3a- if [middle] < target < [right] then do recursion with middle + 1 (left), right
+3b- right side is sorted, but target not in here, search on left side left, middle -1 (right)
+*/

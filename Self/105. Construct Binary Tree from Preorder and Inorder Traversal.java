@@ -30,6 +30,43 @@ class Solution {
 
 
 
+// Review
+/* Thought
+since preorder always put root node first, we can use it to separate left and right subtree in the inorder array. We can solve this recursively.
+At each recur call, start of preorder is the root node val. build the root node. Then find the pos of the root val in inorder array(This can be achieved with a hashmap in O(1)). recursively call preorder[prestart+1, prestart+pos-instart] and inorder[instart, pos-1], the node returned from it will be the left child of cur node. Similarly, the right side recur on preorder[prestart + pos - instart +1, preend] and inorder[pos+1, inend]. return the root node.
+time O(n) space O(n(height))
+*/
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            map.put(inorder[i], i);
+        }       
+        return getTree(preorder, 0, preorder.length-1, inorder, 0, inorder.length-1, map); 
+    }
+    
+    
+    private TreeNode getTree(int[] preorder, int prestart, int preend, int[] inorder, int instart, int inend, Map<Integer,Integer> map) {
+        if(instart > inend) {return null;}
+        if(instart == inend) {return new TreeNode(inorder[instart]);}
+        int pos = map.get(preorder[prestart]);
+        TreeNode root = new TreeNode(preorder[prestart]);
+        TreeNode left = getTree(preorder, prestart+1, prestart+pos-instart, inorder, instart, pos-1, map);
+        TreeNode right = getTree(preorder, prestart+pos-instart+1, preend, inorder, pos+1, inend, map);
+        root.left = left;
+        root.right = right;
+        return root;
+    }
+}
+
+
+
+
+
+// Iterative way
+// https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/discuss/34555/The-iterative-solution-is-easier-than-you-think!
+// basically build the tree in preorder, and for each node determine its parent and it is left or right child by comparing the index in the inorder array. time and space same as recursive way.
+
 
 
 
