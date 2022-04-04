@@ -43,10 +43,60 @@ class RandomizedSet {
     }
 }
 
-/**
- * Your RandomizedSet object will be instantiated and called as such:
- * RandomizedSet obj = new RandomizedSet();
- * boolean param_1 = obj.insert(val);
- * boolean param_2 = obj.remove(val);
- * int param_3 = obj.getRandom();
- */
+
+
+
+
+
+
+
+
+
+// Review - can also use two maps
+/*Thought
+use a map recording <value,index(id)>. Also use a size var to track the current size. When insert, just add the val and size+1 to map. size++. 
+When remove, remove the val from map. change the id of the last val to the id of this removed val. size--. And since we need to know the val of last idx, we also need a map to record <idx, value>.
+When getRandom,  generate a random number from 0 to size-1. And get that val from the idxToVal map.
+*/
+class RandomizedSet {
+    Map<Integer, Integer> idxToVal;
+    Map<Integer, Integer> valToIdx;
+    int size;
+
+    public RandomizedSet() {
+        size = 0;
+        idxToVal = new HashMap<>();
+        valToIdx = new HashMap<>();
+    }
+    
+    public boolean insert(int val) {
+        if(valToIdx.containsKey(val)) {return false;}
+        valToIdx.put(val, size);
+        idxToVal.put(size, val);
+        size++;
+        return true;
+    }
+    
+    public boolean remove(int val) {
+        if(valToIdx.containsKey(val)) {
+            int idx = valToIdx.get(val);
+            valToIdx.remove(val);
+            // update last element idx if idx < size - 1. If we remove above val later, then no need to check idx < size-1
+            if(idx < size - 1) {
+                int lastNum = idxToVal.get(size-1);
+                valToIdx.put(lastNum, idx);
+                idxToVal.put(idx, lastNum);
+                idxToVal.remove(size-1);
+            }           
+            size--;
+            return true;
+        }
+        return false;
+    }
+    
+    public int getRandom() {
+        Random rand = new Random();
+        int idx = rand.nextInt(size);
+        return idxToVal.get(idx);
+    }
+}

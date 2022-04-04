@@ -74,3 +74,39 @@ class Solution {
         return dum.next;
     }
 }
+
+
+
+
+
+
+
+// Review
+/*Thought
+First k can be convert to k % n. Then we can find the end, newhead and newTail, which will be at position n-k and n-k-1. Then we can rotate it using newhead, newTail and head and end.
+time O(n) space O(1)
+*/
+class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        if(head == null) {return null;}
+        ListNode end = head;
+        int size = 0;
+        while(end.next != null) {end = end.next; size++;}
+        size++;
+        k = k % size;
+        if (k == 0) {return head;}
+        ListNode newtail = head;
+        int pos = size-k-1;
+        while(pos-- > 0) {
+            newtail = newtail.next;
+        }
+        ListNode newhead = newtail.next;
+        
+        newtail.next = null;
+        end.next =head;
+        return newhead;
+        
+    }
+}
+
+
