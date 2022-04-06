@@ -84,3 +84,46 @@ class Solution {
         return res.toString();
     }
 }
+
+
+
+
+
+
+
+
+// Review
+/*Thought
+Naive way: using only onew stack of char. adding both number and char to it.
+Improved way: using two separate stacks for number and for stringBuilder. For each pair of number and string, we keep the string in curStr(not in stack), and we pop the number from the number stack each time. We choose this pattern because using '[' to indentify when to add current number and curStr is a clearer way. If we using char or number to identify, we may need to use while instead of curent 'if' logic.
+Below solution is the same as solution M2:
+Time Complexity: O(maxK⋅n), where maxK is the maximum value of k and n is the length of a given string s. We traverse a string of size nn and iterate kk times to decode each pattern of form k[string]. This gives us worst case time complexity as O(maxK⋅n).
+Space Complexity: O(m+n), where mm is the number of letters(a-z) and nn is the number of digits(0-9) in string ss. In worst case, the maximum size of stringStack and countStack could be mm and nn respectively.
+
+Can try solution M3: recursive way later
+
+*/
+class Solution {
+    public String decodeString(String s) {
+        Stack<Integer> numStack = new Stack<>();
+        Stack<StringBuilder> strDeque = new Stack<>();
+        int curNum = 0;
+        StringBuilder curStr = new StringBuilder();
+        for (char c: s.toCharArray()) {
+            if(Character.isDigit(c)) {curNum = curNum * 10 + c - '0';}
+            else if (c >= 'a' && c <= 'z') {curStr.append(c);}
+            else if (c == '[') {
+                numStack.add(curNum);
+                curNum = 0;
+                strDeque.add(curStr);
+                curStr = new StringBuilder();
+            } else {
+                int k = numStack.pop();
+                StringBuilder nextcurStr = strDeque.pop();
+                while(k-- > 0) {nextcurStr.append(curStr);}
+                curStr = nextcurStr;
+            }
+        }
+        return curStr.toString();
+    }
+}

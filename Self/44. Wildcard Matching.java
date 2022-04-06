@@ -147,3 +147,46 @@ class Solution {
     
     
 }
+
+
+
+
+
+// Review
+/*Thought
+M1: recursion + memo
+base case: if(j >= p.len) return i >= s.len; else if (i >= s.len) return all remaining chars in p equal to '*'.
+note recur(s, i+1, p, j+1) for p[j] == '*' case is actually included by recur(s, i+1, p, j)
+time O(ls * lp) space O(ls * lp)
+
+M2: based on M1, try using dp
+use dp[i][j] to represent the result for s[i:] and p[j:]
+The space can be optimized to O(lp)
+init: dp[lp] = true; dp[lp-1...0] = p[i] == '*' && dp[i+1]
+also for each i, dp[lp] = false;
+*/
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int ls = s.length();
+        int lp = p.length();
+        boolean[] dp = new boolean[lp+1];
+        // init dp
+        dp[lp] = true;
+        for (int i = lp-1; i >= 0; i--) {dp[i] = p.charAt(i) == '*' && dp[i+1];}
+        boolean dp_prev = true;
+        for (int i = ls-1; i >= 0; i--) {
+            dp_prev = dp[lp];
+            dp[lp] = false;
+            for (int j = lp -1; j >= 0; j--) {
+                boolean next_prev = dp[j];
+                char schar = s.charAt(i);
+                char pchar = p.charAt(j);
+                if(schar == pchar || pchar == '?') {dp[j] = dp_prev;}
+                else if (pchar == '*') {dp[j] = dp[j] || dp[j+1];}
+                else {dp[j] = false;}
+                dp_prev = next_prev;
+            }
+        }
+        return dp[0];
+    }
+}

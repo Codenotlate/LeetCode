@@ -26,3 +26,22 @@ class Solution {
 
 // from solution: iterative way using bit representation
 // https://leetcode.com/problems/powx-n/discuss/19563/Iterative-Log(N)-solution-with-Clear-Explanation
+
+
+/*Note: need to consider n = -inf, we can't convert it to -n. will cause overflow.
+*/
+class Solution {
+    public double myPow(double x, int n) {
+        if(n == 0 || n == 1) {return n==0 ? 1 : x;}
+        if (n < 0) {return 1/x * myPow(1.0/x, -(n+1));}
+        if ( n % 2 == 0) {
+            double half = myPow(x, n/2);
+            return half * half;
+        } else {
+            double half = myPow(x, n/2);
+            return x *half * half;
+        }
+    }
+}
+
+// can try iterative way next time
