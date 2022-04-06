@@ -41,3 +41,32 @@ class Solution {
         return count;
     }
 }
+
+
+
+
+
+
+
+// Review
+/*Thought
+This problem can be converted to find a pair where (time[i] % 60 + time[j] % 60)%60 = 0.
+Thus we can do similar process in two sum. By using a map or a count array of size 60. One pass of the array. for each num, check the count for num%60 in the map or array, add that to final result.time O(n) space O(60) = O(1)
+*/
+class Solution {
+    public int numPairsDivisibleBy60(int[] time) {
+        int[] count = new int[60];
+        int res = 0;
+        for(int t: time) {
+            if( t % 60 == 0 ) {res += count[0];}
+            else {res += count[60 - t % 60];}
+            count[t % 60]++;
+        }
+        return res;
+    }
+}
+
+
+
+
+

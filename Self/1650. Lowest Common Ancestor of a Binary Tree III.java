@@ -73,3 +73,33 @@ class Solution {
     
    
 }
+
+
+
+
+
+
+
+
+// Review
+/*Thought
+Here each node has a pointer to its parent node. This can convert to find the intersect of two LL.
+M1:O(n) space way. Using a set to store all ancestors for p  or q, then check the first ancestor of q or p that is included in the set.
+M2:O(1) space way. two pointers starting from p and q. If we draw two LinkedLists out:
+----I---
+  --I---
+Then if the second LL pointer move to the start of the first LL when it reaches the end of LL2, and LL1 pointer reaches start of LL2 when reaches end. Then since there path length will be the same, they will ultimately meet at the intersection node.
+time O(n) space O(1)
+*/
+// M2: O(1) space way
+class Solution {
+    public Node lowestCommonAncestor(Node p, Node q) {
+        Node pp = p;
+        Node qq = q;
+        while(pp != qq) {
+            pp = pp.parent == null? q : pp.parent;
+            qq = qq.parent == null? p : qq.parent;
+        }
+        return pp;
+    }
+}
