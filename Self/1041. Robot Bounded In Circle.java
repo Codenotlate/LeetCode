@@ -36,3 +36,87 @@ Second, if the robot doesn't face north at the end of the first cycle, that's th
 */
 // https://leetcode.com/problems/robot-bounded-in-circle/solution/
 // also proof included
+
+
+
+
+
+
+
+// Review
+/* Thought
+To never leave the circle, one case is after 1 pass ended at the starting position. Another case is after 4 passes ended at the starting position.
+M1 way: repeat thee instructions 4 time see if it ends at pos (0,0). This way time is O(4n)  = O(n), space O(1). we will need four directions, and a relationship to find the next direction based on current direction and the L/R instruction.
+
+M2 way; optimize to one pass. Lack of proof here. But seems like as long as we don't end up facing north at positions other than (0,0), we can always get back to starting position after at most 4 times. 
+
+*/
+
+// M1: 4 time way 0 similar as above M1. But above way more elegant in finding the next dir. Based on current dir, add diff gap for L or R to find the next dir.
+class Solution {
+    public boolean isRobotBounded(String instructions) {
+        int[][] dirs = new int[][]{{-1,0},{0,-1},{1,0},{0,1}};
+        int[][] nextdir = new int[][]{{1,3},{2,0},{3,1},{0,2}}; // combine left and right next dir together, first one is the index of the dir in dirs for 'L' and second one for 'R'.
+        int x = 0;
+        int y = 0;
+        int dx = 0;
+        int dy = 1;
+        int n = instructions.length();
+        int i = 0;
+        while ( i < 4 * n) {
+            char c = instructions.charAt( i%n);
+            if ( c == 'G') {x += dx; y +=dy;}
+            else {
+                int  lrIdx = c == 'L'? 0 : 1;
+                if ( dx == -1 && dy == 0) {dx = dirs[nextdir[0][lrIdx]][0]; dy = dirs[nextdir[0][lrIdx]][1];}
+                else if ( dx == 0 && dy == -1) {dx = dirs[nextdir[1][lrIdx]][0]; dy = dirs[nextdir[1][lrIdx]][1];}
+                else if ( dx == 1 && dy == 0) {dx = dirs[nextdir[2][lrIdx]][0]; dy = dirs[nextdir[2][lrIdx]][1];}
+                else {dx = dirs[nextdir[3][lrIdx]][0]; dy = dirs[nextdir[3][lrIdx]][1];}
+            }
+            i++;
+        }
+        return x==0 && y==0;
+        
+    }
+}
+// M2: one pass way
+// Note: still need to process G. Can't only count on whether LR count % 4 != 0. Because it's still true even when LR count % 4 == 0 if it returned to (0,0) in the end. Thus update based on 4 times way.
+class Solution {
+    public boolean isRobotBounded(String instructions) {
+        int[][] dirs = new int[][]{{0,1},{-1,0},{0,-1},{1,0}};
+        int x = 0;
+        int y = 0;
+        int dirIdx = 0;
+        int n = instructions.length();
+        int i = 0;
+        while ( i < n) {
+            char c = instructions.charAt(i);
+            if ( c == 'G') {x += dirs[dirIdx][0]; y +=dirs[dirIdx][1];}
+            else if (c == 'L') { dirIdx = (dirIdx + 1) % 4;}
+            else {dirIdx = (dirIdx + 3) % 4;}    
+            i++;
+        }
+        if (x == 0 && y == 0 || dirIdx != 0) {return true;}
+        return false;
+
+    }
+}
+
+
+/* Math proof for M2: https://leetcode.com/problems/robot-bounded-in-circle/discuss/290856/JavaC%2B%2BPython-Let-Chopper-Help-Explain
+Try to prove with math representation:
+Let's say the robot starts with facing up. It moves [dx, dy] by executing the instructions once.
+If the robot starts with facing
+right, it moves [dy, -dx];
+left, it moves [-dy, dx];
+down, it moves [-dx, -dy]
+
+If the robot faces right (clockwise 90 degree) after executing the instructions once,
+the direction sequence of executing the instructions repeatedly will be up -> right -> down -> left -> up
+The resulting move is [dx, dy] + [dy, -dx] + [-dx, -dy] + [-dy, dx] = [0, 0] (back to the original starting point)
+
+All other possible direction sequences:
+up -> left -> down -> right -> up. The resulting move is [dx, dy] + [-dy, dx] + [-dx, -dy] + [dy, -dx] = [0, 0]
+up -> down -> up. The resulting move is [dx, dy] + [-dx, -dy] = [0, 0]
+up -> up. The resulting move is [dx, dy]
+*/

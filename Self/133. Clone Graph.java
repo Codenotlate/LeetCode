@@ -130,6 +130,65 @@ class Solution {
 
 
 
+// Review
+/* Thought
+
+The traverse of the graph can be BFS or DFS. Since we need to do deep copy, we need to maintain a map between the old node and its corresponding new node. time O(n) space O(n) for the map
+*/
+//M1: BFS
+class Solution {
+    public Node cloneGraph(Node node) {
+        if(node == null) {return node;}
+        Queue<Node> queue = new LinkedList<>();
+        Map<Node, Node> map = new HashMap<>();
+        queue.add(node);
+        Node newRoot = new Node(node.val);
+        map.put(node, newRoot);
+        while (!queue.isEmpty()) {
+            Node cur = queue.poll();
+            Node copycur = map.get(cur);
+            for (Node next: cur.neighbors) {
+                if (map.containsKey(next)) {
+                    Node copynext = map.get(next);
+                    copycur.neighbors.add(copynext);
+                } else {
+                    Node copynext = new Node(next.val);
+                    copycur.neighbors.add(copynext);
+                    map.put(next,copynext);
+                    queue.add(next);
+                }
+            }
+        }
+        return newRoot;
+    }
+}
+//M2: DFS
+class Solution {
+    public Node cloneGraph(Node node) {
+        Map<Node, Node> map = new HashMap<>();
+        return clone(node, map);
+    }
+    
+    private Node clone(Node node, Map<Node, Node> map) {
+        if (node == null) {return null;}
+        Node newRoot = new Node(node.val);
+        map.put(node, newRoot);
+        for (Node next:node.neighbors) {
+            if(map.containsKey(next)) {
+                Node copynext = map.get(next);
+                newRoot.neighbors.add(copynext);
+            } else {
+                newRoot.neighbors.add(clone(next, map));
+            }
+        }
+        return newRoot;
+    }
+}
+
+
+
+
+
 
 
 

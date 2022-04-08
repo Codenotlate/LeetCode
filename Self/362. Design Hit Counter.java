@@ -64,6 +64,72 @@ class HitCounter {
 
 
 
+// Review
+// using map. Not a very quick way. But since the size is constrained as 300. time&space O(300) = O(1)
+class HitCounter {
+    Map<Integer,Integer> map;
+    int countHit;
+
+    public HitCounter() {
+        map = new HashMap<>();
+        countHit = 0;
+    }
+    
+    public void hit(int timestamp) {
+        map.put(timestamp, map.getOrDefault(timestamp,0) + 1);
+        countHit++;
+        Set<Integer> copy = new HashSet<>();
+        copy.addAll(map.keySet());
+        for (int t : copy) {
+            if ( t <= timestamp - 300) {
+                countHit -= map.get(t);
+                map.remove(t);
+            }
+        }
+    }
+    
+    public int getHits(int timestamp) {
+        Set<Integer> copy = new HashSet<>();
+        copy.addAll(map.keySet());
+        for (int t : copy) {
+            if ( t <= timestamp - 300) {
+                countHit -= map.get(t);
+                map.remove(t);
+            }
+        }
+        return countHit;
+    }
+}
+// try using array like in above link
+class HitCounter {
+    int[] times;
+    int[] counts;
+
+    public HitCounter() {
+        times = new int[300];
+        counts = new int[300];
+    }
+    
+    public void hit(int timestamp) {
+        int t = timestamp % 300;
+        if (times[t] != timestamp) {
+            times[t] = timestamp;
+            counts[t] = 1;
+        } else {
+            counts[t]++;          
+        }
+    }
+    
+    public int getHits(int timestamp) {
+        int res = 0;
+        for (int i = 0; i < 300; i++) {
+            res += times[i] > timestamp - 300? counts[i] : 0;
+        }
+        return res;
+    }
+}
+
+
 
 
 
