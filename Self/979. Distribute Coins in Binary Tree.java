@@ -60,3 +60,31 @@ class Solution {
         return new int[]{rootmove, rootexcess};
     }
 }
+
+
+
+
+
+
+
+// Review
+
+/*Thought
+View it from a bottom-up way. For each cur node, get the diff = curnode.val - 1(target). And also add leftchild diff and rightchild diff passed up the path. Since their children nod is already with val = 1 and no need for any coin to distribute to them (since we are doing bottomup and added the diff from children in), then abs(diff) is the min amount of move that cur node requires to move to/from its parent node. Thus we can add abs(diff) along the way to the result and pass cur diff to its parent node. Implement it in top-down recursion way based on the tree structure.
+time O(n) space O(H)
+*/
+class Solution {
+    public int distributeCoins(TreeNode root) {
+        int[] res = new int[1];
+        getHelper(root, res);
+        return res[0];
+    }
+    
+    private int getHelper(TreeNode root, int[] res) {
+        if (root == null) {return 0;}
+        int diff = root.val - 1;
+        diff += getHelper(root.left, res) + getHelper(root.right, res);
+        res[0] += Math.abs(diff);
+        return diff;
+    }
+}

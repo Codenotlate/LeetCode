@@ -22,3 +22,36 @@ class Solution {
         return count;
     }
 }
+
+
+
+// Review
+/*Thought
+If nums.len < 3, return 0. For each nums[i], the goal is to find nums[j] + nums[k] < target - nums[i], where j.k in range[i+1:]. Also to use two pointers for the process, it would be better if the array is sorted. And given total time will be at least O(n^2), we can use O(nlogn) sort in advance.
+Then for each nums[i], we have two pointers pointing to i+1 and end pos. and move two pointers according to current pair sum comparing to new target.
+time O(n^2) space O(1)
+
+*/
+
+class Solution {
+    public int threeSumSmaller(int[] nums, int target) {
+        Arrays.sort(nums);
+        int res = 0;
+        for (int i = 0; i < nums.length - 2; i++) {
+            res += getPair(nums, i, target-nums[i]);
+        }
+        return res;
+    }
+    
+    private int getPair(int[] nums, int i, int newtarget) {
+        int j = i+1;
+        int k = nums.length - 1;
+        int res = 0;
+        while ( j < k) {
+            int pairSum = nums[j] + nums[k];
+            if (pairSum < newtarget) {res += k - j; j++;}
+            else {k--;}
+        }
+        return res;
+    }
+}

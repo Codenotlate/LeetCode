@@ -88,21 +88,6 @@ As for the case when both children of the node to be deleted are not null, I tra
 // Difference with above M1 is:
 // In M1, once we find the leftmost node, (assume target is the left child of its parent)we remove all target.leftsubtree as the left subtree of leftmost node, then parent.left = target.right.
 // In below method, we move leftmost node to replace the target, and adjust the right subtree of leftmost to connect to leftmost's parent. This way the height change of the BST is minimum.
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
     public TreeNode deleteNode(TreeNode root, int key) {
         // step 1 find node with key and its parent
@@ -145,4 +130,41 @@ class Solution {
         leftmost.right = target.right;
         return parent == null ? leftmost : root;
    }
+}
+
+
+
+// Review
+/*Thought
+First use the BST attributes to find the node and also track its parent node (time O(height of target)). If turen null (can't find), retur current root directly. If find the target node with val = key. We will find its next node in inorder traverse. There are two cases:
+case1: target node has right child. Then find the leftmost node of its right subtree. Along the way we also track the parent of that leftmost node. For the deletion, we update the target node val with the val of the leftmost node val. And leftMostParent.left/right = leftMost.right.(based on parent.val & leftmost.val). The right case is when leftmostparent is target node itself). return root.
+case2: target node doesn't have right child. Then if it's root, retur root.left. Otherwise, targetparent.left/right = target.left(based on targetparent.val && target.val)
+time O(height) space O(1)
+*/
+
+// similar to above M2: make the height change minimum
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode target = root;
+        TreeNode targetParent = null;
+        while(target != null && target.val != key) {
+            targetParent = target;
+            if (target.val < key) {target = target.right;}
+            else {target = target.left;}
+        }
+        if (target == null) {return root;}
+        if (target.right == null) {
+            if (target == root) {return root.left;}
+            if (targetParent.val < target.val) {targetParent.right = target.left;}
+            else {targetParent.left = target.left;}
+        } else {
+            TreeNode leftMostParent = target;
+            TreeNode leftMost = target.right;
+            while(leftMost.left != null) {leftMostParent = leftMost; leftMost = leftMost.left;}           
+            if (leftMostParent.val < leftMost.val) {leftMostParent.right = leftMost.right;}
+            else {leftMostParent.left = leftMost.right;}
+            target.val = leftMost.val; // node change the value agfter above comparison
+        }
+        return root;
+    }
 }
