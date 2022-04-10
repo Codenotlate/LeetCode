@@ -30,7 +30,7 @@ class Solution {
 return count after loop every start.
 Time O(nlogn) space O(n)
 */
-/* M2:similar idea as M1, for each current meeting, we care about the earliest end time of all exsiting meetings. Thus we can sort the start time and end time separately into two arrays. Then loop start array and compare to end array. if curstart < curend, means no matter what is the endtime corresponding to curstart, it is later than curend, and since curend corresponding meeting hasn't ended, we need an extra root, thus count++. Else meaning there's one meeting ended, we can move curend one step forward.
+/* M2:similar idea as M1, for each current meeting, we care about the earliest end time of all exsiting meetings. Thus we can sort the start time and end time separately into two arrays. Then loop start array and compare to end array. if curstart < curend, means no matter what is the endtime corresponding to curstart, it is later than curend, and since curend corresponding meeting hasn't ended, we need an extra room, thus count++. Else meaning there's one meeting ended, we can move curend one step forward.
 time O(nlogn)  space O(n)
 */
 
@@ -99,3 +99,33 @@ class Solution {
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+// Review
+/*Thought
+Two ways.
+M1 way, sort by start time and then using PQ. mimic the actual process. The PQ will be ordered based on end time. min end time at the top. process intervals one by one. while cur interval start > pq.peek[end], then keep poll out from PQ. Outside the while loop, add cur[1] into PQ, update max size of PQ.
+time O(nlogn) space O(n) for PQ
+*/
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, (i1,i2)->(i1[0]- i2[0]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int res = 0;
+        for (int[] cur: intervals) {
+            while(!pq.isEmpty() && pq.peek() <= cur[0]) {pq.poll();}
+            pq.add(cur[1]);
+            res = Math.max(res, pq.size());
+        }
+        return res;
+    }
+}
+// next time implement way2: sort start and end separately

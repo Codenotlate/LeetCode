@@ -26,3 +26,32 @@ class Solution {
 
 // similar idea but more concise code
 // https://leetcode.com/problems/asteroid-collision/discuss/109694/JavaC%2B%2B-Clean-Code
+
+
+
+
+
+// Review
+/*Thought
+Using stack. while cur num is negative and stack is not empty with peek value positive, thencompare abs(peek) with abs(cur)。 If abs(peek) > abs(cur), label cur = 1001, representing cur is exploded., break the while loop. if (==), pop out from stack and cur = 1001, nreak the hwile loop. if (<), pop out from stack, continue the while loop.
+Outside the while loop, if cur != 1001, meaning cur didn't explode, then add cur to stack. 
+time O(n) space O(n) for stack
+*/
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Stack<Integer> stack = new Stack<>();
+        for (int cur: asteroids) {
+            while(!stack.isEmpty() && cur < 0 && stack.peek() > 0) {
+                int diff = Math.abs(stack.peek())- Math.abs(cur);
+                if (diff > 0) {cur = 1001; break;}
+                else if (diff == 0) {stack.pop(); cur = 1001; break;}
+                else {stack.pop();}
+            }
+            if (cur != 1001) {stack.push(cur);}
+        }
+        
+        int[] res = new int[stack.size()];
+        for (int i = res.length - 1; i >= 0; i--) {res[i] = stack.pop();}
+        return res;
+    }
+}
