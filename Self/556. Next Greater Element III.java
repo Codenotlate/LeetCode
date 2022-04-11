@@ -54,3 +54,47 @@ How to explain it youtube: https://www.youtube.com/results?search_query=back+to+
 
 
 */
+
+
+
+
+
+
+// Review
+/*Thought
+Convert to char array. Move backwards from end. find the first pos with char[pos] < char[pos+1]. Then in range[pos+1:end], find the last one (lastIdx) > char[pos], swap (pos, lastIdx). Then reverse[pos_1: end].
+note if char array coverts to long > 2^31 -1 , return -1;
+time O(l) l is the digit len of n. space O(l) for the char array.
+*/
+class Solution {
+    public int nextGreaterElement(int n) {
+        char[] arr = Integer.toString(n).toCharArray();
+        int pos = arr.length - 2;
+        while (pos >= 0) {
+            if (arr[pos] < arr[pos+1]) {break;}
+            pos--;
+        }
+        if(pos == -1) {return -1;}
+        int lastIdx = pos + 1;
+        while (lastIdx <= arr.length - 1) {
+            if (arr[lastIdx] <= arr[pos]) {break;}
+            lastIdx++;
+        }
+        swap(arr, pos, lastIdx-1);
+        reverse(arr, pos + 1, arr.length - 1);
+        long resNum = Long.valueOf(new String(arr));
+        return resNum > Integer.MAX_VALUE ? -1 : (int) resNum;
+    }
+    
+    private void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    
+    private void reverse(char[] arr, int i, int j) {
+        int start = i;
+        int end = j;
+        while ( start < end) {swap(arr, start, end); start++; end--;}
+    }
+}

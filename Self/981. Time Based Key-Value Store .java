@@ -64,3 +64,42 @@ time complexity of get() ---- O(log n) , because tree map internally uses binary
 
 */
 
+
+
+// Review
+
+/*Thought
+obviously we will need to use map structure for each key. Then under each key, we need to record both time and value. And since later we will call get based on some random time, we need to find the first time in the stored array that is <= to that random time. Think about using binary search for this,  thus for each key, we will use ArrayList<int[]>, so we can do binary search on int[0], and get its corresponding value on int[1].
+set: time O(1)
+get: time O(log(key array len))
+*/
+class TimeMap {
+    Map<String, List<Pair<Integer, String>>> map;
+
+    public TimeMap() {
+        map = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        if (!map.containsKey(key)) {map.put(key, new ArrayList<Pair<Integer, String>>());}
+        map.get(key).add(new Pair(timestamp, value));
+    }
+    
+    public String get(String key, int timestamp) {
+        // pay attention to all the null condition
+        if(!map.containsKey(key)) {return "";}
+        List<Pair<Integer, String>> list = map.get(key);
+        int start = 0;
+        int end = list.size() - 1;
+        // pay attentin to outside start and end range cases
+        if (list.get(end).getKey() <= timestamp) {return list.get(end).getValue();}
+        // here is to find first one >= target
+        while (start < end) {
+            int mid = start + (end- start) / 2;
+            if (list.get(mid).getKey() > timestamp) {end = mid;}
+            else {start = mid + 1;}
+        }
+        return start == 0 ? "" : list.get(start-1).getValue();
+    }
+}
+

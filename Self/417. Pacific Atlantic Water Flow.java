@@ -240,6 +240,71 @@ class Solution {
 
 
 
+// Review
+/*Thought
+Graph traverse. Can use BFS or DFS. 
+For BFS, adding borders cells to queue as init cells. Move to the neighbors has height >= cur height. If a cell appears in both sets, add it to result. Can use one visited matrix, label pacific as 1 and when do atlantic BFS, if the visited == 1, directly adding that cell to result.
+time O(m*n)
+space O(m * n)
+*/
+// BFS way
+class Solution {
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        int m = heights.length;
+        int n = heights[0].length;
+        int[][] visited = new int[m][n];        
+        List<List<Integer>> res = new LinkedList<>();        
+        bfs(heights, visited, 1, res);
+        bfs(heights, visited, 2, res);
+        return res;                
+    }
+    
+    
+    
+    private void bfs(int[][] heights, int[][] visited, int label, List<List<Integer>> res) {
+        int m = heights.length;
+        int n = heights[0].length;
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        Queue<int[]> queue = new LinkedList<>();
+        if (label == 1) {
+            for (int i = 0; i < m; i++) {
+                queue.add(new int[]{i,0});
+                visited[i][0] = 1;
+            }
+            for (int j = 1; j < n; j++) {
+                queue.add(new int[]{0,j});
+                visited[0][j] = 1;
+            }        
+        } else {
+            for (int i = 0; i < m; i++) {
+                queue.add(new int[]{i,n-1});
+                if (visited[i][n-1] != 0) {res.add(Arrays.asList(i,n-1));}
+                visited[i][n-1] = 2;
+            }
+            for (int j = 0; j < n - 1; j++) {
+                queue.add(new int[]{m-1,j});
+                if (visited[m-1][j] != 0) {res.add(Arrays.asList(m-1,j));}
+                visited[m-1][j] = 2;
+            }
+        }
+        
+        // BFS for pacific
+        while(!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (int[] d: dirs) {
+                int newi = cur[0]+d[0];
+                int newj = cur[1] + d[1];
+                if (newi >= 0 && newi < m && newj >= 0 && newj < n && visited[newi][newj] != label && heights[newi][newj] >= heights[cur[0]][cur[1]]) {
+                    queue.add(new int[]{newi, newj});
+                    if (visited[newi][newj] != 0) {res.add(Arrays.asList(newi,newj));}
+                    visited[newi][newj] = label;
+                }
+            }
+        }
+    }
+}
+
+
 
 
 
