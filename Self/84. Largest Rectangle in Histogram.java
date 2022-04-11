@@ -171,5 +171,35 @@ class Solution {
 
 
 
+// Review
+/*Thought
+The key here is for each height, find the index of the first height smaller than it on both left and right side. Then that area will be the max area of that height, once we traverse all height, we can get the result.
+Naive way to find the left and right lower index is O(n) time and thus O(n^2) time in total.
+Optimized way is to use a monotone stack. We put the index not the height into the stack, this helps to calculate the width. When we have h[stack.peek()] > h[curIdx], we have find the left and right index for stack.peek(). Thus we pop it out and calculate its area. We keep doing it until h[stack.peek()] > cur no longer satisfies. Then we add curIdx into the stack. Until we traversed all element in heights. All the elements left in the stack will have right side = right outside range of the array. Also note at the beginning we will add - 1 to the stack to represent the left outside range of the array.
+time O(n) at most two pass
+space O(n)
+*/
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        int maxArea = 0;
+        for (int i = 0; i < heights.length; i++) {
+            while(stack.peek() != -1 && heights[stack.peek()] > heights[i]) {
+                int idx = stack.pop();
+                maxArea = Math.max(maxArea, heights[idx] * (i - stack.peek() -1));
+            }
+            stack.push(i);
+        }
+        
+        while(stack.peek() != -1) {
+            maxArea = Math.max(maxArea, heights[stack.pop()] * (heights.length - stack.peek() - 1));
+        }
+        return maxArea;
+    }
+}
+
+
+
 
 

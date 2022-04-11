@@ -71,3 +71,59 @@ The OP uses Treemap way, which takes O(log(set)) time instead of O(1) in our cas
 
 
 */
+
+
+
+
+
+
+
+// Review
+/*Thought
+Naive way: have a list with index and its value. Then for each snap, for each index, we keep a map: snap_id -> value. But this is going to take a lot of space if we do lots of snap() without changing the list too much.
+Improved way: only record the new value and corrresponding snap_id when set. Keep nextSnapId, when do snap(), we do nextSnapId++. return nextSnapId - 1. When do set(), we put (nextSnapId, value) to that index. When do get(), we go to the map of that index, binary search to find the first snapId <= snap_id, return its corresponding value.
+Thus we need an array of List<int[]>: index -> List<int[snapIdx, value]>.
+time O(1) for snapshotArray/set/snap. time O(logk) for get() where k is the number of set() being called.
+
+*/
+class SnapshotArray {
+    List<int[]>[] array;
+    int nextSnapId;
+
+    public SnapshotArray(int length) {
+        // note initially, each element equals to 0
+        array = new ArrayList[length];
+        nextSnapId = 0;
+        for (int i = 0; i < length; i++) {
+            array[i] = new ArrayList<int[]>(); 
+            array[i].add(new int[]{0,0});
+        }
+    }
+    
+    public void set(int index, int val) {
+        int size = array[index].size();
+        if (size >= nextSnapId + 1) {array[index].remove(size - 1);}
+        array[index].add(new int[]{nextSnapId, val});
+        
+    }
+    
+    public int snap() {
+        nextSnapId++;
+        return nextSnapId - 1;
+    }
+    
+    public int get(int index, int snap_id) {
+        List<int[]> list = array[index];
+        // find first one > snap_id
+        int start = 0;
+        int end = list.size() - 1;
+        // for (int[] x: list) {System.out.print(x[0]+","+x[1]+" ");}
+        if (list.get(end)[0] <= snap_id) {return list.get(end)[1];}
+        while (start < end) {
+            int mid = start + (end - start) / 2;
+            if (list.get(mid)[0] <= snap_id) {start = mid + 1;}
+            else {end = mid;}
+        }
+        return list.get(start-1)[1];
+    }
+}
