@@ -50,3 +50,59 @@ class Solution {
 
 //https://leetcode.com/problems/rotting-oranges/discuss/238681/Java-Clean-BFS-Solution-with-comments
 // this solution changed all 1 to 2 after it's visited, thus no need for our visited set. But similar idea
+
+
+
+
+
+
+
+// Review
+/*Thought
+BFS. starts with putting all 2 cells into the queue, record the level of whole BFS. If we can modify grid itself, we can label those visited 1 cells to 2 and no need for an extra visited matrix. But if not able to modify, we can use an extra visited matrix. Space won't be worse, since queue already take O(mn) space.
+Also since there is possibility some cells never get rotten,  when first traverse to put all 2 cells into queue, we will simultaneously count cells with 1 or 2. Then reduce the count along the BFS. If in the end count not equal to 0, then we return -1.
+time O(mn) space O(mn)
+
+*/
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] visited = new int[m][n];
+        Queue<int[]> queue = new LinkedList<>();
+        int[][] dirs = new int[][]{{0,-1},{0,1},{1,0},{-1,0}};
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] != 0) {count++;}
+                if (grid[i][j] == 2) {
+                    queue.add(new int[]{i,j});
+                    visited[i][j] = 1;
+                }                
+            }
+        }
+        // pay attention to special case [[0]] or [[1]]
+        if (queue.size() == 0 && count == 0) {return 0;}
+        
+        // BFS
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                count--;
+                for (int[] dir: dirs) {
+                    int newi = cur[0] + dir[0];
+                    int newj = cur[1] + dir[1];
+                    if (newi >= 0 && newi < m && newj >= 0 && newj < n && visited[newi][newj] == 0 && grid[newi][newj] == 1) {
+                        queue.add(new int[]{newi, newj});
+                        visited[newi][newj] = 1;
+                    }
+                }
+            }
+            level++;
+        }
+        
+        return count == 0 ? level-1: -1;
+    }
+}
