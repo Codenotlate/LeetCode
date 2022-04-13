@@ -90,3 +90,41 @@ class Solution {
         
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+// Review
+/*Thought
+preprocess the array. if negative, zero or larger then nums.length, make it nums.length+1.
+The think process: since require O(1) space, we need to use current array to label. But ordinary negative label won't work here cause we may original negative value and 0. Then think about convert them to some positive value that won't affect the final result so we can use negative label. Notice we want the smallest missing positive here, so as long as the positive number is larger than nums.length, it won't impact the result.
+Thus after conversion, for cur in nums, we can make nums[abs(cur)-1] negative if it's stil positive.(need to avoid negate it twice).
+Then in the end, we return the first idx+1 with nums[idx] > 0.
+time O(n) space O(1)
+
+
+*/
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0 || nums[i] > n) {nums[i] = n + 1;}
+        }
+        for (int cur: nums) {
+            int labelIdx = Math.abs(cur) -1;
+            if (labelIdx < n && nums[labelIdx] > 0) {nums[labelIdx] *= -1;}
+        }
+        
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0) {return i+1;}
+        }
+        return n + 1;
+    }
+}

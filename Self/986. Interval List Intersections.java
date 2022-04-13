@@ -62,3 +62,60 @@ class Solution {
     return ans.toArray(new int[ans.size()][]);
   }
 }
+
+
+
+
+
+
+// Review
+/*Thought
+Think about relationship between two intervals. Case1: disjoint(f[start] > s[end] or f[end] < s[start]), move whoever smaller to the next itv in its array. Case2: They overlap, then add to result [max(f[start], s[start]), min(f[end], s[end])]. then move whoever has smaller end to the next one. Do it till one array reaches the end.
+time O(l1 + L2)
+space O(k) k is the number of result pairs
+
+e.g.
+firstList = [[0,2],[5,10],[13,23],[24,25]], secondList = [[1,5],[8,12],[15,24],[25,26]]
+res:[1,2],[5,5],[8,10],[15,23][24,24][25,25]
+
+*/
+class Solution {
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        List<int[]> resList = new LinkedList<>();
+        int p1 = 0;
+        int p2 = 0;
+        while (p1 < firstList.length && p2 < secondList.length) {
+            int[] first = firstList[p1];
+            int[] second = secondList[p2];
+            if (first[0] > second[1] || first[1] < second[0]) {
+                if (first[0] > second[1]) {p2++;}
+                else {p1++;}
+            } else {
+                resList.add(new int[]{Math.max(first[0], second[0]), Math.min(first[1], second[1])});
+                if (first[1] < second[1]) {p1++;}
+                else {p2++;}
+            }
+        }
+        int[][] res = new int[resList.size()][2];
+        for (int i = 0; i < resList.size(); i++) {res[i] = resList.get(i);}
+        return res;
+    }
+}
+// further optimize the code
+class Solution {
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        List<int[]> resList = new LinkedList<>();
+        int p1 = 0;
+        int p2 = 0;
+        while (p1 < firstList.length && p2 < secondList.length) {
+            int[] first = firstList[p1];
+            int[] second = secondList[p2];
+            int low = Math.max(first[0], second[0]);
+            int high = Math.min(first[1], second[1]);
+            if (low <= high) {resList.add(new int[]{low, high});}
+            if(first[1] > second[1]) {p2++;}
+            else {p1++;}
+        }
+        return resList.toArray(new int[resList.size()][]);
+    }
+}
