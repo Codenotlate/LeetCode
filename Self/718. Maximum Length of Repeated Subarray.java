@@ -61,3 +61,34 @@ class Solution {
 
 
 
+
+// Review: above is forwards, this one is backwards
+/*Thought
+DO or recur + memo way
+M1: recur + memo way: if l1[i] = l2[j], then 1 + recur(i+1, j+1). else 0. This way time O(l1 * l2) space O(l1 * l2)
+M2: DP way. dp[i][j] represents result for l1[i:] and l2[j:] and i&j must be included in the subarray. Then similarly. if l1[i] == l2[j], then dp[i][j] = 1 + dp[i+1][j+1]. Otherwise, dp[i][j] = 0. Since each dp[i][j] could be the final result, we need to record the maxLen = max(dp[i][j]) along the way. 
+Space can be optimized to O(len2). time still O(l1 * l2)
+
+*/
+class Solution {
+    public int findLength(int[] nums1, int[] nums2) {
+        int l1 = nums1.length;
+        int l2 = nums2.length;
+        int[] dp = new int[l2 + 1];
+        int maxLen = 0;
+        for (int i = l1 - 1; i >=0; i--) {
+            int prev_ij = 0;
+            for (int j = l2-1; j>=0; j--) {
+                int temp = dp[j];
+                if (nums1[i] == nums2[j]) {
+                    dp[j] = 1+ prev_ij;
+                    maxLen = Math.max(maxLen, dp[j]);
+                }
+                else {dp[j] = 0;}
+                prev_ij = temp;
+            }
+        }
+        return maxLen;
+    }
+}
+

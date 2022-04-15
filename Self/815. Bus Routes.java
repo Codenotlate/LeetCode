@@ -176,3 +176,59 @@ class Solution {
 
 
 
+
+
+
+// Review
+/* Thought
+Basic idea is to build a graph and do BFS. The tricky part is here we want the num of buses but one bus has multi stops.
+One way to build the graph is each node represents a bus. And is they share same stop, they have edge in between. When we at cur bus polled from queue, we check all other buses has any of the curstops, thus we need to have a stopToBus map. We added those unvisited connected bus to BFS queue and do BFS.
+
+Another way is to build the graph with node representing stop. Similarly we will need a stopToBus map. Initially, we add all stops in the source stop related bus to the queue. Each time when we at curstop polled from queue,  we check all other unvisited buses has this curstop, and add all stops of those buses to the queue. This way we might have duplicate stops in the queue. So I think M1 is better.
+
+
+Note pay attention to two special cases: when target or source not in routes; when target is same as source.
+
+self think time is O(b^2 * s)
+*/
+
+class Solution {
+    public int numBusesToDestination(int[][] routes, int source, int target) {
+        // special case
+        if (target == source) {return 0;}
+        // build stopToBus map
+        Map<Integer, Set<Integer>> stopToBus = new HashMap<>();
+        for (int i = 0; i < routes.length; i++) {
+            for (int stop: routes[i]) {
+                stopToBus.putIfAbsent(stop, new HashSet<>());
+                stopToBus.get(stop).add(i);
+            }
+        }
+        // do BFS
+        Queue<Integer> queue = new LinkedList<>();
+        int level = 0;
+        Set<Integer> visitedBus = new HashSet<>();
+        if (!stopToBus.containsKey(source) || !stopToBus.containsKey(target)) {return -1;}
+        for (int bus: stopToBus.get(source)) {queue.add(bus); visitedBus.add(bus);}
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int curbus = queue.poll();
+                if (stopToBus.get(target).contains(curbus)) {return level + 1;}
+                for (int stop: routes[curbus]) {
+                    for (int nextbus: stopToBus.get(stop)) {
+                        if (!visitedBus.contains(nextbus)) {
+                            queue.add(nextbus);
+                            visitedBus.add(nextbus);
+                        }
+                    }
+                }
+            }
+            level++;
+        }
+        
+        return -1;
+    }
+}
+

@@ -99,3 +99,37 @@ class Solution {
 
 
 
+
+// Review
+/*Thought
+Don't understand question wrongly.
+Using stack. when to skip: when char is already in the stack. When to pop: when peek() remaining count > 0  && peek() > cur.First use int[26] to do count.
+e.g."cbdfacdcbc"
+*/
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        int[] count = new int[26];
+        int[] seen = new int[26];
+        for (char c: s.toCharArray()) {
+            count[c-'a']++;
+        }
+        StringBuilder res = new StringBuilder();
+        for (char c: s.toCharArray()) {
+            if (seen[c-'a'] == 1) {count[c-'a']--;continue;}
+            int i = res.length() - 1;
+            while (i >= 0 && res.charAt(i) > c && count[res.charAt(i)-'a'] > 0) {
+                seen[res.charAt(i)-'a'] = 0;
+                res.deleteCharAt(i--);              
+            }
+            res.append(c);
+            count[c-'a']--;
+            seen[c-'a'] = 1;
+            
+        }
+        return res.toString();
+    }
+}
+
+
+
+
