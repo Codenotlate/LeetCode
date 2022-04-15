@@ -65,3 +65,47 @@ class Solution {
 
 
 
+
+
+
+// Review
+/*Thought
+Inorder traverse (Morris way) of  BST. 
+Time O(n) space O(1)
+*/
+class Solution {
+    public Node treeToDoublyList(Node root) {
+        if (root== null) {return null;}
+        Node head = new Node(-1);
+        
+        // Morris inorder traverse
+        Node cur = root;
+        Node prev = head;
+        while (cur != null) {
+            if (cur.left != null) {
+                Node rightMost = cur.left;
+                while (rightMost.right != null && rightMost != cur) {rightMost = rightMost.right;}
+                if (rightMost!= cur) {
+                    rightMost.right = cur;
+                    cur = cur.left;
+                } else {
+                    prev.right = cur;
+                    cur.left = prev;
+                    prev = cur;
+                    cur = cur.right;
+                }               
+            } else {
+                prev.right = cur;
+                cur.left = prev;
+                prev = cur;
+                cur = cur.right;
+            }
+        }
+        
+        // circular adjustment
+        head.right.left = prev;
+        prev.right = head.right;
+        return head.right;
+    }
+}
+
