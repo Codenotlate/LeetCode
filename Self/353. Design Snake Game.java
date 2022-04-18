@@ -72,13 +72,51 @@ class SnakeGame {
 
 
 
+// Review
+/*Thought
+For the record of snake body occupied space, if we don't have food, at each move we will have one new cell added and remove the oldest cell. This can be maintained by using a deque of pos int[].
+*/
+class SnakeGame {
+    Deque<Pair<Integer, Integer>> deque;
+    Set<Pair<Integer, Integer>> bodySet;
+    int[][] food;
+    int width;
+    int height;
+    int curfood;
 
-
-
-
-
-
-
+    public SnakeGame(int width, int height, int[][] food) {
+        this.food = food;
+        this.width = width;
+        this.height = height;
+        curfood = 0;
+        deque = new LinkedList<>();
+        deque.addLast(new Pair(0,0));
+        bodySet = new HashSet<>();
+        bodySet.add(new Pair(0,0));
+    }
+    
+    public int move(String direction) {
+        int headrow = deque.peekLast().getKey();
+        int headcol = deque.peekLast().getValue();
+        if (direction.equals("R")) {headcol++;}
+        else if (direction.equals("L")) {headcol--;}
+        else if (direction.equals("U")) {headrow--;}
+        else {headrow++;}
+        
+        if (headcol < 0 || headrow < 0 || headcol >= width || headrow >= height) {return -1;}
+        if (curfood < food.length && headrow == food[curfood][0] && headcol == food[curfood][1]) {
+            curfood++;
+        } else {
+            bodySet.remove(deque.pollFirst());
+        }
+        
+        Pair<Integer, Integer> newHead = new Pair(headrow, headcol);
+        if (bodySet.contains(newHead)) {return -1;}
+        deque.addLast(newHead);
+        bodySet.add(newHead);
+        return curfood;
+    }
+}
 
 /**
  * Your SnakeGame object will be instantiated and called as such:

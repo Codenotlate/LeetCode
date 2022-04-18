@@ -21,3 +21,31 @@ class Solution {
         return res;
     }
 }
+
+
+
+
+
+
+
+
+
+// Review
+/*Thought
+Only care about the first one in 1*k or k*1 group. thus for each X cell, we can only check its left and upper neighbors. If either of them is X, then this cur cell is not the start of a X group, we move on. Otherwise, we add 1 to count.
+*/
+class Solution {
+    public int countBattleships(char[][] board) {
+        int count = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j=0; j < board[0].length; j++) {
+                if (board[i][j] == 'X') {
+                    if (i > 0 && board[i-1][j] == 'X') {continue;}
+                    else if (j > 0 && board[i][j-1] == 'X') {continue;}
+                    else {count++;}
+                }
+            }
+        }
+        return count;
+    }
+}

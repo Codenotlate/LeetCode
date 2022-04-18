@@ -57,6 +57,60 @@ https://leetcode.com/problems/dot-product-of-two-sparse-vectors/solution/
 
 
 
+// Review
+// Naive way: not accepatable by FB since hash also takes time for large scale.
+class SparseVector {
+    Map<Integer, Integer> map;
+    
+    SparseVector(int[] nums) {
+        map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {map.put(i, nums[i]);}
+        }
+    }
+    
+    // Return the dotProduct of two sparse vectors
+    public int dotProduct(SparseVector vec) {
+        int res = 0;
+        for (int pos: vec.map.keySet()) {
+            if (map.containsKey(pos)) {res += vec.map.get(pos) * map.get(pos);}
+        }
+        return res;
+    }
+}
+
+// best way time O(l1 + l2)
+// followup: if l1 >> l2, do binary search make it O(l2 * log(l1))
+class SparseVector {
+    List<int[]> list;
+    
+    SparseVector(int[] nums) {
+        list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {list.add(new int[]{i, nums[i]});}
+        }
+    }
+    
+    // Return the dotProduct of two sparse vectors
+    public int dotProduct(SparseVector vec) {
+        List<int[]> list2 = vec.list;
+        int p1 = 0;
+        int p2 = 0;
+        int res = 0;
+        while (p1 < list.size() && p2 < list2.size()) {
+            if (list.get(p1)[0] == list2.get(p2)[0]) {
+                res += list.get(p1)[1] * list2.get(p2)[1];
+                p1++;
+                p2++;
+            } else if(list.get(p1)[0] < list2.get(p2)[0]){
+                p1++;
+            } else {
+                p2++;
+            }
+        }
+        return res;
+    }
+}
 
 
 
