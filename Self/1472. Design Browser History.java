@@ -43,3 +43,40 @@ class BrowserHistory {
 }
 
 // based on discussion, this is already the best way!
+
+
+
+
+
+
+
+// Review
+class BrowserHistory {
+    List<String> urllist;
+    int curPos;
+    int lastPos;
+
+    public BrowserHistory(String homepage) {
+        urllist = new ArrayList<>();
+        urllist.add(homepage);
+        curPos = 0;
+        lastPos = 0;
+    }
+    
+    public void visit(String url) {
+        if (curPos == urllist.size() - 1) {urllist.add(url);}
+        else {urllist.set(curPos+1, url);}      
+        curPos++;
+        lastPos = curPos;
+    }
+    
+    public String back(int steps) {
+        curPos = Math.max(curPos - steps, 0);
+        return urllist.get(curPos);
+    }
+    
+    public String forward(int steps) {
+        curPos = Math.min(curPos + steps, lastPos);
+        return urllist.get(curPos);
+    }
+}

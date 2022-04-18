@@ -110,6 +110,67 @@ class Solution {
 
 
 
+// Review
+
+/*Thought
+Build the graph based on equations and values. Each pair will contribute to directionl edges: a-> b = 2, then b->a = 0.5. The graph will be <String>: List<pair<String, Double>>
+when calculate for queries, first check if both strings in the graph, otherwise return -1.  Then check if two strings are the same, if same return 1. Then we can start with first string and do dfs to find the second string and multiply the value along the way.
+*/
+class Solution {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        Map<String, List<Pair<String, Double>>> graph = new HashMap<>();
+        Map<Pair<String,String>, Double> memo = new HashMap<>();
+        for(int i = 0; i < equations.size(); i++) {
+            List<String> equa = equations.get(i);
+            String s1 = equa.get(0);
+            String s2 = equa.get(1);
+            double val = values[i];
+            graph.putIfAbsent(s1, new LinkedList<>());
+            graph.putIfAbsent(s2, new LinkedList<>());
+            graph.get(s1).add(new Pair(s2, val));
+            graph.get(s2).add(new Pair(s1, 1.0 /val));
+            memo.put(new Pair(s1, s2), val);
+            memo.put(new Pair(s2,s1), 1.0/val);
+        }
+        
+        double[] res = new double[queries.size()];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = calQuery(queries.get(i), graph, memo, new HashSet<String>());
+        }
+        return res;
+    }
+    
+    
+    
+    private double calQuery(List<String> query, Map<String, List<Pair<String, Double>>> graph, Map<Pair<String, String>, Double> memo, Set<String> visited) {
+        String s1 = query.get(0);
+        String s2 = query.get(1);
+        if (memo.containsKey(new Pair(s1, s2))) {return memo.get(new Pair(s1, s2));}     
+        if (!graph.containsKey(s1) || !graph.containsKey(s2) || visited.contains(s1)) {return -1;}
+        if (s1.equals(s2)) {return 1;}
+        
+        visited.add(s1);
+
+        for (Pair<String, Double> next: graph.get(s1)) {
+            List<String> nextList = new LinkedList<>();
+            nextList.add(next.getKey());
+            nextList.add(s2);
+            double nextRes = calQuery(nextList, graph, memo, visited);
+            if (nextRes > 0) {
+                double res = next.getValue() * nextRes;
+                memo.put(new Pair(s1, s2), res);
+                return res;
+            }
+        }
+        
+        return -1;
+        
+    }
+    
+}
+
+
+
 
 
 
