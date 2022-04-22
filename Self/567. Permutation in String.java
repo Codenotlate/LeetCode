@@ -48,6 +48,50 @@ class Solution {
 
 
 
+//Review - similar sliding window idea, but different implementation
+/* special case, if s1.len > s2.len, return false.
+finding a window in s2, that has the exactly same chars count as s1. since only lowercase letters, can use int[26] for count for s1 first.
+Then maintain a window in s2,  keep move right pointer right if count[char] > 0. Decrease the count and adjust nonZeros along the way. If current window no longer satisfies, move left pointer one step right, need to adjust count[left] and nonZeros accordingly.
+
+time O(l2) space O(26) = O(1)
+
+
+*/
+
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        if (s1.length() > s2.length()) {return false;}
+        int[] count = new int[26];
+        int nonZeros = 0;
+        for (char c : s1.toCharArray()) {
+            count[c-'a']++;
+            if (count[c-'a'] == 1) {nonZeros++;}
+        }
+        
+        int left = 0;
+        int right = left;
+        while (left < s2.length()) {
+            while (right < s2.length() && count[s2.charAt(right) - 'a'] > 0) {
+                int countIdx = s2.charAt(right) - 'a';
+                count[countIdx]--;
+                if (count[countIdx] == 0) {
+                    nonZeros--;
+                    if (nonZeros == 0) {return true;}
+                }
+                right++;
+            }
+            
+            int charIdx = s2.charAt(left)-'a';
+            count[charIdx]++;
+            if (count[charIdx]== 1) {nonZeros++;}
+            left++;
+            
+        }
+        return false;
+    }
+}
+
+
 
 
 

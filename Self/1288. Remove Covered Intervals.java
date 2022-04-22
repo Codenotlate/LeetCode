@@ -23,3 +23,22 @@ class Solution {
         
     }
 }
+
+
+
+// Review - time O(nlogn) space O(logn)
+class Solution {
+    public int removeCoveredIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (i1, i2)->(i1[0]==i2[0]? i2[1] - i1[1] : i1[0] - i2[0]));
+        int preend = -1;
+        int count = 0;
+        for (int[] curint: intervals){
+            int curend = curint[1];
+            if(curend > preend) {
+                preend = curend;
+                count++;
+            }
+        }
+        return count;
+    }
+}
