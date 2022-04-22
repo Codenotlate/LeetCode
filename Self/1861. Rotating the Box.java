@@ -49,3 +49,47 @@ class Solution {
 // similar idea slightly diff implementation
 // https://leetcode.com/problems/rotating-the-box/discuss/1210113/simplest-explanation-with-java-solution
 
+
+
+
+
+
+
+// Review
+// similar but slightly implemented way
+/*
+Since the empty cell will be filled with '.', we fill the res with '.' initially. Then for each row, we go backwards, and using a stack concept. If cur is '#', pop out all '.' from stack. If cur is '*', move the peek pos of the stack to current ith position, since its position is fixed. The gap between prev peekpos and i will be automatically filled with '.'. Then add cur to stack.
+
+time O(mn), space O(1)
+ 
+*/
+class Solution {
+    public char[][] rotateTheBox(char[][] box) {
+        int m = box.length;
+        int n = box[0].length;
+        char[][] res = new char[n][m];
+        for(char[] row: res) {Arrays.fill(row,'.');}
+        int r = 0;
+        for (char[] row: box) {
+            convert(row, res, r);
+            r++;
+        }
+        return res;
+    }
+    
+    
+    private void convert(char[] row, char[][] res, int r) {
+        int newcol = res[0].length - 1 - r;
+        int peekpos = row.length;
+        for (int i = row.length - 1; i >= 0; i--) {
+            char cur = row[i];
+            while(cur == '#' && peekpos < row.length && res[peekpos][newcol] == '.') {peekpos++;}            
+            peekpos--;
+            if (cur == '*') {
+                peekpos = i;
+            }
+            res[peekpos][newcol] = cur;
+        }
+    }
+}
+

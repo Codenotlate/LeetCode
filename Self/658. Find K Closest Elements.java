@@ -77,6 +77,62 @@ class Solution {
 
 
 
+// Review - similar as above way
+
+// time O(logn + k) space O(1)
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int firstpos = binaryfind(arr, x);
+        List<Integer> res =new LinkedList<>();
+        if (firstpos == 0) {
+            for (int i = 0; i < k; i++) {res.add(arr[i]);}
+        } else if (firstpos == -1) {
+            for (int i = arr.length - k; i < arr.length; i++) {res.add(arr[i]);}
+        } else {
+            //two pointers
+            int p1 = firstpos - 1;
+            int p2 = firstpos;
+            int count = 0;
+            while (p1 >= 0 || p2 < arr.length) {
+                if (count == k) {break;}
+                int p1num = p1 >= 0? Math.abs(arr[p1]-x): Integer.MAX_VALUE;
+                int p2num = p2 < arr.length? Math.abs(arr[p2] - x) : Integer.MAX_VALUE;
+                if(p1num <= p2num) {
+                    p1--;
+                } else {
+                    p2++;
+                }
+                count++;
+                
+            }
+            for (int w = p1+1; w <p2; w++) {res.add(arr[w]);}
+        
+        }
+        
+        
+        return res;
+    }
+    
+    
+    
+    private int binaryfind(int[] arr, int x) {
+        int n = arr.length;
+        if (arr[0] >= x) {return 0;}
+        if (arr[n-1] < x) {return -1;}
+        int start = 0;
+        int end= n - 1;
+        while(start < end) {
+            int mid = start + (end - start) / 2;
+            if (arr[mid] < x) {start  = mid + 1;}
+            else {end = mid;}
+        }
+        return start;
+        
+    }
+}
+
+
+
 
 
 
