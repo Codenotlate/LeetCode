@@ -102,6 +102,37 @@ init: dp[i][0][0] = 0 dp[i-1][0][1] = -inf dp[-1][0][k] = 0 dp[-1][1][k] = -inf
 
 
 
+// Review
+/*
+i th day, 0 don't have stock, k: has used k times transactions
+dp[i][k][0] = max(dp[i-1][k][1] + p, dp[i-1][k][0])
+dp[i][k][1] = max(dp[i-1][k-1][0] - p, dp[i-1][k][1])
+init:
+dp[-1][2/1/0][0] = 0
+dp[-1][2/1/0][1] = -inf
+dp[i][0][0] = 0 dp[i][0][1] = -inf
+
+write all k out. and apply some init conditions above, we can get below 4 formulas. And pay attention to the order to avoid dp_i-1 being replace by dp_i.
+*/
+
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        int dp_i20= 0;
+        int dp_i10 = 0;
+        int dp_i21 = Integer.MIN_VALUE;
+        int dp_i11 = Integer.MIN_VALUE;
+        
+        for (int p : prices) {
+            dp_i20 = Math.max(dp_i21 + p, dp_i20);
+            dp_i21 = Math.max(dp_i10 - p, dp_i21);
+            dp_i10 = Math.max(dp_i11 + p, dp_i10);
+            dp_i11 = Math.max(-p, dp_i11);
+        }
+        
+        return dp_i20;
+    }
+}
 
 
 

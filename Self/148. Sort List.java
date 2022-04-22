@@ -280,7 +280,63 @@ class Solution {
 
 
 
+// Review 
+// time O(nlogn) space O(1): same as above, except don't have split function separated.
+/* At every level, we maintain newhead and newtail. Two while loops.
+outside loop is based onsteps, step *= 2, and stop when steps > L.len.
+inner loop is based on l1. l2 and nextl1 are based on l1 and steps. l1 = nextl2. stop the loop when l1 is null.
+*/
+class Solution {
+    public ListNode sortList(ListNode head) {
+        int len = getLen(head);
+        int step = 1;
+        ListNode newhead = new ListNode(-1, head);
+        while (step < len) {
+            ListNode newtail = newhead;
+            ListNode l1 = newhead.next;
+            while (l1 != null) {
+                // find l2 and l1.end = null
+                ListNode p = l1;
+                int i = 0;
+                while (i++ < step - 1 && p != null) {p = p.next;}
+                ListNode l2 = p == null ? p : p.next;
+                if ( p!= null) {p.next = null;}
+                
+                // find next and l2.end = null
+                p = l2;
+                i = 0;
+                while (i++ < step - 1 && p !=  null) {p = p.next;}
+                ListNode nextl1 = p == null? p : p.next;
+                if ( p!= null) {p.next = null;}
 
+                newtail = merge(l1, l2, newtail);
+                l1 = nextl1;
+            }
+            step *= 2;
+        }
+        return newhead.next;        
+    }
+    
+    
+    
+    private int getLen(ListNode head) {
+        int len = 0;
+        while (head != null) {head = head.next; len++;}
+        return len;
+    }
+    
+    private ListNode merge(ListNode l1, ListNode l2, ListNode newtail) {
+        while (l1 != null || l2 != null) {
+            int v1 = l1 == null ? Integer.MAX_VALUE : l1.val;
+            int v2 = l2 == null ? Integer.MAX_VALUE : l2.val;
+            if (v1 <= v2) {newtail.next = l1; l1 = l1.next;}
+            else {newtail.next = l2; l2 = l2.next;}
+            newtail = newtail.next;
+        }
+        return newtail;
+    }
+    
+}
 
 
 
