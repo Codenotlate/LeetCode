@@ -26,3 +26,29 @@ class Solution {
 
 // follow up discussion on what if  each boat can carry at most k people instead of only 2 people at the same time
 // https://leetcode.com/problems/boats-to-save-people/discuss/157289/What-if-each-boat-carries-at-most-K-people-(instead-of-2-people)-at-the-same-time
+
+
+
+
+
+
+
+
+
+
+// Review
+// time O(nlogn) space O(logn)
+class Solution {
+    public int numRescueBoats(int[] people, int limit) {
+        Arrays.sort(people);
+        int start = 0;
+        int end = people.length - 1;
+        int count = 0;
+        while (start < end) {
+            if (people[start] + people[end] <= limit) {start++;}
+            end--;
+            count++;
+        }
+        return start == end ? count + 1 : count;
+    }
+}

@@ -46,6 +46,33 @@ class Solution {
 
 
 
+// Review - same as above m2
+// time O(l2)  space O(l2) for stringBuilder
+class Solution {
+    public String customSortString(String order, String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < order.length(); i++) {
+            map.put(order.charAt(i), i);
+        }
+        int[] count = new int[order.length()];
+        StringBuilder res = new StringBuilder();
+        for (char c: s.toCharArray()) {
+            if (map.containsKey(c)) {count[map.get(c)]++;}
+            else {res.append(c);}
+        }
+        for (int i = 0; i < count.length; i++) {
+            for (int k = 0; k < count[i];k++) {res.append(order.charAt(i));}
+        }
+        return res.toString();
+    }
+}
+
+
+
+
+
+
+
 
 
 
