@@ -85,6 +85,71 @@ However, there will be one tricky thing you must handle if you use a singly link
 
 
 
+// Review - similar idea as above(double LL + map <key, node>), but above way more elegant
+class LRUCache {
+    class Node {
+        int val;
+        int key;
+        Node prev;
+        Node next;
+    }
+    
+    Node dummy;
+    Node tail;
+    int capacity;
+    Map<Integer, Node> map;
+
+    public LRUCache(int capacity) {
+        dummy = new Node();
+        tail = dummy;
+        this.capacity = capacity;
+        map = new HashMap<>();
+    }
+    
+    public int get(int key) {
+        if (!map.containsKey(key)) {return -1;}
+        Node cur = map.get(key);
+        if (cur == tail) {return cur.val;}
+        cur.prev.next = cur.next;
+        cur.next.prev = cur.prev;
+        tail.next = cur;
+        cur.prev = tail;
+        tail = tail.next;
+        return cur.val;        
+    }
+    
+    public void put(int key, int value) {
+        if (!map.containsKey(key)) {
+            Node newnode = new Node();
+            newnode.key = key;
+            newnode.val = value;
+            tail.next = newnode;
+            newnode.prev = tail;
+            tail = tail.next;
+            map.put(key, tail);
+            
+            if (map.keySet().size() > capacity) {
+                Node deleted = dummy.next;
+                dummy.next = deleted.next;
+                dummy.next.prev = dummy;
+                map.remove(deleted.key);
+            }
+        } else {
+            Node cur = map.get(key);
+            cur.val = value;
+            if (cur == tail) {return;}
+            cur.prev.next = cur.next;
+            cur.next.prev = cur.prev;
+            tail.next = cur;
+            cur.prev = tail;
+            tail = tail.next;
+        }
+    }
+}
+
+
+
+
 
 
 
