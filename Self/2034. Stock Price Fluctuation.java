@@ -58,8 +58,44 @@ class StockPrice {
 
 
 
+// Review: using tree map for price:count
+// time: current() -O(1); update/maximum/minimum - O(log(#of unique prices))  space O(n)
+class StockPrice {
+    Map<Integer, Integer> map;
+    int latestTime;
+    TreeMap<Integer, Integer> countMap;
 
-
+    public StockPrice() {
+        map = new HashMap<>();
+        latestTime = -1;
+        countMap = new TreeMap<>();
+    }
+    
+    public void update(int timestamp, int price) {       
+        if (map.containsKey(timestamp)) {
+            int oriprice = map.get(timestamp);
+            int count = countMap.get(oriprice);
+            if (count == 1) {countMap.remove(oriprice);}
+            else {countMap.put(oriprice, count-1);}
+        }
+        
+        countMap.put(price, countMap.getOrDefault(price, 0) + 1);
+        map.put(timestamp, price);
+        latestTime = Math.max(latestTime, timestamp);
+    }
+    
+    public int current() {
+        return map.get(latestTime);
+    }
+    
+    public int maximum() {
+        return countMap.lastKey();
+    }
+    
+    public int minimum() {
+        return countMap.firstKey();
+    }
+}
 
 
 

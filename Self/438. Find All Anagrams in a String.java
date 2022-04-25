@@ -47,3 +47,53 @@ class Solution {
 // https://leetcode.com/problems/find-all-anagrams-in-a-string/discuss/92059/O(n)-Sliding-Window-JAVA-Solution-Extremely-Detailed-Explanation
 
 
+
+// Review
+/*Thought
+count array for p (count++)
+sliding window for s (count--), count nonZeros. window size = p.len
+time O(s.length) space O(1)
+
+*/
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        int[] count = new int[26];
+        int nonZeros = 0;
+        List<Integer> res = new LinkedList<>();
+        if (p.length() > s.length()) {return res;}
+        
+        for (char c: p.toCharArray()) {
+            count[c-'a']++;
+            if (count[c-'a'] == 1) {nonZeros++;}
+        }
+        // initial window with size p.len
+        int left = 0;
+        int right = 0;
+        while (right < p.length()) {
+            int idx = s.charAt(right) - 'a';
+            count[idx]--;
+            if (count[idx] == 0) {
+                nonZeros--;
+                if (nonZeros == 0) {res.add(left);}
+            }
+            right++;
+        }
+        
+        right--;
+        // each time move one step forward for both left and right
+        while (left < s.length() - p.length()) {
+            int leftidx = s.charAt(left)-'a';
+            left++;
+            right++;
+            int rightidx = s.charAt(right)-'a';
+            count[leftidx]++;
+            if (count[leftidx] == 1) {nonZeros++;}
+            count[rightidx]--;            
+            if (count[rightidx] == 0) {nonZeros--;}
+            if (nonZeros == 0) {res.add(left);}
+        }
+        
+        return res;
+    }
+}
+

@@ -27,3 +27,32 @@ class Solution {
         return pairIdx < 0 ? -1 : n / factors.get(pairIdx);
     }
 }
+
+
+
+
+
+// Review
+/*Thought
+Appear as pair, we can traverse sqrt(n) pair.  Pay attention to perfect square numbers.
+time O(sqrt(n)) space O(min(sqrt(n), k))
+*/
+class Solution {
+    public int kthFactor(int n, int k) {
+        List<Integer> factors = new LinkedList<>();
+        int i = 1;
+        int count = 0;
+        while (i * i <= n) {
+            if (n % i == 0) {
+                factors.add(i); 
+                count++;
+                if (count == k) {return i;}
+            }
+            i++;
+        }
+        i--;
+        int len = n == i * i? (2 * count - 1) : (2 * count);
+        if (k > len) {return -1;}
+        return n / factors.get(len-k);
+    }
+}
