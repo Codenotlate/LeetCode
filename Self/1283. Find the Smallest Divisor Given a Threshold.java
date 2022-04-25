@@ -30,3 +30,41 @@ class Solution {
         return sum <= threshold;
     }
 }
+
+
+
+// Review
+// time O(n * log(maxn)) space O(1)
+class Solution {
+    public int smallestDivisor(int[] nums, int threshold) {
+        int maxNum = 0;
+        long sum = 0;
+        for (int n: nums) {
+            sum += n;
+            maxNum = Math.max(maxNum, n);
+        }
+        // note sum should be wrong, otherwise may have overflow
+        if (sum <= threshold) {return 1;}
+        int start = 1;
+        int end = maxNum;
+        while (start < end) {
+            int mid = start + (end - start) /2 ;
+            if (isValid(mid, nums, threshold)) {
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return start;
+    }
+    
+    private boolean isValid(int div, int[] nums, int threshold) {
+        int sum = 0;
+        for (int n : nums) {
+            int res = n % div == 0 ? n / div : (n / div + 1);
+            sum += res;
+            if (sum > threshold) {return false;}
+        }
+        return true;
+    }
+}

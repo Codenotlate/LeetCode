@@ -99,7 +99,53 @@ try self implement this way next time.
 
 
 
-
+// Review
+// similar recursive way as above M1, but slightly diff implementation
+class Solution {
+    public Node flatten(Node head) {
+        reflat(head);
+        return head;
+    }
+    
+    
+    private Node reflat(Node head) {
+        if (head == null) {return null;}
+        Node next = head.next;
+        Node childEnd = head;
+        if (head.child != null) {
+            childEnd = reflat(head.child);
+            if (head.next != null) {
+                head.next.prev = childEnd;
+                childEnd.next = head.next;
+            }
+            head.next = head.child;
+            head.child.prev = head;
+            head.child = null;
+        } 
+        return next == null? childEnd : reflat(next);
+    }
+}
+// preorder way of a tree (child as left and next as right, prev as parent)
+class Solution {
+    public Node flatten(Node head) {
+        if (head == null) {return head;}
+        Node dummy = new Node(-1, null, null, null);
+        Node tail = dummy;
+        Stack<Node> stack = new Stack<>();
+        stack.push(head);
+        while (!stack.isEmpty()) {
+            Node cur = stack.pop();
+            tail.next = cur;
+            cur.prev = tail;
+            tail = tail.next;
+            if (cur.next != null) {stack.push(cur.next);}
+            if (cur.child != null) {stack.push(cur.child);}
+            cur.child = null;
+        }
+        dummy.next.prev = null;
+        return dummy.next;
+    }
+}
 
 
 
