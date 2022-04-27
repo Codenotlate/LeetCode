@@ -109,6 +109,112 @@ class Solution {
 
 
 
+// solution summary: sort way + heap way + quickselect way
+// https://leetcode.com/problems/k-closest-points-to-origin/discuss/220235/Java-Three-solutions-to-this-classical-K-th-problem.
+/*
+Also explanation in comment about time of quickselect comparing to quickSort:
+"Because in the quicksort, you have to take care of two sides of the pivot. But in quickselect, you only focus on the side the target object should be. So, in optimal case, the running time of quicksort is (n + 2 * (n/2) + 4 * (n/4)...), it has logn iterations. Instead, the running time of quickselect would be (n + n/2 + n/4 +...) it has logn iterations as well. Therefore, the running time of quicksort is O(nlogn), instead, the running time of quickselect of quickselect is O(n)"
+Hope this can help you:) 
+*/
+
+
+
+
+
+
+
+// Review
+/*Thought
+M1: maxheap size as k. time O(nlogk+klogk) = O(nlogk) space O(k)
+M2: counting sort. An array of size maxdist. time O(maxdist) space O(maxdist)
+M3: sort the array and return first k nodes. time O(nlogn) space O(logn)
+----------------------
+
+M4: based on M2, instead of using a count array, we can do binary search on dist range (min, max), for each middle dist, we check count of points having smaller dist than middist in the range(start, end), and comparing the count with k. If count <= k, start = mid, k-=count, second range on list with element > count. If count > k, end = middist - 1. And do second round on list with element <= count.
+Worst case, each time we only eliminate one element from the list, then time O(1+2+...+n-1) = O(n^2) space O(n^2)
+average case, each time we eliminated half of the elements from the list, then time O(1 + 2+4 + ... + n/4 + n/2 + n) = O(n) space O(n)
+-----------
+M5: similar as M4, eliminate the search range every time using quick select. we select a pivot(choose value in mid position) each time, and quick sort the current range to have [smaller than pivot | pivot| larger than pivot] by having small and large pointer starts at both ends and swap along the way. The small and large pointers will meet at pivot position. Then we compare the pivot pos with k, if pivot pos <= k, range start = pivot pos, k-= pivot pos; else if pivot pos > k, range end = pivot pos - 1.
+same as M4, the elimination efficiency determines the time, worst case O(n^2). average case O(n). Both have space O(1)
+note we choose midpos value as pivot is to trying best to avoid worst case since if the array is nearly sorted then choose start or end pos as pivot will more likely lead to worst case.
+
+*/
+// M4: BS way
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        List<int[]> distList = new LinkedList<>();
+        List<int[]> reslist = new ArrayList<>();
+        for (int i = 0; i < points.length; i++) {
+            int[] point = points[i];
+            int dist = point[0] * point[0] + point[1] * point[1];
+            distList.add(new int[]{dist, i}); // since later we need index to get int[] point to add to result
+            min = Math.min(min, dist);
+            max = Math.max(max, dist);
+        }
+        
+        int start = min;
+        int end = max;
+        
+        while (k > 0) {
+            int mid = start + (end- start) / 2;
+            List<List<int[]>> splited = split(distList, mid);
+            List<int[]> smaller = splited.get(0);
+            List<int[]> larger = splited.get(1);
+            if (smaller.size() <= k) {
+                k -= smaller.size();
+                start = mid;
+                distList = larger;
+                reslist.addAll(smaller);
+            } else {
+                end = mid - 1;
+                distList = smaller;
+            }
+        }
+        
+        
+        int[][] res = new int[reslist.size()][2];
+        for (int i = 0; i < reslist.size(); i++) {
+            res[i] = points[reslist.get(i)[1]];
+        }
+        return res;        
+    }
+    
+    
+    private List<List<int[]>> split(List<int[]> distList, int target) {
+        List<int[]> small = new ArrayList<>();
+        List<int[]> large = new ArrayList<>();
+        for (int[] cur: distList) {
+            if (cur[0] <= target) {small.add(cur);}
+            else {large.add(cur);}
+        }
+        List<List<int[]>> res = new ArrayList<>();
+        res.add(small);
+        res.add(large);
+        return res;
+    }
+}
+
+// implement quickselect way next time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
