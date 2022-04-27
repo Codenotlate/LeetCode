@@ -216,7 +216,64 @@ class Solution {
 
 
 
+// Review
+/* Thought
+if t.len < s.len, return "";
+count array for t first, record nonZeros as well.using sliding window on s also update the start pos of minLen subString along the way.
+Move right pointer, count[right-'a']--.If count[right-'a']==0, nonZeros--. If (nonZeros = 0), start to shrink the window size by moving left pointers.
+count[left-'a']++, if count[left-'a'] == 1, nonZeros++. If (nonZeros != 0), compare right-left+1 with minLen. If it's smaller,update minLen to it and update start pos as left. Stop the window shrink. left++, and start a new round(moving right again).
 
+every char processed exactly twice, time O(m+n) space O(1)
+
+*/
+class Solution {
+    public String minWindow(String s, String t) {
+        if(t.length() > s.length()) {return "";}
+        int[] count = new int[58];
+        int nonZeros = 0;
+        for (char c: t.toCharArray()) {
+            count[c-'A']++;
+            if (count[c-'A'] == 1) {nonZeros++;}
+        }
+        
+        int left = 0;
+        int right = 0;
+        int minLen = s.length() + 1;
+        int startpos = -1;
+        
+        while (right < s.length()) {
+            // move right to expand the window
+            while (right < s.length()) {
+                int idx = s.charAt(right) -'A';
+                count[idx]--;
+                if (count[idx] == 0) {
+                    nonZeros--;
+                    if (nonZeros == 0) {break;}
+                }
+                right++;
+            }
+            
+            // move left to shrink the window (be careful with the condition between left and right below)
+            while (right < s.length() && left <= right - t.length()+1) {
+                int idx = s.charAt(left)-'A';
+                count[idx]++;
+                if (count[idx] == 1) {
+                    nonZeros++;
+                    if (minLen > right - left + 1) {
+                        minLen = right - left + 1;
+                        startpos = left;
+                    }
+                    left++;
+                    break;
+                }
+                left++;
+            }
+            right++;
+        }
+        
+        return startpos == -1 ?  "" : s.substring(startpos, startpos + minLen);
+    }
+}
 
 
 

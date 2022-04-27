@@ -116,10 +116,54 @@ class WordDictionary {
 
 
 
+// Review- similar as above M1, better than M2 in searchHelp function
+class WordDictionary {
+    class TrieNode {
+        boolean isEnd;
+        TrieNode[] links;
+        
+        public TrieNode(){
+            isEnd = false;
+            links = new TrieNode[26];
+        }
+    }
+    
+    TrieNode root;
 
-
-
-
-
-
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+    
+    public void addWord(String word) {
+        TrieNode cur = root;
+        for (char c: word.toCharArray()) {
+            if (cur.links[c-'a'] == null) {
+                cur.links[c-'a'] = new TrieNode();
+            }
+            cur = cur.links[c-'a'];
+        }
+        cur.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        return searchHelp(word,0, root);
+    }
+    // time O(26^m) or O(S) where S = total number of chars in the Trie.
+    private boolean searchHelp(String word, int pos, TrieNode cur) {
+        if (cur == null) {return false;}
+        if (pos == word.length()) {return cur.isEnd;}
+        char c = word.charAt(pos);
+        if (c != '.') {
+            if (cur.links[c-'a'] != null) {return searchHelp(word, pos+1, cur.links[c-'a']);}
+            return false;
+        }
+        for (TrieNode next: cur.links) {
+            if (next != null && searchHelp(word, pos+1, next)) {return true;}
+        }
+        return false;
+    }
+    
+    
+    
+}
 

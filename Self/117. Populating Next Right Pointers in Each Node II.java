@@ -93,3 +93,36 @@ class Solution {
         
     }
 }
+
+
+
+
+
+
+// Review
+
+/*Thought
+M1 iterative way: for each layer, it connext the next pointer for its children layer. Each layer consists a LL, we can use a dummyhead to label the start of the child layer(used when child layer becomes current layer). And use the already built next pointer from current layer to move to the next one. For each node in the child layer, if it has left/right node then append to the layer tail and udpate tail.
+time O(n) space O(1)
+*/
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) {return root;}
+        Node leftStart = root;
+        
+        while(leftStart != null) {
+            Node dummyhead = new Node();
+            Node curtail = dummyhead;
+            Node cur = leftStart;
+            while (cur != null) {
+                if (cur.left != null) {curtail.next = cur.left; curtail = curtail.next;}
+                if (cur.right != null) {curtail.next = cur.right; curtail = curtail.next;}
+                cur = cur.next;
+            }
+            
+            leftStart = dummyhead.next;
+        }
+        
+        return root;
+    }
+}
