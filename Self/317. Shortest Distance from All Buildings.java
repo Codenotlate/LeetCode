@@ -223,6 +223,71 @@ class Solution {
 
 
 
+// Review
+/*
+BFS starting at cell 1. For each cell 0, adding up the distance from all 1 cells. And count the number of 1 cell visiting this 0 cell. If the count doesn't match the # of BFS done, meaning this 0 cell is unreachable for one building, then we will skip it in this round as well. Return the min dist among all 0 cells having count == # of 1 cells.
+time O(#of1 * #of0) = O(mn * mn)
+space O(mn)
+
+
+*/
+class Solution {
+    public int shortestDistance(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][][] visited = new int[m][n][2];
+        
+        int bfsCount = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    bfs(grid, i, j, visited,bfsCount);
+                    bfsCount++;
+                }
+            }
+        }
+        
+        int mindist = Integer.MAX_VALUE;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0 && visited[i][j][1]==bfsCount) {
+                    mindist = Math.min(mindist, visited[i][j][0]);
+                }
+            }
+        }
+        return mindist == Integer.MAX_VALUE? -1: mindist;
+    }
+    
+    
+    private void bfs(int[][] grid, int i, int j, int[][][] visited, int bfsCount) {
+        int m = grid.length;
+        int n = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int[][] dirs = new int[][]{{-1,0},{0,1},{0,-1},{1,0}};
+        queue.add(new int[]{i,j});
+        
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                for (int[] d: dirs) {
+                    int newi = cur[0] + d[0];
+                    int newj = cur[1] + d[1];
+                    
+                    if (newi >= 0 && newi < m && newj >= 0 && newj < n && grid[newi][newj] == 0 && visited[newi][newj][1] == bfsCount) {
+                        queue.add(new int[]{newi, newj});
+                        visited[newi][newj][0] += level + 1;
+                        visited[newi][newj][1]++;
+                    }
+                }
+            }
+            level++;
+        }
+    }
+}
+
+
 
 
 

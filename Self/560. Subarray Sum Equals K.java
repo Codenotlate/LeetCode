@@ -34,8 +34,6 @@ class Solution {
 
 
 
-
-
 // Method no longer working: NOTE: since the numer in nums can be negative now, we can't use sliding window any more
 // class Solution {
 //     /*Initial thought
@@ -60,3 +58,30 @@ class Solution {
 //         return count;
 //     }
 // }
+
+
+
+
+
+
+
+// Review - optimal way now
+/*
+sliding window, but not sorted and can't sort, thus no criteria for moving window.
+accumsum. record known accumsum and count in a map. for each accumsum check whether accumsum - k in the map.keySet, if in, res += map.get(accumsum - k)
+time O(n) space O(n)
+*/
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        Map<Integer,Integer> map = new HashMap<>();
+        map.put(0,1);
+        int accumsum = 0;
+        int count = 0;
+        for (int n: nums) {
+            accumsum += n;
+            if (map.containsKey(accumsum-k)) {count += map.get(accumsum-k);}
+            map.put(accumsum, map.getOrDefault(accumsum, 0) + 1);
+        }
+        return count;
+    } 
+}

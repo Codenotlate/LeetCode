@@ -51,3 +51,36 @@ public class Solution extends Relation {
 
 // solution of this problem is good
 // Approach 3: Logical Deduction with Caching: need to check this approach as a good possible followup in interview
+// copied in goodnote
+
+
+
+
+
+
+
+// Review
+/* Thought
+for each call on knows(a,b), we can delete one people from being the celebrity. If A knows B, then A can be eliminated. If A doesn't know B, then B can be eliminated. Thus we only need to have two pointers,  one for A and another for next B. Since each time we eliminate one people, we only need to make n-1 calls of knows to find one potential celebrity. Then we check all other people with this potential one to see if it's indeed celebrity(everyone knows him and he knows noone).
+time O(n) space O(1)
+
+*/
+
+public class Solution extends Relation {
+    public int findCelebrity(int n) {
+        int p1 = 0;
+        int p2 = 1;
+        while (p2 < n) {
+            if (knows(p1,p2)) {
+                p1= p2;
+            }
+            p2++;
+        }
+        
+        for (p2 = 0; p2 < n; p2++) {
+            if (p1 == p2) {continue;}
+            if (!knows(p2,p1) || knows(p1,p2)) {return -1;}
+        }
+        return p1;
+    }
+} 
