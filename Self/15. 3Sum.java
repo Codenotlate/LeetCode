@@ -86,6 +86,31 @@ Figuring out and communicating pros and cons of each approach is very important 
 
 
 
+// No-sort way mentioned above: time O(n^2) space O(n). Though same as two pointer way but much slower
+// not prefered in interview, unless is asked to solve it without sort
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Set<List<Integer>> res = new HashSet<>();
+        Set<Integer> dups = new HashSet<>();
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < nums.length; ++i)
+            if (dups.add(nums[i])) {
+                for (int j = i + 1; j < nums.length; ++j) {
+                    int complement = -nums[i] - nums[j];
+                    if (seen.containsKey(complement) && seen.get(complement) == i) {
+                        List<Integer> triplet = Arrays.asList(nums[i], nums[j], complement);
+                        Collections.sort(triplet);
+                        res.add(triplet);
+                    }
+                    seen.put(nums[j], i);
+                }
+            }
+        return new ArrayList(res);
+    }
+}
+
+
+
 
 
 
@@ -97,3 +122,48 @@ Space complexity of O(1) stems from using in-place sorting algorithms like Bubbl
 
 Heapsort actually gives you the best of both worlds - O(nlogn) time complexity and O(1) space complexity. So, asymptotically, you are right that we can solve this problem in O(1) space complexity. But since Quicksort is almost always used in practice in most library sorting algorithms, we have to be content with O(logn) space complexity.
 */
+
+
+
+
+
+
+
+// Review
+/*Thought
+like two sum. If we fix one number, then the rest will be two sum. Two ways in two sum: sort first and then use two pointers(time O(nlogn) space O(1)); second way is using hashmap(time O(n) space O(n)). Note with dup in array, we actually still want to sort first and then use hashmap.
+Here since we need to fix one number, the best time we can achieve is O(n^2). Sort first won't worse the time but can optimize space to O(1). Thus we sort first and then for each cur, do two sum two pointers way for the rest to find valid pairs.
+note need to avoid dup.
+time O(nlogn + n^2) = O(n^2) space O(sort space O(logn))
+*/
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new LinkedList<>();
+        for (int i = 0; i < nums.length; i++) {
+            int cur = nums[i];
+            // deal with dup
+            if (i > 0 && nums[i-1] == cur) {continue;}
+            twoSum(nums, cur, i+1, -cur, res);
+        }
+        return res;
+    }
+    
+    
+    private void twoSum(int[] nums, int cur, int start, int target, List<List<Integer>> res) {
+        int left = start;
+        int right = nums.length - 1;
+        while (left < right) {
+            // deal with dup
+            if (left > start && nums[left] == nums[left-1]) {left++; continue;}
+            int pairSum = nums[left] + nums[right];
+            if (pairSum == target) {
+                res.add(Arrays.asList(cur, nums[left], nums[right]));
+                left++; 
+                right--;
+            } else if (pairSum < target) {left++;}
+            else {right--;}
+        }
+    }
+}
