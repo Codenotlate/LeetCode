@@ -39,5 +39,27 @@ https://leetcode.com/problems/maximum-sum-obtained-of-any-permutation/discuss/85
 */
 
 
+// Review - used above M2 bucket sort idea
+/*Thought
+M1: have an array of size 1001(or max pos) label each location. Then one pass of trips, add num to start pos and add -num to end pos +1. Then we check the accumsum of all pos again, see if any pos num exceeds capacity.
+time O(max(N,1001)) space O(1001)
+*/
+class Solution {
+    public boolean carPooling(int[][] trips, int capacity) {
+        int[] count = new int[1001];
+        for (int[] t: trips) {
+            int num = t[0];
+            count[t[1]] += num;
+            count[t[2]] -= num;
+        }
+        for (int i = 0; i < 1001; i++) {
+            if (i > 0) {count[i] += count[i-1];}
+            if (count[i] > capacity) {return false;}
+        }
+        return true;
+    }
+}
+
+
 
 

@@ -19,3 +19,29 @@ class Solution {
         return maxLen;
     }
 }
+
+
+
+
+
+// Review
+/*Thought
+[0,1,1,1,1,0,1,0,1,0,1,1,1] 
+M1: accumsum, sum diff = (i-j) / 2. time O(n^2)
+M2: based on M1, simplify the check condition, by making 0 as -1 to cumsum. Then if sum diff = 0, that range has equal number of 0 and 1. We can use a map: <cumsum, earlist pos>. update the maxlen along the way.
+time O(n) space O(n)
+*/
+class Solution {
+    public int findMaxLength(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        int cumsum = 0;
+        int maxLen = 0;
+        for (int i = 0; i < nums.length; i++) {
+            cumsum += nums[i] == 0? -1 : 1;
+            if (map.containsKey(cumsum)) {maxLen = Math.max(maxLen, i- map.get(cumsum));}
+            else {map.put(cumsum, i);}
+        }
+        return maxLen;
+    }
+}
