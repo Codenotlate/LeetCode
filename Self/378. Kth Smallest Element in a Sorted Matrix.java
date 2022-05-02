@@ -276,7 +276,40 @@ class Solution {
 
 
 
-
+/*Thought
+M1: use PQ for each top value at each column. Then time O(klogn) space O(min(k, n))
+M2: use BS to have space O(1). the answer will be in range (min, max). And we want to find a number that has count(<=) == k. We reduce the range each time based on the comparison between count(<=target) and k. Also given the sorted attributes, we can do count() in O(n) times: start with [0,n-1], each time reduce a row or a col.
+Thus M2 time O(nlog(max-min))  space O(1)
+*/
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int max = matrix[n-1][n-1];
+        int min = matrix[0][0];
+        while (min < max) {
+            int mid = min + (max - min) / 2;
+            int count = count(matrix, mid);
+            if (count < k) {min = mid + 1;}
+            else {max = mid;}
+        }
+        return min; // should not reach this line
+    }
+    
+    private int count(int[][] mat, int mid) {
+        int r = 0;
+        int c = mat.length - 1;
+        int count = 0;
+        while (r < mat.length && c >= 0) {
+            if (mat[r][c] <= mid) {
+                count+= c+1;
+                r++;
+            } else {
+                c--;
+            }
+        }
+        return count;
+    }
+}
 
 
 

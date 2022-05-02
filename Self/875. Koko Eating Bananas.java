@@ -50,3 +50,37 @@ class Solution {
         return maxHeap.peek();
     }
 }
+
+
+
+
+
+// Review
+/*Thought
+the possible range for answer would be [sum/h,n*max/h + 1] or simply [1,max]. Do binary search on this range and for each target number, we check the hours needed for each element in piles. And decide which half of the range to be eliminated. 
+time O(n* log(max)) space O(1)
+*/
+
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int max = 0;
+        for (int p: piles) {max = Math.max(max, p);}
+        int min = 1;
+        while (min < max) {
+            int mid = min + (max-min) /2;
+            int hours = getHours(piles, mid);
+            if (hours <= h) {max = mid;}
+            else {min = mid + 1;}
+        }
+        return min;
+    }
+    
+    private int getHours(int[] piles, int mid) {
+        int hours = 0;
+        for(int p: piles) {
+            int num = p / mid;
+            hours += p % mid == 0 ? num : num+1;
+        }
+        return hours;
+    }
+}

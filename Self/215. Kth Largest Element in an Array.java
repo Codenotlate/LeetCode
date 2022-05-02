@@ -243,3 +243,54 @@ class Solution {
     
     
 }
+
+
+
+
+
+
+
+// Review - lack shuffle, which can reduce worst case prob
+/*Thought
+M1: naive way: sort and get kth. time O(nlogn) space O(logn)
+M2: sort + size k heap way. time O(nlogk)  space O(k)
+M3: quick sort, stop when pivot is at pos k. Also each time, ideally we can discard half of array(the half that won't contain kth element). So time on average O(1+2+4+...+logn+n) = O(n). worst case O(n^2) space O(1).
+for quick sort, while left <= right. if left <= target, left++; if right > target, right--. if (left > target), swap(left, right), right--. if(right <= target) swap(right, left), left++. Out of the loop, left represents the first num > target. compare left with k, to determine the left and right range for next round.
+*/
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int left = 0;
+        int right = nums.length - 1;
+        k = nums.length - k;
+        while (left <= right) {
+            int pivot = left + (right-left) / 2;
+            int pivotpos = select(nums, left, right, pivot);
+            if (pivotpos == k) {return nums[k];}
+            else if (pivotpos < k) {left = pivotpos+1;}
+            else {right = pivotpos-1;}
+        }
+        return -1; // should not reach this line
+    }
+    
+    private int select(int[] nums, int start, int end, int pivot) {
+        int pivotNum = nums[pivot];
+        int left = start;
+        int right = end;
+        swap(nums, end, pivot);
+        right--;      
+        while (left <= right) {
+            while (left <= end - 1 && nums[left] <= pivotNum) {left++;}
+            while (right >= start && nums[right] > pivotNum) {right--;}
+            if (left > right) {break;}
+            swap(nums, left, right);
+        }
+        swap(nums, left, end);
+        return left;
+    }
+    
+    private void swap(int[] nums, int left, int right) {
+        int temp = nums[left];
+        nums[left] = nums[right];
+        nums[right] = temp;
+    }
+}
