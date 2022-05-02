@@ -35,3 +35,41 @@ For an interview, we recommend focusing on the Two Pointers approach above. It's
 
 If an interviewer asks you whether you can achieve \mathcal{O}(1)O(1) memory complexity, you can use the selection sort instead of a built-in sort in the Two Pointers approach. It will make it a bit slower, though the overall time complexity will be still O(n^2).
 */
+
+
+
+
+// Review - same idea as above
+/*Thought
+like 3Sum. still sort first and using 2 pointers. if pair sum  == new target, immediately return, if '<', left++; else right--. until left >= right, stop the move. Track the diff with min abs. return target+diff in the end.
+time O(n^2) space O(logn for sort)
+*/
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
+        int diff = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            int curdiff = twoSum(nums, i+1, nums[i], target);
+            if (Math.abs(curdiff) < Math.abs(diff)) {
+                diff = curdiff;
+            }
+        }
+        return target + diff;
+    }
+    
+    
+    private int twoSum(int[] nums, int i, int cur, int target) {
+        target -= cur;
+        int left = i;
+        int right = nums.length - 1;
+        int diff = Integer.MAX_VALUE;
+        while (left < right) {
+            int sum = nums[left] + nums[right];
+            if (sum == target) {return 0;}
+            else if (sum < target) {left++;}
+            else {right--;}
+            if (Math.abs(diff) > Math.abs(sum-target)) {diff = sum - target;}
+        }
+        return diff;
+    }
+}

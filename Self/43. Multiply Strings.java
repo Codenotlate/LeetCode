@@ -41,3 +41,51 @@ class Solution {
         return res.toString();
     }
 }
+
+
+
+
+
+
+
+
+
+// Review - same idea above, used list instead of an array
+/*Thought
+Can be separated to digit multiply. For each digit in num2, multiply it to every digit in num1. res2 (for each digit in num2) = res2 * 10 + num2 digit * num1[i]; Then for the total res, res = res * 10 + res2 of num2[j].
+The key is how to deal with large number, maybe use an Arraylist.
+time O(l1+l2) space O(# of digits of res)
+123
+456
+
+4 8 12
+  5 10 15
+    6  12  18    ->  4,13,28,27,18 -> (backwards)->     5,6,0,8,8 -> convert to String
+*/
+class Solution {
+    public String multiply(String num1, String num2) {
+        // don't forget this line
+        if (num1.equals("0") || num2.equals("0")) {return "0";}
+        List<Integer> reslist = new ArrayList<>();
+        for (int j = 0; j < num2.length(); j++) {
+            for (int i = 0; i < num1.length(); i++) {
+                if (reslist.size()<= j + i) {reslist.add(0);}
+                int temp = (num1.charAt(i)-'0') * (num2.charAt(j) - '0');
+                reslist.set(i+j, reslist.get(i+j) + temp);
+            }
+        }
+        // move backwards
+        int carry = 0;
+        for(int k = reslist.size() - 1; k >= 0; k--) {
+            int num = (reslist.get(k) + carry) % 10;
+            carry = (reslist.get(k) + carry) / 10;
+            reslist.set(k, num);
+        }
+        
+        StringBuilder res = new StringBuilder();
+        // don't forget this line
+        if (carry != 0) {res.append(carry);}
+        for (int n: reslist) {res.append(n);}
+        return res.toString();
+    }
+}

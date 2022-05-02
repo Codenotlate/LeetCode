@@ -15,3 +15,24 @@ class Solution {
         return sum;
     }
 }
+
+
+
+
+
+// Review
+
+/*Thought
+Consider we have two people, we need to decide who goto A and who goto B with min cost. This actually depends on diff of costa and costb for each person. The person with larger (costb-costa) diff prefers A more than B and vise virsa. Thus we need to sort n people based on their ab cost diff. And choose the first half people with bcost and the rest half with acost.
+time O(nlogn)  space O(sort)
+*/
+class Solution {
+    public int twoCitySchedCost(int[][] costs) {
+        Arrays.sort(costs, (c1,c2) -> (c1[1] - c1[0] - (c2[1]-c2[0])));
+        int res = 0;
+        for (int i = 0; i < costs.length; i++) {
+            res += i < costs.length / 2? costs[i][1] : costs[i][0];
+        }
+        return res;
+    }
+}
