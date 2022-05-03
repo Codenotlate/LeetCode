@@ -62,7 +62,40 @@ Algorithm
 
 
 
+// Review
+/* Thought
+we can use a pair with char and its count in one stack, and update the peek pair's count each time cur char is the same as peek char. Or we can use two stacks, one for char and one for its count.
+For the double stacks way, when cur is teh same as peek, update peek count by 1. Whenever the count of peek char reaches k, pop the count and char out. In the end, use the remaining count and char and reverse for result.
+time O(n) space O(n)
 
+*/
+class Solution {
+    public String removeDuplicates(String s, int k) {
+        Stack<Character> charStack = new Stack<>();
+        Stack<Integer> countStack = new Stack<>();
+        for (char c: s.toCharArray()) {
+            if (!charStack.isEmpty() && c == charStack.peek()) {
+                countStack.push(countStack.pop() + 1);
+                if (countStack.peek() == k) {
+                    charStack.pop();
+                    countStack.pop();
+                }
+            } else {
+                charStack.push(c);
+                countStack.push(1);
+            }
+        }
+        
+        StringBuilder res = new StringBuilder();
+        while(!charStack.isEmpty()) {
+            int count = countStack.pop();
+            char c = charStack.pop();
+            while (count-- > 0) {res.append(c);}
+        }
+        res.reverse();
+        return res.toString();
+    }
+}
 
 
 

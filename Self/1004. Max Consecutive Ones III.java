@@ -64,3 +64,34 @@ class Solution {
 
 // solution and similar questions list
 // https://leetcode.com/problems/max-consecutive-ones-iii/discuss/247564/JavaC%2B%2BPython-Sliding-Window
+
+
+
+
+
+
+
+
+// Review - similar to above M1
+/* Thought
+if use dp way, time O(nk) space O(k)
+Greedy way - sliding window. a left pointer move one step each time, the right pointer keep forward until right == nums.len or (k==0 && nums[right] == 0). Along the way k-- if cell = 0. End the right loop, update maxlen based on right-left. Continue the outside loop until left or right == nums.len.
+time O(n) space O(1)
+*/
+class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int maxlen = 0;
+        int left = 0;
+        int right = left;
+        while (right < nums.length && left < nums.length) {
+            while (right < nums.length && (nums[right] == 1 || k > 0)) {
+                if (nums[right] == 0) {k--;}
+                right++;
+            }
+            maxlen = Math.max(maxlen, right - left);
+            if (nums[left] == 0) {k++;}
+            left++;
+        }
+        return maxlen;
+    }
+}
