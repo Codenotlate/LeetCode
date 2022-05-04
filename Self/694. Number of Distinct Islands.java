@@ -100,6 +100,74 @@ class Solution {
 
 
 
+// Review - similar as above M2 using string path, but using BFS here instead of DFS
+/*Thought
+The key diff with usual num of islands is how to identify two islands are the same. Since we loop from left to right and top to bottom. Two identical islands will be visited in exactly same order. 
+M1: we can use a String to represent,if we do BFS, we need to add a label to distinguish each level. And we have a set for all the returned string from BFS, return the set size in the end.
+Note: In addition to label for each level, we also need a label for each cell process. Otherwise we will having same string for below two patterns
+        O-R-R-R                 O-R-R-R
+        |                       |   |
+        D                       D   D
+        |              &&       |
+        D                       D
+        |
+        D
+time O(mn) space O(mn)
+
+M2: we can also add the relative position with the starting point of BFS.
+*/
+
+class Solution {
+    public int numDistinctIslands(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] visited = new int[m][n];
+        Set<String> islandSet = new HashSet<>();
+        for (int i =0; i < m; i++) {
+            for (int j = 0; j < n;j++) {
+                if (grid[i][j] == 1 && visited[i][j] != 1) {
+                    islandSet.add(bfssearch(grid, i, j, visited));
+                }
+            }
+        }
+        return islandSet.size();
+    }
+    
+    private String bfssearch(int[][] grid, int i, int j, int[][] visited) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{i,j});
+        visited[i][j] = 1;
+        
+        StringBuilder res = new StringBuilder();
+        int[][] dirs = new int[][]{{-1,0},{0,1},{0,-1},{1,0}};
+        char[] chardirs = new char[]{'L','R','D','U'};
+        
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while(size-- > 0) {
+                int[] cur = queue.poll();
+                for (int k = 0; k < 4; k++) {
+                    int[] d = dirs[k];
+                    int newi = cur[0]+d[0];
+                    int newj = cur[1]+d[1];
+                    if (newi >= 0 && newi < grid.length && newj >= 0 && newj < grid[0].length && grid[newi][newj] == 1 && visited[newi][newj] == 0) {
+                        queue.add(new int[]{newi, newj});
+                        res.append(chardirs[k]);
+                        visited[newi][newj] = 1;
+                    }
+                }
+                // Note: don't forget about this label.
+                res.append('.');
+            }
+            res.append('|');            
+        }
+        return res.toString();
+    }
+}
+
+
+
 
 
 

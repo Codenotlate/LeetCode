@@ -26,3 +26,34 @@ class Solution {
 
 //https://leetcode.com/problems/valid-parenthesis-string/discuss/543521/Java-Count-Open-Parenthesis-O(n)-time-O(1)-space-Picture-Explain
 // https://leetcode.com/problems/valid-parenthesis-string/discuss/107577/Short-Java-O(n)-time-O(1)-space-one-pass
+
+
+
+
+// Review: still from solution
+/*Thought
+if we do count++ for (, and count-- for ), then we need the count to be no less than 0 along the way and equal to 0 in the end. 
+When we encounter '*', there are 2 choices. The count will be in a range. And we want the final range to include 0. If along the way, range max <0, return false directly. Otherwise, min and max are changed along the way. Notice, we can't change min to <0, because we need to guarantee count >= 0 along the way, otherwise it's already invalid. And would be wrong with below example.
+"(*)("
+*/
+class Solution {
+    public boolean checkValidString(String s) {
+        int mincount = 0;
+        int maxcount = 0;
+        for (char c: s.toCharArray()) {
+            if (c == '*') {
+                maxcount++;
+                mincount = Math.max(0,mincount-1);
+            } else if (c == '(') {
+                maxcount++;
+                mincount++;
+            } else {
+                mincount = Math.max(0,mincount-1);
+                maxcount--;
+                if (maxcount < 0) {return false;}
+            }
+            
+        }
+        return mincount == 0;
+    }
+}

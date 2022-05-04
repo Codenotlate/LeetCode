@@ -41,7 +41,37 @@ class Solution {
 
 
 
+// Review - still from solution
+/*Thought
+Sort array by start, then add all ongoing events to pq to sort by end. cur time starts with the min start time. Add all events with start time <= cur to pq, then pop out all events with end time < cur.Poll one out of pq and add one to result.
+if pq not empty, cur = max(cur+1, pq.peek().start). Otherwise cur is the start time for next event in events to be processed.
+time O(nlogn) space O(n)
 
+cases:
+[[1,2],[1,2],[3,3],[1,5],[1,5]]
+[[1,5],[1,5],[1,5],[2,3],[2,3]]
+*/
+class Solution {
+    public int maxEvents(int[][] events) {
+        Arrays.sort(events, (e1,e2)->(e1[0]-e2[0]));
+        int i = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((e1,e2)->(e1[1]-e2[1]));
+        int cur = events[0][0];
+        int count = 0;
+        while (i < events.length || !pq.isEmpty()) {
+            while(i< events.length && events[i][0] <= cur) {pq.add(events[i]);i++;}
+            while (!pq.isEmpty() && pq.peek()[1] < cur) {pq.poll();}
+            if (!pq.isEmpty()) {
+                pq.poll();
+                count++;
+                cur++;
+            } else {
+                if(i < events.length) {cur = events[i][0];}
+            }
+        }
+        return count;
+    }
+}
 
 
 
