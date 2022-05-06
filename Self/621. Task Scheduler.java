@@ -33,3 +33,34 @@ class Solution {
 
 // detail explanation
 // https://leetcode.com/problems/task-scheduler/discuss/104500/Java-O(n)-time-O(1)-space-1-pass-no-sorting-solution-with-detailed-explanation
+
+
+
+
+
+
+// Review
+/*Thought
+Find the chars(assume k of them) with most freq(as maxcount), and use them as the separater for different gaps. There will be (maxcount-1) * (n-k+1) empty positions after separation and wait to be filled by the rest tasks.If the rest tasks number is larger than the gap numbers. It canbe added the gap as well, since n is the min len required between two same tasks, not the max len. As long as those tasks are put as one in each separation part.
+time O(n) space O(26) = O(1)
+
+below map can also be replace by int[26]
+*/
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int maxCount = 0;
+        int numCount = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c: tasks) {
+            map.put(c, map.getOrDefault(c,0)+1);
+            if (map.get(c) > maxCount) {
+                maxCount = map.get(c);
+                numCount = 1;
+            } else if (map.get(c) == maxCount) {
+                numCount++;
+            }
+        }
+        
+        return Math.max(numCount * maxCount + (maxCount - 1) * (n-numCount+1), tasks.length);
+    }
+}

@@ -73,3 +73,44 @@ class CustomStack {
         }
     }
 }
+
+
+
+
+// Review - get hint from above M1
+class CustomStack {
+    int[] arr;
+    int size;
+    int[] add; // add[i] represents the value needs to be added for range[0:i]
+    int peek;
+
+    public CustomStack(int maxSize) {
+        arr = new int[maxSize];
+        size = maxSize;
+        add = new int[maxSize];
+        peek = -1;
+    }
+    
+    public void push(int x) {
+        if (peek+1 < size) {
+            peek++;
+            arr[peek] = x;
+        }
+    }
+    
+    public int pop() {
+        if (peek < 0) {return -1;}
+        int res = arr[peek] + add[peek];
+        if (peek >= 1) {add[peek-1] += add[peek];}
+        add[peek] = 0;
+        peek--;
+        return res;
+    }
+    
+    public void increment(int k, int val) {
+        if (peek < 0) {return;}
+        int right = Math.min(peek, k-1);
+        add[right] += val;
+    }
+}
+

@@ -224,7 +224,40 @@ class Solution {
 
 
 
+/* About Morris way in interview:
+One of the strategies is to list all possible solutions: recursive, iterative and Morris + time/space complexities. Then tell to the interviewer that to secure the interview you'd prefer first to implement not Morris, and implement recursion / or iteration, with all bases cases and checks.
 
+Now you have 5 min left, long enough to discuss the main idea of Morris implementation, and not enough time to drown in details.
+
+*/
+
+
+
+
+
+
+// Review
+/*Thought
+recursive way DFS. time O(n) space O(height) = O(n)
+can also do iterative way use stack,  stack element Pair<node, presum>
+*/
+class Solution {
+    public int sumNumbers(TreeNode root) {
+        int[] res = new int[1];
+        cal(root, 0, res);
+        return res[0];
+    }
+    
+    private void cal(TreeNode root, int prevsum, int[] res) {
+        if (root.left == null && root.right == null) {
+            res[0] += prevsum * 10 + root.val;
+            return;
+        }
+        prevsum = 10 * prevsum + root.val;
+        if (root.left != null) {cal(root.left, prevsum, res);}
+        if (root.right != null) {cal(root.right, prevsum, res);}
+    }
+}
 
 
 
