@@ -45,6 +45,32 @@ class Solution {
 
 
 
+// Review - similar idea as above, but more elegant code
+/*Thought
+want to have min num, whenever we have num[i-1] > num[i], it's always better to remove num[i-1], and k--. Can use StringBuilder as a stack, when cur < res.last, keep pop(). Then add cur into res, note if res isEmpty and cur is "0", we skip adding to avoid leading zeros in the result. If k>0 after we traverse one pass of num, since the res digits are in non-descending order now, we remove k dgits from backwards. return res.toString() if empty return "0"
+
+time O(n) space O(n)
+*/
+
+class Solution {
+    public String removeKdigits(String num, int k) {
+        StringBuilder res = new StringBuilder();
+        for (char cur: num.toCharArray()) {
+            while (k > 0 && res.length() > 0 && res.charAt(res.length() -1) > cur) {
+                res.deleteCharAt(res.length() - 1);
+                k--;
+            }
+            if (res.length() != 0 || cur != '0') {res.append(cur);}
+        }
+        
+        while (k-- > 0 && res.length() > 0) {res.deleteCharAt(res.length()-1);}
+        
+        return res.length() == 0? "0" : res.toString();
+    }
+}
+
+
+
 
 
 

@@ -62,6 +62,48 @@ https://leetcode.com/problems/minimum-cost-for-tickets/discuss/226659/Two-DP-sol
 
 
 
+// Review
+
+/* Thought
+At each day, 3 options. dp[i] = min(dp[i+0/6/29] + costs[0/1/2]). since i + 0/6/29 may not in days array. we can either use binary search to find the first largest days, or since the days.len is at most 365, we can directly use an array with size 365 to represent consecutive days. For time, it's log(n)  v.s. 365. But since n <= 365. Binary search should be better way.
+Base case dp[days.len] = 0. If i + 0/6/29 > max days[i], then index is dp[days.len].
+time O(3 * n * logn)  space O(n)
+
+
+*/
+class Solution {
+    public int mincostTickets(int[] days, int[] costs) {
+        int n = days.length;
+        int[] dp = new int[n+1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[n] = 0;
+        
+        int[] counts = new int[]{0,6,29};
+        
+        for (int i = n-1; i >= 0; i--) {
+            for (int j =0; j < costs.length; j++) {
+                int nexti = findNext(days[i] + counts[j], days, i);
+                dp[i] = Math.min(dp[nexti] + costs[j], dp[i]);
+            }
+        }
+        return dp[0];
+    }
+    
+    private int findNext(int target, int[] days, int start) {
+        int end = days.length - 1;
+        if (target >= days[end]) {return end+1;}
+        while (start < end ) {
+            int mid = start + (end- start) / 2;
+            if (days[mid] <= target) {start = mid + 1;}
+            else {end = mid;}
+        }
+        return start;
+    }
+}
+
+
+
+
 
 
 

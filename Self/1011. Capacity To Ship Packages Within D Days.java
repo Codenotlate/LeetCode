@@ -53,10 +53,48 @@ class Solution {
 
 
 
+// Review
+/*Thought
+binary search on range (max, sum). When we have a threshold, how to determine how many days needed?
+Since the weights should be packed in order, we jsut go throught the weights, whenever acumsum > threshold, days++, accumsum = cur weight.
+Thus take O(n) time for each threshold check.time O(n * log(sum-min)) space O(1)
 
 
-
-
+*/
+class Solution {
+    public int shipWithinDays(int[] weights, int days) {
+        int start = Integer.MIN_VALUE;
+        int end = 0;
+        for (int w: weights) {
+            start = Math.max(w, start);
+            end += w;
+        }
+        
+        while (start < end) {
+            int mid = start + (end- start) / 2;
+            int count = getCount(weights, mid);
+            if (count > days) {
+                start = mid + 1;
+            } else {
+                end = mid;
+            }
+        }
+        return start;
+    }
+    
+    private int getCount(int[] weights, int mid) {
+        int cumsum = 0;
+        int count = 0;
+        for (int w: weights) {
+            cumsum += w;
+            if (cumsum > mid) {
+                count++;
+                cumsum = w;
+            }
+        }
+        return count+1;
+    }
+}
 
 
 
