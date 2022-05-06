@@ -52,3 +52,32 @@ class Solution {
 //         return false;
 //     }
 // }
+
+
+
+
+
+// Review - O(n) time O(k) space same as above
+/* Thought
+subarray -> think about accumsum
+Also multiple of k can be convert as: if A%k == B % k, then (A-B) % k == 0
+Thus all value can be categoriesed into k classes [0,k-1].
+Then for each element, cumsum += n. rem = cumsum % k, and we check if map contains rem and its corresponding pos is not curpos-1, return true. Otherwise, if map not contains rem. map.put(ren, curpos). return false in the end. Since k might be huge, replace the map with size k array will cause space limit exceed in leetcode.
+
+*/
+
+
+class Solution {
+    public boolean checkSubarraySum(int[] nums, int k) {
+        Map<Integer,Integer> map = new HashMap<>();
+        map.put(0,-1); // since 0 is always valid
+        int cumsum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            cumsum += nums[i];
+            int rem = cumsum % k;
+            if (map.getOrDefault(rem, i) < i-1) {return true;}
+            if (!map.containsKey(rem)) {map.put(rem, i);}
+        }
+        return false;
+    }
+}

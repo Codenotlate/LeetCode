@@ -57,6 +57,54 @@ class Solution {
 
 
 
+// Review - better than above method for understanding
+
+
+/*Thought
+sort the array first, then for each cur, need to find all its factors before. dp[cur] = max(dp[factor] +1). But we want a list answer here, so a parent map and track the cur with the larget length.
+Having an array same as nums size to track the length of each pos.
+Having a map to store <cur, prenum with max len>
+Update the global max len and element with maxlen along the way.
+In the end, using maxlen element and parent map to build the list.
+time O(nlogn + n^2) = O(n^2) space O(n)
+*/
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        Map<Integer,Integer> map = new HashMap<>();
+        Arrays.sort(nums);
+        
+        Arrays.fill(dp, 1);
+        map.put(nums[0], -1);
+        
+        int maxlen = 1;
+        int maxnum = nums[0];
+        
+        for (int i =1; i <n; i++) {
+            int cur = nums[i];
+            map.put(cur,-1);
+            for (int j = 0; j < i; j++) {
+                if(cur % nums[j] == 0 && dp[i] < dp[j] + 1) {
+                    dp[i] = dp[j] + 1;
+                    map.put(cur, nums[j]);
+                }
+            }
+            if (dp[i] > maxlen) {
+                maxlen = dp[i];
+                maxnum = nums[i];
+            }
+        }
+        
+        LinkedList<Integer> res = new LinkedList<>();
+        while (maxnum != -1) {
+            res.addFirst(maxnum);
+            maxnum = map.get(maxnum);   
+        }
+        return (List)res;
+    }
+}
+
 
 
 
