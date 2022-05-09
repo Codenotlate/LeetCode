@@ -115,7 +115,7 @@ class Solution {
             else if (c == '[') {
                 numStack.add(curNum);
                 curNum = 0;
-                strDeque.add(curStr);
+                strDeque.add(curStr); // an empty str is actually a sign for the start of one [] block
                 curStr = new StringBuilder();
             } else {
                 int k = numStack.pop();
@@ -125,5 +125,58 @@ class Solution {
             }
         }
         return curStr.toString();
+    }
+}
+
+
+
+
+
+
+
+// Review - same as above
+/*Thought
+1[a]3[ab2[c]]13[i]ef
+
+numstack: 
+SB: [
+
+curstr = a
+curnum = 0
+
+we need a numstack. we also need a StringBuilder stack.
+
+if number: curnum = curnum * 10 + c-'0';
+if [: push curnum to numstack. curnum = 0, push curstr, curstr = "". push [ to curstr
+if char: append to curstr.
+if ]: pop out k from numstack, then curstr = strstack.pop() append curstr k times.
+
+*/
+class Solution {
+    public String decodeString(String s) {
+        int curnum = 0;
+        StringBuilder curstr = new StringBuilder();
+        Stack<Integer> numstack = new Stack<>();
+        Stack<StringBuilder> strstack = new Stack<>();
+        
+        for (char c: s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                curnum = curnum * 10 + c - '0';
+            } else if (c == '[') {
+                numstack.push(curnum); 
+                curnum = 0;
+                strstack.push(curstr); 
+                curstr = new StringBuilder();
+            } else if (c == ']') {
+                int k = numstack.pop();
+                StringBuilder temp = strstack.size() > 0? strstack.pop() : new StringBuilder();
+                while (k-- > 0) {temp.append(curstr);}
+                curstr = temp;
+            } else {
+                curstr.append(c);
+            }
+        }
+        
+        return curstr.toString();
     }
 }
