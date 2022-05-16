@@ -77,3 +77,25 @@ class Solution {
         return (int)res;
     }
 }
+
+
+
+// Review
+class Solution {
+    public int sumSubarrayMins(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        // use long to deal with overflow
+        long res = 0;
+        
+        for (int i = 0; i <= arr.length; i++) {
+            while (stack.peek() != -1 && (i == arr.length || arr[i] <= arr[stack.peek()])) {
+                int popIdx = stack.pop();
+                res = (res + (long) arr[popIdx] * (popIdx - stack.peek()) * (i - popIdx)) % 1000000007;
+            } 
+            if(i < arr.length) {stack.push(i);}
+        }
+        
+        return (int) res;
+    }
+}
