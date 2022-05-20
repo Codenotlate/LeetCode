@@ -54,6 +54,8 @@ class Solution {
 
 
 // check solution page with other ways 'Yale Format' with same time and also followup discussion.
+// interview expectation from FB
+// https://leetcode.com/problems/sparse-matrix-multiplication/discuss/419538/What-the-interviewer-is-expecting-when-this-problem-is-asked-in-an-interview...
 
 
 
