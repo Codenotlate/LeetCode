@@ -26,3 +26,17 @@ class Solution {
         }
     }
 }
+
+// several ways in solution to check later
+/*
+Here are some good points to clarify with the interviewer, before jumping into coding.
+
+What should we do if there is a cycle in the input?
+Can there be a self-loop, such that pid[i] == ppid[i]?
+What should we do if there is an orphaned process in the input? e.g. pid[i] does not exist in pid?
+After clarification, write down the assumptions and only then start coding. Ensure that your code follows the assumption and handles any special cases accordingly.
+
+Agreed. Simply solving the problem out of the gate (considering it's pretty straightforward) won't provide the interviewer much insight into your thought process and how you go about solving a problem. Probably a good habit to have when preparing for system design too.
+
+
+*/
