@@ -49,3 +49,26 @@ class Solution {
         return res - Math.min(maxdamage,armor);
     }
 }
+
+
+
+
+
+// Review
+/*Thought
+Go with the greedy way, which is always use the armor in the largest damage position, so the equivalent idea is to find the largest num and the sum of the damage array, then minus min(largest, armor) from it.
+pay attention to the data type: long to avoid overflow
+time O(n)
+space O(1)
+ */
+class Solution {
+    public long minimumHealth(int[] damage, int armor) {
+        int largest = 0;
+        long res = 0;
+        for (int d: damage) {
+            largest = Math.max(largest, d);
+            res += d;
+        }
+        return res - Math.min(armor, largest) + 1;
+    }
+}
