@@ -333,8 +333,116 @@ class Solution {
 
 
 
+// Review
+// M1: BFS / DFS
+class Solution {
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] visit = new int[m][n];
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1' && visit[i][j] == 0) {
+                    search(grid, m, n, i ,j, visit);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    // BFS version of search : O(m * n) space O(m * n + min(m, n)) -> the first m*n will be the space for visit matrix
+    private void search(char[][] grid, int m, int n, int i, int j, int[][] visit) {
+        Queue<int[]> queue = new LinkedList<>();
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        visit[i][j] = 1;
+        queue.add(new int[]{i,j});
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            for (int[] d: dirs) {
+                int newi = cur[0] + d[0];
+                int newj = cur[1] + d[1];
+                if (newi >= 0 && newi < m && newj >= 0 && newj < n && grid[newi][newj] == '1' && visit[newi][newj] == 0) {
+                    queue.add(new int[]{newi, newj});
+                    visit[newi][newj] = 1;
+                }
+            }
+        }
+    }
+
+    // DFS version of search: time O(m * n) space O(m * n)
+    private void search(char[][] grid, int m, int n, int i , int j, int[][] visit) {
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] != '1' || visit[i][j] != 0) {return;}
+        visit[i][j] = 1;
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+        for (int[] d: dirs) {
+            int newi = i + d[0];
+            int newj = j + d[1];
+            search(grid, m,n,newi, newj, visit);
+        }
+    }
+}
 
 
+// M2: UF way time O(m * n) space O(m * n)
+class Solution {
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[] parents = new int[m * n];
+        for (int i = 0; i < m *n; i++) {parents[i] = i;}
+        int[] ranks = new int[m * n];
+        
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+
+        for (int i = 0; i < m ; i++) {
+            for (int j = 0; j < n; j++) {
+                // don't forget this line
+                if (grid[i][j] == '0') {parents[i * n + j] = -1;}
+                if (grid[i][j] == '1') {
+                    for (int[] d: dirs) {
+                        int newi = i + d[0];
+                        int newj = j + d[1];
+                        if (newi >= 0 && newi < m && newj >= 0 && newj < n && grid[newi][newj] == '1') {
+                            connect(i*n + j , newi * n + newj, parents, ranks);
+                        }
+                    }
+                }
+            }
+        }
+
+        int count = 0;
+        for (int i = 0;i < parents.length; i++) {
+            if (parents[i] == i) {count++;}
+        }
+        return count;      
+    }
+
+    private void connect(int p, int q, int[] parents, int[] ranks) {
+        int rootp = find(parents, p);
+        int rootq = find(parents, q);
+        if (ranks[rootp] > ranks[rootq]) {
+            parents[rootq] = rootp;
+        } else {
+            parents[rootp] = rootq;
+            if (ranks[rootp] == ranks[rootq]) {
+                ranks[rootq]++;
+            }
+        }
+    }
+
+    // need to have path compression to make this O(1) time
+    private int find(int[] parents, int p) {
+        while (parents[p] != p) {
+            parents[p] = parents[parents[p]];
+            p = parents[p];
+        }
+        return p;
+    }
+
+    
+}
 
 
 

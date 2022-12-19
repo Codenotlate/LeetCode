@@ -149,6 +149,92 @@ class LRUCache {
 
 
 
+// Review - error: don't forget to remove the key in the map as well
+/* Thought
+double LL + hashmap (key -> node in LL)
+ */
+class LRUCache {
+    private class Node {
+        int value;
+        int key;
+        Node prev;
+        Node next;
+    }
+    Map<Integer, Node> keyMap;
+    Node dummyHead;
+    Node dummyTail;
+    int currentSize;
+    int capSize;
+
+    public LRUCache(int capacity) {
+        capSize = capacity;
+        currentSize = 0;
+        dummyHead = new Node();
+        dummyTail = new Node();
+        dummyHead.next = dummyTail;
+        dummyTail.prev = dummyHead;
+        keyMap = new HashMap<>();
+    }
+    
+    public int get(int key) {
+        if (!keyMap.containsKey(key)) {return -1;}
+        int res = keyMap.get(key).value;
+        // update the order of the node
+        Node curNode = keyMap.get(key);
+        removeNode(curNode);
+        insertEnd(curNode);
+        return res;
+         
+    }
+    
+    public void put(int key, int value) {
+        Node curNode;
+        if (keyMap.containsKey(key)) {
+            curNode = keyMap.get(key);
+            curNode.value = value;
+            removeNode(curNode);
+            insertEnd(curNode);
+        } else {
+            curNode = new Node();
+            curNode.key = key;
+            curNode.value = value;
+            keyMap.put(key, curNode);
+            insertEnd(curNode);
+            currentSize++;
+            if (currentSize > capSize) {
+                //!!! don't forget this line!
+                keyMap.remove(dummyHead.next.key);
+                removeNode(dummyHead.next);               
+                currentSize--;
+            }
+        }
+        
+        
+    }
+
+    private void removeNode(Node cur) {
+        cur.prev.next = cur.next;
+        cur.next.prev = cur.prev;
+        // cur.prev = null;
+        // cur.next = null;
+    }
+
+    private void insertEnd(Node cur) {
+        dummyTail.prev.next = cur;
+        cur.prev =dummyTail.prev;
+        dummyTail.prev = cur;
+        cur.next = dummyTail;
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
+
+
 
 
 
