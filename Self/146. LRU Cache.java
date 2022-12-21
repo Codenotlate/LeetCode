@@ -78,8 +78,32 @@ However, there will be one tricky thing you must handle if you use a singly link
 
 // another way directly use LinekedHashMap structure in Java
 // https://leetcode.com/problems/lru-cache/discuss/45939/Laziest-implementation%3A-Java's-LinkedHashMap-takes-care-of-everything
+class LRUCache {
+    private LinkedHashMap<Integer, Integer> map;
+    private int SIZE;
+    public LRUCache(int capacity) {
+        map = new LinkedHashMap<>();
+        SIZE = capacity;
+    }
 
+    public int get(int key) {
+        if(map.containsKey(key)) {
+            int value = map.remove(key);
+            map.put(key, value);
+            return value;
+        }
+        return -1;
+    }
 
+    public void put(int key, int value) {
+        if(map.containsKey(key)) {
+            map.remove(key);
+        }else if(map.size() + 1 > SIZE) {
+            map.remove(map.keySet().iterator().next());
+        }
+        map.put(key, value);
+    }
+}
 
 
 
