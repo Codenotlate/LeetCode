@@ -353,6 +353,42 @@ class Solution {
 
 
 
+// Review - bucket sort O(n) way
+/*Thoughts
+O(n) time to get the freq of each num in nums.
+Then naive way is to sort nums based on their freq, which will take O(nlogn) time for regular sort algo. But notice here the freq will be in range [1,n], thus we can consider using counting sort, which will take O(n) time as well.
+time & space O(n)
+ */
+// Note although both O(n) way, using list of list is much slower than using above array of List. Just pay attention to how to declare it: e.g. List<Integer>[] buckets = new List[nums.length]; And also remember to skip null in buckets in the end.
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        int[] res = new int[k];
+        List<List<Integer>> buckets = new LinkedList<>();
+        for (int i = 0; i < nums.length; i++){buckets.add(new ArrayList<>());}
+        Map<Integer, Integer> counts = new HashMap<>();
+
+        for (int n: nums) {
+            counts.putIfAbsent(n, 0);
+            counts.put(n, counts.get(n) + 1);
+        }
+
+        for (int n: counts.keySet()) {
+            int count = counts.get(n);
+            buckets.get(count - 1).add(n);
+        }
+
+        int curIdx = 0;
+        for (int i = nums.length-1; i >= 0; i--) {
+            for (int n: buckets.get(i)) {
+                res[curIdx] = n;
+                curIdx++;
+            }
+            if (curIdx == k) {break;}
+        }
+        return res;
+
+    }
+}
 
 
 
