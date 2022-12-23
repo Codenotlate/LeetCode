@@ -185,9 +185,48 @@ class Solution {
 
 
 
+// Review
 
+/*Thoughts
+The idea will be using recursion (divide and conquer). Basically if we encounter a sign, we put the left and right two parts in to recur function to get the result in list and calculated according to the sign.
+For the recur function, if the current string only composes of digits, then return the digits directly.  Also we can keep a memo map for (startIdx, endIdx) -> list<Integer>
+Two things to pay attention are:
+The number can have multiple digits; Need to make sure the string won't start with a * sign, i.e. the input string should be valid.
 
+Time: hard to tell, depends of how many signs in the string. F(n) = F(1) * F(n-1) + F(2) * F(n-2) + ... + F (n/2) * F(n / 2). Space similarly.
 
+ */
+class Solution {
+    public List<Integer> diffWaysToCompute(String expression) {
+        Map<Pair<Integer, Integer>, List<Integer>> map = new HashMap<>();
+        return getRes(expression, 0, expression.length() -1, map);
+    }
+
+    private List<Integer> getRes(String s, int start, int end, Map<Pair<Integer, Integer>, List<Integer>> map) {
+        if (map.containsKey(new Pair(start, end))) {return map.get(new Pair(start, end));}
+        List<Integer> res = new LinkedList<>();
+
+        for (int i = start; i <= end; i++) {
+            char c = s.charAt(i);
+            if (c == '+' ||  c== '-' ||  c== '*') {
+                List<Integer> leftList = getRes(s, start, i-1, map);
+                List<Integer> rightList = getRes(s, i+1, end, map);
+                for (int l: leftList) {
+                    for (int r: rightList) {
+                        if (c == '+') {res.add(l + r);}
+                        else if ( c== '-') {res.add(l - r);}
+                        else if ( c== '*') {res.add( l * r);}
+                    }
+                }
+            }
+        }
+        if (res.size() == 0) {
+            res.add(Integer.valueOf(s.substring(start, end+1)));
+        }
+        map.put(new Pair(start, end), res);
+        return res;
+    }
+}
 
 
 
