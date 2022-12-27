@@ -87,3 +87,29 @@ class Solution {
         return n == 1 ? 0 : steps + 1;
     }
 }
+
+
+// Review
+/*Thoughts
+Use greedy way, for each num in nums, it has the potential to expand the most right position we can get. for cur <= right, and we check if cur + nums[cur] > right, if that's the case, meaning with current step + 1, we can expand the right side to nextright, which is the max pos of all pos <= current right can reach to. If we have cur > right, then step++, right = nextright, and nextright = cur + nums[cur]. And whenever we have right >= n-1,  current step number will be the min result to return.
+Time O(n) space O(1)
+ */
+class Solution {
+    public int jump(int[] nums) {
+        int right = 0;
+        int step = 0;
+        int nextright = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i <= right && nextright < i + nums[i]) {
+                nextright = i + nums[i];
+            } else if (i > right) {
+                right = nextright;
+                nextright = i + nums[i];
+                step++;
+            }
+            if (right >= nums.length - 1) {return step;}            
+        }
+        return step; // should not reach this line
+
+    }
+}
