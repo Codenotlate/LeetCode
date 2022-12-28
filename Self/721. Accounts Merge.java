@@ -240,8 +240,127 @@ class Solution {
 
 
 
+// 22/12/28
+/* Thoughts
+UF way without explicit UF class
+emailMap <email, id>, same id for all emails in the same list. connect the id using UF.
+Go through email in the list, add <email, current idx> to emailMap, if email already in emailMap.keys, connect two id. 
+e.g.
+0 - 1
+2
+3
+resMap <id, set<emails>>, store a set of emails.
+After the UF built up, go throught the idx of the list of list again, check the parent of each id, resMap.putIfAbsent(parentid, Set<String>), resMap.get(id).addAll(all the emails from this list).
+After the whole iteration, go through the resMap, name will be accounts.get(id).get(0), sort the emails in the set and add to the list.
+
+time O(m * n + n * mlog(n*m)) = O(mn* log(mn))
+*/
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        Map<String, Integer> emailMap = new HashMap<>();
+        Map<Integer, Set<String>> resMap = new HashMap<>();
+        int n = accounts.size();
+        int[] parents = new int[n];
+        for (int i = 0; i < n; i++) {parents[i] = i;}
+        int[] ranks = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < accounts.get(i).size(); j++) {
+                String email = accounts.get(i).get(j);
+                if (emailMap.keySet().contains(email)) {
+                    connectUF(i, emailMap.get(email), parents, ranks);
+                } else {
+                    emailMap.put(email, i);
+                }
+            }
+        }
+        // UF built-up now
+        for (int i = 0; i < n; i++) {
+            int parentId = findUF(i, parents); // note this should be findUF not directly from parents.
+            resMap.putIfAbsent(parentId, new HashSet<>());
+            for (int j = 1; j < accounts.get(i).size(); j++) {
+                resMap.get(parentId).add(accounts.get(i).get(j));
+            }           
+        }
+        // convert to the res
+        List<List<String>> res = new ArrayList<>();
+        for (int id : resMap.keySet()) {
+            List<String> emails = new LinkedList<>(resMap.get(id));
+            Collections.sort(emails);
+            emails.add(0, accounts.get(id).get(0));
+            res.add(emails);
+        }
+        return res;
+    }
 
 
+    private void connectUF(int p, int q, int[] parents, int[] ranks) {
+        int parentP = findUF(p, parents);
+        int parentQ = findUF(q, parents);
+        if (ranks[parentP] > ranks[parentQ]) {
+            parents[parentQ] = parentP;
+        } else {
+            parents[parentP] = parentQ;
+            if (ranks[parentP] == ranks[parentQ]) {ranks[parentQ]++;}
+        }
+    }
+
+    private int findUF(int p, int[] parents) {
+        while (parents[p] != p) {
+            parents[p] = parents[parents[p]];
+            p = parents[p];
+        }
+        return p;
+    }
+}
+
+
+
+// 22/12/28
+/*Thoughts
+Another way is to build a graph from it and do bfs/dfs to traverse all emails connect to each other. For emails in the same list, they can all connect to the first email.
+At the same time, if we traverse the graph directly, we need to maintain a email to account Map. Alternatively, if we traverse the graph using the first email of each list in accounts, we don't need to maintain this map, since we can already get the account name info.
+time O(mnlog(mn)) space O(mn)
+ */
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        Map<String, Set<String>> graph = new HashMap<>();
+        for (List<String> l: accounts) {
+            String keyEmail = l.get(1);
+            graph.putIfAbsent(keyEmail, new HashSet<>());
+            for (int i = 1; i < l.size(); i++) {
+                graph.putIfAbsent(l.get(i), new HashSet<>());
+                graph.get(keyEmail).add(l.get(i));
+                graph.get(l.get(i)).add(keyEmail);
+            }
+        }
+
+        // graph is built, do dfs or bfs on it.
+        List<List<String>> res = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        for (List<String> l: accounts) {
+            ArrayList<String> emails = dfs(l.get(1), graph, visited);
+            if (emails.size() == 0) {continue;}
+            Collections.sort(emails);
+            emails.add(0, l.get(0));
+            res.add(emails);
+        }
+        return res;
+
+    }
+
+    private ArrayList<String> dfs(String cur, Map<String, Set<String>> graph, Set<String> visited) {
+        ArrayList<String> res = new ArrayList<>();
+        if (visited.contains(cur)) {return res;}       
+        visited.add(cur);
+        res.add(cur);
+        for (String next: graph.get(cur)) {
+            res.addAll(dfs(next, graph, visited));
+        }
+        return res;
+
+    }
+}
 
 
 

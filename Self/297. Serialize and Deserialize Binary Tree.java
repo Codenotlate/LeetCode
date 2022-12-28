@@ -376,9 +376,107 @@ public class Codec {
 
 
 
+// Review
+/* Thoughts - BFS way, including some wrong idea below in description:
+One note is the val of node can be multi-digits, thus we need a delimiter after value of each node in the string.
+Store as a [Wrong! - using BFS, it won't be a complete since the child node of null node won't be added to the queue] tree using BFS, [Wrong!- Thus can't use below way: then for node in index i,  its parent will be in index i / 2, and i % 2 != 0 will be it left child otherwise right.]
+When do serialize, we use BFS and also include null nodes in the queue. The poll out val will be appended to the string results.
+When do deserialize, split the string using delimiter, then we iterate each char in the string. Again, we use a queue and the curIdx to iterate the string array. For each non-n string poll out of queue, we check the curIdx, and curIdx +1 as its left and right children.
+time O(2^h) space O(2^h) same as above O(n) as n represents the node number of the tree.
+
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) {return "";}
+        StringBuilder res = new StringBuilder();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            if (cur.val == 10000) { // 10000 represents null node
+                res.append("n,");
+                continue;
+            }
+            res.append(String.valueOf(cur.val)).append(",");
+            queue.add(cur.left == null ? (new TreeNode(10000)) : cur.left);
+            queue.add(cur.right == null ? (new TreeNode(10000)) : cur.right);
+            // cur.right == null ? queue.add(new TreeNode(10000)) : queue.add(cur.right);
+        }
+        return res.toString();
+        
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.equals("")) {return null;}
+        String[] s = data.split(",");
+        Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode root = new TreeNode(Integer.valueOf(s[0]));
+        queue.add(root);
+        int i = 1;
+        while ( i < s.length - 1) { // the last one of s will be ""
+            TreeNode curNode = queue.poll();
+            if (!s[i].equals("n")) {
+                TreeNode leftNode = new TreeNode(Integer.valueOf(s[i]));
+                curNode.left = leftNode;
+                queue.add(leftNode);
+            }
+            i++;
+            if (!s[i].equals("n")) {
+                TreeNode rightNode = new TreeNode(Integer.valueOf(s[i]));
+                curNode.right = rightNode;
+                queue.add(rightNode);
+            }
+            i++;
+        }
+        
+        return root;
+        
+    }
+}
 
 
+/*Thoughts - DFS preorder way (instead of above DFS using a queue, we use the string and an index array that can be changed between recursive calls to achieve same idea)
+ 1, 2, n, n, 3, 4, n, n, 5, n, n,
+ when do serialize: simply use recursion with preorder
+ when do deserialize: again make it a recursive call, it returns the node of the tree from an string subarray, labeled using the starting index.
+  */
+public class Codec {
 
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder res = new StringBuilder();
+        buildString(root, res);
+        return res.toString();
+    }
+
+    private void buildString(TreeNode node, StringBuilder res) {
+        if (node == null) {res.append("n,"); return;}
+        res.append(String.valueOf(node.val)).append(",");
+        buildString(node.left, res);
+        buildString(node.right, res);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] s = data.split(",");
+        return buildTree(s, new int[]{0});
+    }
+
+    private TreeNode buildTree(String[] s, int[] idx) {
+        int cur = idx[0];
+        if (cur >= s.length - 1) {return null;}
+        if (s[cur].equals("n")) {idx[0]++;return null;}
+        TreeNode root = new TreeNode(Integer.valueOf(s[cur]));
+        idx[0]++;
+        root.left = buildTree(s, idx);
+        root.right = buildTree(s, idx);
+        return root;
+
+    }
+}
 
 
 

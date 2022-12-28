@@ -131,5 +131,32 @@ class Solution {
 }
 
 
-
+// review 22/12/28
+// use stack, but can be optimized as above using stringbuilder directly as the stack
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        Set<Character> included = new HashSet<>();
+        Map<Character, Integer> counts = new HashMap<>();
+        Stack<Character> stack = new Stack<>();
+        for (char c: s.toCharArray()) {
+            counts.putIfAbsent(c, 0);
+            counts.put(c, counts.get(c) + 1);
+        }
+        for (char c: s.toCharArray()) {
+            counts.put(c,counts.get(c) - 1);
+            if (included.contains(c)) {continue;}
+            while (!stack.isEmpty() && c <= stack.peek() && counts.get(stack.peek()) > 0) {
+                included.remove(stack.pop());
+            }
+            stack.push(c);
+            included.add(c);          
+        }
+        StringBuilder res = new StringBuilder();
+        while (!stack.isEmpty()){
+            res.append(stack.pop());
+        }
+        res.reverse();
+        return res.toString();
+    }
+}
 
