@@ -286,6 +286,78 @@ class Solution {
 
 
 
+// Review 22/12/29
+// M1: BFS way space O(mn)
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] res = new int[m][n];
+        Queue<int[]> queue = new LinkedList<>();
+        // put all 0 cells in
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 0) {queue.add(new int[]{i,j});}
+            }
+        }
+        int[][] dirs = new int[][]{{-1,0},{1,0},{0,-1},{0,1}};
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int[] cur = queue.poll();
+                int curi = cur[0];
+                int curj = cur[1];
+                if (mat[curi][curj] == 1 && res[curi][curj] <= 0) {
+                    res[curi][curj] = level;
+                }
+                // check neighbors
+                for (int[] d: dirs) {
+                    int newi = curi + d[0];
+                    int newj = curj + d[1];
+                    if (newi >= 0 && newi < m && newj >= 0 && newj < n && mat[newi][newj] == 1 && res[newi][newj] == 0) {
+                        queue.add(new int[]{newi, newj});
+                        res[newi][newj] = -1;
+                    }
+                }
+            }
+            level++;
+        }
+        return res;
+    }
+}
+
+
+// M2: two DP way space O(1)
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        int[][] res = new int[m][n];
+
+        // first traverse from upperleft to bottomright
+        int infmax = m * n;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 0) {continue;} // don't forget this line
+                int topres = i == 0 ? infmax : res[i-1][j];
+                int leftres = j == 0? infmax : res[i][j-1];
+                res[i][j] = Math.min(leftres, topres) + 1;
+            }
+        }
+        // second traverse from bottomright to upperleft
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if (mat[i][j] == 0) {continue;}
+                int bottomres = i == m-1? infmax : res[i+1][j];
+                int rightres = j == n-1? infmax : res[i][j+1];
+                res[i][j] = Math.min(res[i][j], Math.min(rightres, bottomres) + 1);
+            }
+        }
+        return res;
+    }
+}
+
 
 
 
