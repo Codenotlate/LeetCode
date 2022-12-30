@@ -221,3 +221,56 @@ class Solution {
 
 
 
+
+// Review 22/12/30
+/*Thoughts - similar to above, but above have one init as 0, here we have one init as len - 1. (above way seems more concise)
+partition target = 1. we have three areas, for 0, 1, 2. We will need 3 pointers to label the separation boundary for each of them. Maybe zero starting from the left, and one and two both start from the right side.
+Then we will have zero pointer representing the starting index of the unexplored area.
+Basically like below structure:
+[0,zero) [zero, one] (one, two]  (two, end]
+0 part  -unexplored part - one part - two part
+Two notes for the implementation:
+we stop checking when one < zero.
+for cur > target case, we only swap(one, cur) when one is <= two, i.e. when one is outside part 2.
+Rule of check:
+if cur == target, swap(one, cur), one--
+if cur < target, swap(zero, cur), zero++, if (cur < zero) {cur = zero}
+if cur > target, swap(two, cur), two--, if one <= two:  swap(one, cur), one--
+
+time O(n) space O(1)
+
+ */
+class Solution {
+    public void sortColors(int[] nums) {
+        int zero = 0;
+        int one = nums.length - 1;
+        int two = nums.length - 1;
+        int target = 1;
+        while (one >= zero) {
+            int cur = zero;
+            int num = nums[cur];
+            if (num == target) {
+                swap(nums, one, cur);
+                one--;
+            } else if (num < target) {
+                swap(nums,cur, zero);
+                zero++;
+            } else {
+                swap(nums, two, cur);
+                two--;
+                if (one <= two) {swap(nums, one, cur);}
+                one--;
+                
+            }
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+
+
