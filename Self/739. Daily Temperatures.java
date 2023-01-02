@@ -131,3 +131,50 @@ class Solution {
 
 
 
+
+// review 23/1/2
+/*Thoughts
+Method1: monotonic stack, put in index number, when stack peek num is smaller then cur num, pop the index out, res of the popIdx will be curIdx - popIdx, keep popping out until cur num is smaller or equal to peek num.
+time and space O(n)
+
+Method2: try O(1) space
+first do similar monotonic stack as M1 but in backwards way. Then view the res array as an stack itself, record down the peekIdx representing the peek num in the stack, and the next num in the stack after peekIdx pop out will be peekIdx + res[peekIdx].
+Thus we have time O(n) but space O(1)
+
+ */
+// M1: monotonic stack
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] res = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while(!stack.isEmpty() && temperatures[i]> temperatures[stack.peek()]) {
+                int popIdx = stack.pop();
+                res[popIdx] = i - popIdx;
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+}
+
+// M2: backwards + res array as monotonic stack
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] res = new int[n];
+        int peekIdx = n;
+        for (int i = n - 1; i >= 0; i--) {
+            while(peekIdx!=n && temperatures[peekIdx] <= temperatures[i]) {
+                peekIdx = res[peekIdx] == 0 ? n : res[peekIdx] + peekIdx;
+            }
+            res[i] = peekIdx == n ? 0 : peekIdx - i;
+            peekIdx = i;
+        }
+        
+        return res;
+    }
+}
+
+
