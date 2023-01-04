@@ -110,3 +110,34 @@ class Solution {
         return dp[0];
     }
 }
+
+
+// Review 23/1/3
+// unlike above, this is moving forward way and no special treatment for edge cases.
+// time O(mn) space O(min(m,n))
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int left = 0;
+        int[] dp = new int[n];
+        for (int i = 0; i < m; i++) {
+            left = 0;
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) {
+                    dp[j] = obstacleGrid[0][0] == 1 ? 0 : 1;
+                    left = dp[j];
+                    continue;
+                }
+                dp[j] = obstacleGrid[i][j] == 1 ? 0 : left + dp[j];
+                left = dp[j];
+            }
+        }
+        return dp[n-1];
+    }
+}
+
+
+
+// (copy from above) interviewer may ask alternative approaches and the comparison between them. Another way could be dfs + memo
+

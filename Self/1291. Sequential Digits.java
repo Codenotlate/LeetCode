@@ -50,3 +50,34 @@ class Solution {
 
 
 // Review: still need to from solution
+
+
+// Review 23/1/3
+// Derive the result from string "123456789". time O(8 * 8) = O(1) space O(1)
+// one diff from the above sliding window way is to not generate substring each time and instead calculate the value based on the previous value. This may save some space, but since overall space is O(1), no optimize to this.
+class Solution {
+    public List<Integer> sequentialDigits(int low, int high) {
+        List<Integer> res = new LinkedList<>();
+        String digits = "123456789";
+        int lowlen = String.valueOf(low).length();
+        int highlen = Math.min(String.valueOf(high).length(),digits.length()); //don't forget to cap highlen to 9.
+        
+        for (int size = lowlen; size <= highlen; size++) {
+            int value = Integer.valueOf(digits.substring(0, size));
+            if (value >= low && value <= high) {res.add(value);}
+            for (int end = size; end < digits.length(); end++) {
+                int leftDigit = digits.charAt(end - size) - '0';
+                int rightDigit = digits.charAt(end) - '0';
+                value = (value - (int)Math.pow(10, size-1) * leftDigit) * 10  + rightDigit;
+                if (value >= low && value <= high) {res.add(value);}
+                if (value > high) {break;}
+            }
+        }
+        return res;
+    }
+}
+
+// Also a BFS way to generate all nums in order
+// https://leetcode.com/problems/sequential-digits/solutions/853592/python-solution-using-queue-explained/
+
+
