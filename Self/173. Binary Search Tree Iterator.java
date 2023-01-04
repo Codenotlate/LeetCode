@@ -43,13 +43,6 @@ class BSTIterator {
     }
 }
 
-/**
- * Your BSTIterator object will be instantiated and called as such:
- * BSTIterator obj = new BSTIterator(root);
- * int param_1 = obj.next();
- * boolean param_2 = obj.hasNext();
- */
-
 
 /*
 When analyzing amortized time complexities, I find it easiest to reason that each node gets pushed and popped exactly once in next() when iterating over all N nodes.
@@ -142,6 +135,39 @@ class BSTIterator {
     
     public boolean hasNext() {
         return !stack.isEmpty() || cur != null;
+    }
+}
+
+
+// Review 23/1/4 (same as above M2)
+/* Thoughts
+Think about iterative inorder traverse - using a stack. space of the stack will be O(h) and return the next element will be the top of the stack, which is average O(1);
+ */
+class BSTIterator {
+    Stack<TreeNode> stack;
+
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<>();
+        while(root != null) {
+            stack.push(root);
+            root = root.left;
+        }
+    }
+    
+    public int next() {
+        TreeNode cur = stack.pop();
+        if (cur.right!= null) {
+            TreeNode root = cur.right;
+            while(root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+        }
+        return cur.val;
+    }
+    
+    public boolean hasNext() {
+        return !stack.isEmpty();
     }
 }
 

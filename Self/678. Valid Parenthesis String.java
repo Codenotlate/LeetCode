@@ -57,3 +57,43 @@ class Solution {
         return mincount == 0;
     }
 }
+
+
+
+// Review 22/1/4: still need solution
+/* Thoughts - range instead of exact counts. As long as the range has part >= 0 along the way, and low side covers 0 at the end, it is valid.
+
+Graph in this post helps understanding:
+https://leetcode.com/problems/valid-parenthesis-string/solutions/543521/java-count-open-parenthesis-o-n-time-o-1-space-picture-explain/
+ */
+class Solution {
+    public boolean checkValidString(String s) {
+        int min = 0;
+        int max = 0;
+        for (char c: s.toCharArray()) {
+            if ( c== '*') {
+                min = Math.max(0, min-1);
+                max++;
+            } else if ( c == '(') {
+                min++;
+                max++;
+            } else {
+                min = Math.max(0, min - 1);
+                max--;
+                if (max < 0) {return false;}
+            }
+        }
+        return min == 0;
+    }
+}
+
+// Another way with two pass (first comment in solution)
+/*
+There are 3 valid cases:
+
+1- There are more open parenthesis but we have enough '*' so we can balance the parenthesis with ')'
+2- There are more close parenthesis but we have enough '*' so we can balance the parenthesis with '('
+3- There are as many '(' than ')' so all parenthesis are balanced, we can ignore the extra '*'
+
+Algorithm: You can parse the String twice, once from left to right by replacing all '*' by '(' and once from right to left by replacing all '*' by ')'. For each of the 2 loops, if there's an iteration where you end up with a negative count (SUM['('] - SUM[')'] < 0) then you know the parenthesis were not balanced. You can return false. After these 2 checks (2 loops), you know the string is balanced because you've satisfied all the 3 valid cases mentioned above. Voila!
+*/
