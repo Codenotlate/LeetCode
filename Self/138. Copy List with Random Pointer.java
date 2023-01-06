@@ -139,6 +139,81 @@ class Solution {
 
 
 
+// Review 23/1/5
+/* Earlier view this as a graph and traverse it. This time try M2 and M3.
+M2: view it directly as a LL. two similar ways, both O(n) space since we need to maintain a map from old node to new node.
+    M2.1 two pass. First pass, go throught all nodes, and build all new nodes and recorded in the map. Second pass address al the random pointers using the map to find corresponding new nodes.
+    M2.2 one pass. For each node, if not in the map already, build the new node and put into map. Otherwise directly get the corresponding new node from the map. Similar logic applies to the nodes random/next pointers pointing to. Mimic the connecting ways in the new LL.
+
+M3: O(1) way. Three pass. First pass, build new nodes and put them in between old nodes. Second pass, address random pointers. Third pass, revert all next pointers adjusted in the first pass, and address the next pointers for the new LL.
+
+
+ */
+// M2.2
+class Solution {
+    public Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>();
+        Node oldhead = head;
+        while(head != null) {
+            if (!map.containsKey(head)) {
+                map.put(head, new Node(head.val));
+            }
+            Node newhead = map.get(head);
+            Node oldRandom = head.random;
+            Node oldNext = head.next;
+            if (oldRandom != null && !map.containsKey(oldRandom)) {
+                map.put(oldRandom, new Node(oldRandom.val));
+            }
+            if (oldNext != null && !map.containsKey(oldNext)) {
+                map.put(oldNext, new Node(oldNext.val));
+            }
+            if (oldRandom != null) {
+                newhead.random = map.get(oldRandom);
+            }
+            if (oldNext != null) {
+                newhead.next = map.get(oldNext);
+            }
+            head = head.next;
+        }
+        return map.get(oldhead);
+    }
+}
+
+// M3
+class Solution {
+    public Node copyRandomList(Node head) {
+        // first pass
+        Node cur = head;
+        while(cur != null) {
+            Node newnode = new Node(cur.val);
+            newnode.next = cur.next;
+            cur.next = newnode;
+            cur = newnode.next;
+        }
+        // second pass
+        cur = head;
+        while(cur != null) {
+            Node oldRandom = cur.random;
+            // don't forget to check null here
+            if (oldRandom != null) {cur.next.random = oldRandom.next;}           
+            cur = cur.next.next;
+        }
+        // third pass
+        cur = head;
+        Node dummy = new Node(-1);
+        Node newCur = dummy;
+        while(cur != null) {
+            newCur.next = cur.next;
+            newCur = newCur.next;
+            cur.next = cur.next.next;
+            newCur.next = null;
+            cur = cur.next;
+        }
+        return dummy.next;
+    }
+}
+
+
 
 
 
