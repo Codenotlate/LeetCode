@@ -145,3 +145,72 @@ class Solution {
 }
 
 
+
+
+
+// Review 23/1/6
+/* Thoughts
+M1: recursive + memo. time & space O(amount * coins.len)
+One note: to avoid dup combinations, we need to know the previous coin position used, and start from that coin position as the smallest.
+Also note the special case for amount == 0.
+5
+5 f(0,5);  2 f(3,2);   1 f(4,1)
+        |  2 f(1,2);  1 f(2,1)  | 1 f(3,1)
+        |  1 f(0,1); | 1 f(1,1) | 1 f(2,1)
+                        ...
+
+
+M2: dp way.
+Above M1 can be converted to a dp way of thinking. Have dp[amount][i] represents #of ways with amount and coins[i:]. Then dp[amount][i] = dp[amount - coins[i]][i] + dp[amount][i+1].
+amount -  up to down
+i - right to left
+To optimize the space to O(amount) and store it as a row(in above setting, can store as a column, but more familiar with the row way), can adjust the order: dp[i][amount] = dp[i][amount - coins[i]] + dp[i+1][amount]
+i - bottom to up
+amount - left to right
+ */
+// M1
+class Solution {
+    public int change(int amount, int[] coins) {
+        if (amount == 0) {return 1;}
+        int[][] memo = new int[amount+1][coins.length];
+        for (int[] row: memo) {Arrays.fill(row, -1);}
+        int res = 0;
+        for (int i = 0; i < coins.length; i++) {
+            if (amount < coins[i]) {continue;}
+            res += count(amount-coins[i], i, coins, memo);
+        }
+        return res;
+    }
+
+    private int count(int amount, int cur, int[] coins, int[][] memo) {
+        if (amount == 0) {return 1;}
+        if (memo[amount][cur] != -1) {return memo[amount][cur];}
+        int res = 0;
+        for (int i = cur; i < coins.length; i++) {
+            int c = coins[i];
+            if ( c > amount) {continue;}
+            res += count(amount - c, i, coins, memo);
+        }
+        memo[amount][cur] = res;
+        return res;
+
+    }
+}
+
+
+// M2 - can be more precise as above; can also have the dp rule as dp[i] based on dp[i-1]. Like above dp ways.
+class Solution {
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for (int i = coins.length - 1; i >= 0; i--) {
+            int c = coins[i];
+            for (int w = 1; w <= amount; w++) {
+                if (w >= c) {
+                    dp[w] += dp[w-c];
+                }
+            }           
+        }
+        return dp[amount];
+    }   
+}
