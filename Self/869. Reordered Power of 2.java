@@ -20,3 +20,11 @@ class Solution {
         return false;
     }
 }
+
+// Need review for the time complexity etc
+/*Several posts good:
+https://leetcode.com/problems/reordered-power-of-2/solutions/149843/c-java-python-straight-forward/
+https://leetcode.com/problems/reordered-power-of-2/solutions/151949/simple-java-solution-based-on-string-sorting/
+https://leetcode.com/problems/reordered-power-of-2/solutions/149819/reordered-power-of-2/
+https://leetcode.com/problems/reordered-power-of-2/solutions/2483557/Python-oror-O(log(n))-time-O(1)-space-oror-Faster-than-100-oror-Explained-and-compared/
+*/
