@@ -135,6 +135,33 @@ class Solution {
 
 
 
+// Review 23/1/9
+/*Thoughts
+This is also a knapsack problem. Assume dp[i][amount] represents min number of ways to get amount using coins[i:]. Then dp[i][w] = min(dp[i][w-coins[i]]+1, dp[i+1][w]).
+Which then can be optimized to 1d Dp, starting from i = coins.len-1 to 0, and w starts from coins[i] to amount.
+Note: Don't forget to initialize.
+time O(len * amount) space O(amount)
+
+
+Can also use above dfs + memo way. time and space are the same.
+ */
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        // don't forget to initialize
+        Arrays.fill(dp, amount+1);
+        dp[0] = 0;
+        for (int i = coins.length - 1; i >= 0; i--) {
+            for (int w = coins[i]; w <= amount; w++) {
+                dp[w] = Math.min(dp[w-coins[i]] + 1, dp[w]);
+            }
+        }
+        return dp[amount]==amount+1? -1: dp[amount];
+    }
+}
+
+
 
 
 

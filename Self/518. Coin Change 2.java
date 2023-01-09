@@ -198,7 +198,7 @@ class Solution {
 }
 
 
-// M2 - can be more precise as above; can also have the dp rule as dp[i] based on dp[i-1]. Like above dp ways.
+// M2 - can be more precise as above; can also have the dp rule as dp[i] based on dp[i-1]. Like above dp ways (top down).
 class Solution {
     public int change(int amount, int[] coins) {
         int[] dp = new int[amount + 1];
