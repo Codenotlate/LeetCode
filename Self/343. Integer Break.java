@@ -58,6 +58,24 @@ class Solution {
 
 
 
+// Review 23/1/8
+/* Thoughts
+Can view it as a knapsack problem, each item is unlimited, from 1 to n - 1. The total amount is n. Let dp[i][amount] represents the max product for amount from [i : ]. then dp[i][amount] = max(i * dp[i][amount - i], dp[i+1][amount]). The space can be optimized to O(n). The order will be i -> n-1 to 1,  amount small to large.
+Time O(n^2)
+ */
+
+class Solution {
+    public int integerBreak(int n) {
+        int[] dp = new int[n+1];
+        dp[0] = 1;
+        for (int i = n-1; i >= 1; i--) {
+            for (int amount = i; amount <= n; amount++) {
+                dp[amount] = Math.max(dp[amount], i * dp[amount - i]);
+            }
+        }
+        return dp[n];
+    }
+}
 
 
 
