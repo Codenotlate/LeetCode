@@ -231,10 +231,96 @@ class Solution {
 
 
 
+// Review 23/1/10
+/*Thoughts - self way, not exactly the same as above ways, but similar dfs + backtracking way. - Used sort to handle dup cases, but code is not as elegant as above.
+Note it contains dup. To avoid dup, we sort the nums first.
+Then for each position in the result list, we try each non-dup num from nums, putting into that pos. Then recur on the rest nums.
 
+*/
+// M0 - self less concise way
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        return permuRecur(nums, 0, new int[nums.length]);
+    }
 
+    private List<List<Integer>> permuRecur(int[] nums,int i, int[] visited) {
+        List<List<Integer>> res = new LinkedList<>();
+        if ( i >= nums.length) {return res;}
+        int k = 0;
+        while (k < nums.length) {
+            if (visited[k] != 0) {k++; continue;}
+            visited[k] = 1;
+            List<List<Integer>> subRes = permuRecur(nums, i+1, visited);
+            if (subRes.size() == 0) {
+                List<Integer> list = new LinkedList<>();
+                list.add(nums[k]);
+                res.add(list);
+            }
+            for (List<Integer> list: subRes) {
+                list.add(0, nums[k]);
+                res.add(list);
+            }
+            visited[k] = 0; // don't forget about the backtrack
+            while(k < nums.length - 1 && nums[k+1] == nums[k]) {k++;}
+            k++;
+        }
+        return res;
 
+    }
+}
 
+// Above M1: typical dfs + backtracking way using visited array
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new LinkedList<>();
+        dfs(nums, new int[nums.length], new LinkedList<>(), res);
+        return res;
+    }
+
+    private void dfs(int[] nums, int[] visited, List<Integer> curList, List<List<Integer>> res) {
+        if (curList.size() == nums.length) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] != 0 || (i > 0 && nums[i-1] == nums[i] && visited[i-1]== 0)) {continue;}
+            visited[i] = 1;
+            curList.add(nums[i]);
+            dfs(nums, visited, curList, res);
+            curList.remove(curList.size() - 1);
+            visited[i] = 0;
+        }
+    }
+}
+
+// Above M2: typical dfs + backtracking way using count map
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new LinkedList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n: nums) {map.put(n, map.getOrDefault(n, 0) + 1);}
+        dfs(nums.length, map, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void dfs(int N, Map<Integer, Integer> map, List<Integer> curList, List<List<Integer>> res) {
+        if (curList.size() == N) {
+            res.add(new LinkedList(curList));
+            return;
+        }
+        for (int num: map.keySet()) {
+            if (map.get(num) == 0) {continue;}
+            map.put(num, map.get(num) - 1);
+            curList.add(num);
+            dfs(N, map, curList, res);
+            curList.remove(curList.size() - 1);
+            map.put(num, map.get(num) + 1);
+        }
+    }
+}
 
 
 
