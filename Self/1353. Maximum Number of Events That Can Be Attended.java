@@ -33,7 +33,7 @@ class Solution {
 
 
 // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/discuss/510263/JavaC%2B%2BPython-Priority-Queue
-// good explanation
+// good explanation !!!
 // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/discuss/510262/Detailed-analysisLet-me-lead-you-to-the-solution-step-by-step
 
 
@@ -72,6 +72,44 @@ class Solution {
         return count;
     }
 }
+
+
+// Review 23/1/11 - same as above
+// review the good explanation post above again! - the thinking process in an interview
+/* Self Note from solution:
+for interval problems, always think first about sort and pq with greedy way (think about how you would do in reality).
+For this problem, the way we do it in reality is to first sort by start time, then for all events satisfy the current day, we choose the one with smallest end time. 
+To achieve it, we first sort the array based on start time. Then have the curDay start as events[0][0]. Then have all events having start time <= curDay inserted to a pq (sort by end time). After the insertion, pop out those invalid ones having end time < curDay. Then poll one remaining valid one out, res++. curDay++.
+
+Time O(nlogn for sort + nlogn for pq related) = O(nlogn)  space O(n)
+ */
+class Solution {
+    public int maxEvents(int[][] events) {
+        Arrays.sort(events, (e1,e2) -> (e1[0] - e2[0]));
+        PriorityQueue<int[]> pq = new PriorityQueue<>((e1,e2)->(e1[1]-e2[1]));
+        int curDay = events[0][0];
+        int ei = 0;
+        int res = 0;
+        while (!pq.isEmpty() || ei < events.length) {
+            while(ei < events.length && events[ei][0]<= curDay) {
+                pq.add(events[ei]);
+                ei++;
+            }
+            // pop out invalid ones
+            while(!pq.isEmpty() && pq.peek()[1] < curDay) {pq.poll();}
+            if (!pq.isEmpty()) {
+                pq.poll();
+                res++;
+                curDay++;
+            } else {
+                if(ei < events.length) {curDay = events[ei][0];}
+            }
+            
+        }
+        return res;
+    }
+}
+
 
 
 
