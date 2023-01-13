@@ -112,3 +112,57 @@ class Solution {
 // Or like above M1 way. Always adjust mid to be at odd positions, so that we don't need to move differently based on even and odd cases.
 
 
+
+
+// Review 23/1/13
+/*Thoughts - similar as two above self ways
+O(n) way is trivial. O(logn) way - binary search.
+Need to consider about even or odd case. compare mid with mid+1 and mid - 1
+if both sides len is even, then if either side == mid, then meaning the single number is on that side. Otherwise mid is the number.
+if both sides len is odd, then if either side == mid, then meaning the single number is on the other side.
+If we move the range carefully, we won't have cases when one side is odd len and the other is even len.
+ */
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+        while(start < end) {
+            int mid = start + (end - start) / 2;
+            if ((mid - start) % 2 == 0) {
+                if (nums[mid] == nums[mid + 1]) {
+                    start = mid + 2;
+                } else if (nums[mid] == nums[mid - 1]) {
+                    end = mid - 2;
+                } else {
+                    return nums[mid];
+                }
+            } else {
+                if (nums[mid] == nums[mid + 1]) {
+                    end = mid - 1;
+                } else  {
+                    start = mid + 1;
+                } 
+            }
+        }
+        return nums[end];
+    }
+}
+
+
+// practice above M1 way, as it's a better way. - basically to adjust mid positin to always have both sides with odd len.
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+        while(start < end) {
+            int mid = start + (end - start) / 2;
+            if ((mid - start) % 2 == 0) {mid++;}
+            if (nums[mid] == nums[mid+1]) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return nums[end];
+    }
+}
