@@ -171,6 +171,42 @@ class Solution {
 
 
 
+// Review 23/1/19
+/* Thoughts
+since it's a BST, left < root < right
+Recursive way, at each level, every node remains can become the root. Given we need to return the full list, no need to have a memo.
+base case: if only one node remains, return itself.
+
+*/
+
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        return treeHelper(1, n);        
+    }
+
+    private List<TreeNode> treeHelper(int start, int end) {
+        List<TreeNode> res = new LinkedList<>();
+        if (start >= end) {
+            TreeNode root = start > end ? null: new TreeNode(start);
+            res.add(root);
+            return res;
+        }
+        for (int i = start; i <= end; i++) {
+            List<TreeNode> left = treeHelper(start, i-1);
+            List<TreeNode> right = treeHelper(i+1, end);
+            for (TreeNode l: left) {
+                for (TreeNode r: right) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = l;
+                    root.right = r;
+                    res.add(root);
+                }               
+            }
+        }
+        return res;
+    }
+}
+
 
 
 
