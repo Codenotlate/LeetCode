@@ -204,6 +204,51 @@ class Solution {
 
 
 
+// Review 23/1/20
+/*Thoughts
+DFS + backtracking with visited label
+time O(m * n * 3^L)
+
+space is O(L) len of recursion calls if we use board itself as a visited label.
+ */
+class Solution {
+    public boolean exist(char[][] board, String word) {
+      int m = board.length;
+      int n = board[0].length;
+      if (m * n < word.length()) {return false;}
+      int[][] visited = new int[m][n];
+      for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+          if (existHelper(board, i, j, word, 0, visited)) {return true;}
+        }
+      }
+      return false;
+    }
+
+    private boolean existHelper(char[][] board, int i , int j, String word, int idxWord, int[][] visited) {
+      if (idxWord >= word.length()) {return true;}
+      if (i < 0 || j < 0 || i >= board.length || j >= board[0].length || visited[i][j] == 1 ||board[i][j] != word.charAt(idxWord)) {return false;}
+      visited[i][j] = 1;
+      int[][] dirs = new int[][]{{-1,0},{1,0},{0,1},{0,-1}};
+      for (int[] d: dirs) {
+        int newi = i + d[0];
+        int newj = j + d[1];
+        if (existHelper(board, newi, newj, word, idxWord + 1, visited)) {
+          return true;
+        }
+      }
+      visited[i][j] = 0;
+      return false;
+    }
+}
+
+
+// For the pruning mentioned in followup
+/* From discussion:
+In pruning you just have to stop the search when you have reached an index whose value does not matches with the original word. For example you have the word "HELLO" and in the search you have got "HELP_" so there is no point on generating the last word because you have already got a index where there is a mismatch. I guess most of the people have implemented this in the back of their mind without even noticing it.
+
+*/
+
 
 
 
