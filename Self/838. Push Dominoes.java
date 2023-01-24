@@ -5,7 +5,7 @@ If current pos is R: if has R in the left, replace all between positions to R. U
 time O(n)
 space O(n)
 
-not the ideal one, but solutions also similar,check the solution next time
+not the ideal one, but solutions also similar,check the solution next time: "https://leetcode.com/problems/push-dominoes/solutions/132482/java-one-pass-in-place-13ms/"
 
 
  */

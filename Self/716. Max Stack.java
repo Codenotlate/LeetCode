@@ -6,7 +6,7 @@ when top, return the last node value O(1)
 when peekMax, return the last key in the treemap. O(logn)
 when popMax, pop the last key from the treemap, connect its prev and next node directly in LL. O(logn)
 
-remember remove an element from pq is O(n). Thus not use pq here.
+!!!---remember remove an element from pq is O(n). Thus not use pq here.---!!!
 */
 class MaxStack {
     public class Node {
@@ -83,3 +83,104 @@ class MaxStack {
     }
 }
 // hint from https://leetcode.com/problems/max-stack/discuss/129922/Java-simple-solution-with-strict-O(logN)-push()popMax()pop()
+
+
+// Review 23/1/24
+/* Thoughts
+to make popMax time not O(n), we need a double LL. And in order to know the next largest after current max being popped out, we need a sorted structure.e.g. maxheap or treeMap. Note maxheap won't work here, as remove a non-root element from heap takes O(n) time.
+Thus we use treemap with <node value, List<node in LL>>.
+Note List get size is O(1) for both arrayList and LL. And LL.removeLast() is O(1), arrayList.remove(size-1) is also O(1).
+https://stackoverflow.com/questions/43145395/time-complexity-while-deleting-last-element-from-arraylist-and-linkedlist
+https://stackoverflow.com/questions/863469/what-is-the-time-complexity-of-a-size-call-on-a-linkedlist-in-java
+ */
+class MaxStack {
+    private class Node {
+        int val;
+        Node prev;
+        Node next;
+
+        public Node(int value) {
+            val = value;
+        }
+    }
+
+
+    TreeMap<Integer, ArrayList<Node>> map;
+    Node dumHead;
+    Node dumTail;
+
+    public MaxStack() {
+        map = new TreeMap<>();
+        dumHead = new Node(-1);
+        dumTail = dumHead;
+    }
+    
+    public void push(int x) {
+        Node addNode = new Node(x);
+        // add in double LL
+        dumTail.next = addNode;
+        addNode.prev = dumTail;
+        dumTail = addNode;
+
+        // add in map
+        map.putIfAbsent(x, new ArrayList<>());
+        map.get(x).add(addNode);
+    }
+    
+    public int pop() {
+        // remove in double LL
+        int val = dumTail.val;
+        dumTail = dumTail.prev;
+        dumTail.next = null;
+
+        // remove in map
+        map.get(val).remove(map.get(val).size() - 1);
+        if (map.get(val).size() == 0) {map.remove(val);}
+
+        return val;
+    }
+    
+    public int top() {
+        // return last node in LL
+        return dumTail.val;
+        
+    }
+    
+    public int peekMax() {
+        //return last key in map
+        return map.lastKey();
+    }
+    
+    public int popMax() {
+        // remove from map.lastKey() list
+        int maxVal = map.lastKey();
+        Node maxNode = map.get(maxVal).remove(map.get(maxVal).size()-1);
+        if (map.get(maxVal).size() == 0) {map.remove(maxVal);}
+
+        // remove maxNode from LL (special case when maxNode is dumTail)
+        maxNode.prev.next = maxNode.next;
+        if (maxNode.next != null) {maxNode.next.prev = maxNode.prev;}
+        else {dumTail = maxNode.prev;}
+
+        return maxVal;
+    }
+}
+
+
+
+/* Review of heap data structure
+Implementation note: (https://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html)
+this implementation provides O(log(n)) time for the enqueing and dequeing methods (offer, poll, remove() and add); 
+linear time for the remove(Object) and contains(Object) methods; 
+and constant time for the retrieval methods (peek, element, and size).
+
+(https://stackoverflow.com/questions/12719066/priority-queue-remove-complexity-time):
+remove() -> This is to remove the head/root, it takes O(logN) time.
+remove(Object o) -> This is to remove an arbitrary object. Finding this object takes O(N) time, and removing it takes O(logN) time.
+
+Detail implementation of heap: https://en.wikipedia.org/wiki/Binary_heap
+
+
+
+
+*/
