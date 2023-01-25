@@ -307,7 +307,14 @@ class Solution {
 
 
 
+// Review 23/1/25 - skip the implementation, one error record. Should convert to string array first as above codes.
+/* Thought
+M1: basically it's about the sort of the num in nums. The order of n1, n2 is actually determined by int(str(n1) + str(n2)) v.s. int(str(n2) + str(n1)). Thus we can directly sort based on this rule and append get the result.
+Time O(nlogn) space O(n)
 
+Note: reason why we can't just define a integer comparator for int[] array sort
+https://stackoverflow.com/questions/29583035/no-suitable-method-found-for-sortint-anonymous-comparatorinteger
+*/
 
 
 
