@@ -217,9 +217,58 @@ class Solution {
 
 
 
+// Review - 23/1/25 (same two methods as above)
+/*Thoughts
+Way1: for each char in s, use it as the center of palindromic string and expand to the two sides, similarly use it along with its right neighbor as the center and count as well. 
+time O(n^2) space O(1)
+
+Way2: assume dp(i,j) represents whether s[i:j] is palindromic.  dp[i][j] = dp[i+1][j-1] && s[i] == s[j]. In the end, we can count the number of true value in dp[][]. The space can be optimized to O(n). Time O(n^2).
+Again two base cases are single char and double chars.
+
+ */
+// M1
+class Solution {
+    public int countSubstrings(String s) {
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            count += singleCount(s, i, i) + singleCount(s, i, i+1);
+        }
+        return count;
+    }
+
+    private int singleCount(String s, int i, int j) {
+        int count = 0;
+        while ( i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)){
+            count++;
+            i--;
+            j++;
+        }
+        return count;
+
+    }
+}
 
 
-
+// M2 O(n) space way
+class Solution {
+    public int countSubstrings(String s) {
+        int count = 0;
+        boolean[] dp = new boolean[s.length()];
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (int j = s.length() - 1; j >= i; j--) {
+                // base case
+                if (i == j || (i+1 == j && s.charAt(i) == s.charAt(j))) {
+                    dp[j] = true;
+                    count++;
+                } else {
+                    dp[j] = dp[j-1] && (s.charAt(i) == s.charAt(j));
+                    if (dp[j]) {count++;}
+                }
+            }
+        }
+        return count;
+    }    
+}
 
 
 
