@@ -143,3 +143,42 @@ class Solution {
         
     }
 }
+
+
+// Review 23/1/26
+/* Thoughts - similar to above math proven way
+one move to increment n-1 elements by 1 is the same as having one element decrease by 1. So basically, we need all elements to decrease until they equal to the minimum elements in the array.
+Thus we can find the min, and sum up all diffs from other elements and min.
+Time O(n) space O(1)
+*/
+class Solution {
+    public int minMoves(int[] nums) {
+        int min = nums[0];
+        int sum = 0;
+        for (int n: nums) {
+            min = Math.min(min, n);
+        }
+        for (int n: nums) {
+            sum += n - min;
+        }
+        return sum;       
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

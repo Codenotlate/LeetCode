@@ -244,7 +244,78 @@ class Solution {
 
 
 
+// Review 23/1/26
+/*Thoughts
+M1: recursive way. Base case: if root equal to p/q, return p/q; if root == null, return null. Otherwise, left = recur(root.left, p, q) and right = recur(root.right, p, q). If left != null && right != null, return root. Otherwise, return the non-null one between left and right.
+Time O(n), space O(n)
 
+M2: iterative way. find p and q in the tree, record the node -> parent map along the way. Trace back starting from p to get all the ancestors from root to p and store them in a set. Trace back starting from q and check whether Pset includes the ancester node in q's path. return the first one found.
+time O(n) space O(n)
+ 
+*/
+// M1: recursive
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {return null;}
+        if (root == p || root == q) {
+            return root == q? q : p;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left == null || right == null) {
+            return left == null ? right : left;
+        }
+        return root;
+    }
+}
+
+// M2: iterative
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        Map<TreeNode, TreeNode> map = new HashMap<>();
+        // find both p and q and build the map along the way (can be either recursive or iterative)
+        map.put(root, null); // required for recursive way find
+        find(root, p, q, map);
+        Set<TreeNode> pSet = new HashSet<>();
+        TreeNode parentP = p;
+        while (parentP != null) {
+            pSet.add(parentP);
+            parentP = map.get(parentP);
+        }
+        TreeNode parentQ = q;
+        while (!pSet.contains(parentQ)) {
+            parentQ = map.get(parentQ);
+        }
+        return parentQ;
+    }
+
+    // iterative way using stack
+    // private void find(TreeNode root, TreeNode p, TreeNode q, Map<TreeNode, TreeNode> map) {
+    //     Stack<TreeNode> stack = new Stack<>();
+    //     stack.push(root);
+    //     map.put(root, null);
+    //     while (!map.containsKey(p) || !map.containsKey(q)) {
+    //         TreeNode cur = stack.pop();
+    //         if (cur.left != null) {stack.push(cur.left); map.put(cur.left, cur);}
+    //         if (cur.right != null) {stack.push(cur.right); map.put(cur.right, cur);}
+    //     }
+    // }
+
+
+    // recursive way
+    private void find(TreeNode root, TreeNode p, TreeNode q, Map<TreeNode, TreeNode> map) {
+        if (map.containsKey(p) && map.containsKey(q)) {return;}
+        if (root.left != null) {
+            map.put(root.left, root);
+            find(root.left, p, q, map);
+        }
+        if (root.right != null) {
+            map.put(root.right, root);
+            find(root.right, p, q, map);
+        }
+
+    }    
+}
 
 
 
