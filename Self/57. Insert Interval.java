@@ -134,3 +134,35 @@ class Solution {
         return res;
     }
 }
+
+
+
+// Review 23/1/27 - similar as above
+/* Thoughts
+since sorted in ascending order by start, we can use binary search to find the position where we can insert the new interval.  Checking the two neighbors to merge the range if necessary. However in this way, we still need to go through all intervals to add them in res, thus the time is still O(n), binary search won't improve the overall time. Thus we just get back to the iterative way.
+Basically, go through each interval in the array, the basic rule is switching current interval based on new interval, and when current interval is non overlapping with next interval, insert it to the result.
+
+ */
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> resList = new LinkedList<>();
+        for (int[] curInt: intervals) {
+            if (newInterval[1] < curInt[0]) {
+                resList.add(newInterval);
+                newInterval = curInt;
+            } else if (newInterval[0] > curInt[1]) {
+                resList.add(curInt);
+            } else {
+                newInterval[0] = Math.min(newInterval[0], curInt[0]);
+                newInterval[1] = Math.max(newInterval[1], curInt[1]);
+            }
+        }
+        resList.add(newInterval);
+
+        int[][] res = new int[resList.size()][2];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = resList.get(i);
+        }
+        return res;
+    }
+}

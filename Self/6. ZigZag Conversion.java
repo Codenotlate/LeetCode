@@ -159,7 +159,7 @@ class Solution {
     }
 }
 
-// Actually is we reverse the loop order, i.e. with numRows as outer loop and j + size as inner loop, we don't need the map, can directly append the result to stringbuilder. As below
+// Actually if we reverse the loop order, i.e. with numRows as outer loop and j + size as inner loop, we don't need the map, can directly append the result to stringbuilder. As below
 class Solution {
     public String convert(String s, int numRows) {
         if (numRows == 1) {return s;}
@@ -180,6 +180,45 @@ class Solution {
 }
 
 
+
+
+
+// Review 23/1/27 - idea is the same as above, slightly diff implementation, but a more straightforward way
+/* Thoughts
+Basically find the rule: find indexes in the first row, then those in the second row and so on until row n.
+first row: 0, 4, 8, ... ->  diff = 2 * (n-1)
+second row: 1, 3,5, 7,9,... -> first row index +1 or +(diff-1) and in the range
+third row -> first row index +2 or +(diff-2) and in the range
+nth row -> first row index + (n-1) and in the range
+Thus, loop on each row (1st to nth row), for each row append to result based on the index rule above.
+
+!!! Don't forget about special case numRows == 1
+
+Time O(n) space O(n)
+
+*/
+class Solution {
+    public String convert(String s, int numRows) {
+        // special case
+        if (numRows == 1) {return s;}
+        StringBuilder res = new StringBuilder();
+        int diff = 2 * (numRows - 1);
+        for (int i = 0; i < numRows; i++) {
+            int cur = 0;
+            while (cur < s.length()) {
+                if (i == 0 || i == numRows - 1) { // first row and last row only need to add once
+                    if (cur + i < s.length()) {res.append(s.charAt(cur + i));}
+                } else { // other rows in between, need to add twice
+                    if (cur + i < s.length()) {res.append(s.charAt(cur + i));}
+                    if (cur + diff - i < s.length()) {res.append(s.charAt(cur + diff - i));}
+                }
+
+                cur += diff;
+            }
+        }
+        return res.toString();
+    }
+}
 
 
 
