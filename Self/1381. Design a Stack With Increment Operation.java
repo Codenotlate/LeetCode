@@ -114,3 +114,43 @@ class CustomStack {
     }
 }
 
+
+
+// Review 23/1/30 - self came up with, two details below forgot
+/* Thought
+If go with the normal array way, the inc(k,val) will take O(min(n, k)) time.
+This can be optimized to O(1) using another array tracking the inc for [0] to that position. And when a value is popped out, the inc at that position needs to be added to the pop out number and also transferred to [pos-1]
+ */
+class CustomStack {
+    int[] stackArr;
+    int[] incs;
+    int top;
+
+    public CustomStack(int maxSize) {
+        stackArr = new int[maxSize];
+        incs = new int[maxSize];
+        top = -1;
+    }
+    
+    public void push(int x) {
+        if (top == stackArr.length - 1) {return;}
+        top++;
+        stackArr[top] = x;        
+    }
+    
+    public int pop() {
+        if (top == -1) {return -1;}
+        if (top >= 1) {incs[top-1] += incs[top];}
+        int res = stackArr[top] + incs[top];
+        // don't forget to clean incs up
+        incs[top] = 0;
+        top--;
+        return res;
+    }
+    
+    public void increment(int k, int val) {
+        k = Math.min(k-1, top);
+        // top can be -1
+        if (k >= 0) {incs[k] += val;}        
+    }
+}

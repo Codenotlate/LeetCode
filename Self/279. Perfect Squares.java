@@ -250,9 +250,79 @@ class Solution {
 
 
 
+// Review 23/1/30 - 4 summarized ways from above
+/*Thoughts
+M1: DP way(bottom-up): dp[i] = i is squareNum? 1 : min(dp[i-squareNum]) + 1
+check whether is squareNum takes O(sqrt(n)) time, get all the squareNum < i also take O(sqrt(i)) time.
+Thus overall time O(n * sqrt(n)) space O(n)
 
+M2: similarly recursive + memo way(top-down, can also do top-down dp way): time O(n * sqrt(n)) space O(n)
 
+M3: view this as a n-nary tree, when diff is a squareNum, the two numbers have a edge connecting them. Thus the issue is to find the shortest path between 0 and n.
+If we view it as find the path from 0 to n, then it's bottom-up. If from n to 0, then it's top-down.
 
+All 4 ways share same complexity.
+*/
+
+// M1: bottom-up dp
+class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, 10001);
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j * j <= i; j++) {
+                dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
+            }
+        }
+        return dp[n];
+    }
+}
+// M2: top-down recursion + memo
+class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        return squareHelper(n, dp);
+    }
+
+    private int squareHelper(int n, int[] dp) {
+        if (n == 0) {return 0;}
+        if (dp[n] != 0) {return dp[n];}
+        int res = Integer.MAX_VALUE;
+        for (int i = 1; i * i <= n; i++) {
+            res = Math.min(squareHelper(n-i*i, dp)+1, res);
+        }
+        dp[n] = res;
+        return res;
+    }
+}
+// M3: bottom-up/top-down b-nary tree, here choose bottom-up
+class Solution {
+    public int numSquares(int n) {
+        Queue<Integer> queue = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        queue.add(0);
+        visited.add(0);
+
+        int level = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                int cur = queue.poll();
+                int j = 1;               
+                while(cur + j * j <= n) {
+                    if (cur + j * j == n) {return level + 1;}
+                    if (visited.contains(cur + j * j)) {j++;continue;}
+                    queue.add(cur + j * j);
+                    visited.add(cur + j * j);
+                    j++;
+                }
+            }
+            level++;
+        }
+        return -1; // should not reach this row
+    }
+}
 
 
 
