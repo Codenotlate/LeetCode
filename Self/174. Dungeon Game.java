@@ -143,3 +143,30 @@ class Solution {
         return Math.max(0, -dp[0]) + 1;
     }
 }
+
+
+
+// Review - 23/1/31 (self done)
+/* Thoughts
+want the max of the negative numbers
+dp[i][j] = mat[i][j] + max(min(0, dp[i+1][j]), min(0, dp[i][j+1])) for out of boundary ones, dp = -inf
+in the end, return max(0,-dp[0][0]) + 1.
+time O(mn) space O(min(m,n))
+*/
+class Solution {
+    public int calculateMinimumHP(int[][] dungeon) {
+        int m = dungeon.length;
+        int n = dungeon[0].length;
+        int[] dp = new int[n];
+        for (int i = m-1; i >= 0; i--) {
+            for (int j = n-1; j >= 0; j--) {
+                if (i == m-1 && j == n-1) {dp[j] = dungeon[i][j]; continue;}
+                int right = j+1 < n? Math.min(0, dp[j+1]) : Integer.MIN_VALUE;
+                int bottom = i + 1 < m? Math.min(0, dp[j]) : Integer.MIN_VALUE;
+                dp[j] = dungeon[i][j] + Math.max(right, bottom);
+            }
+        }
+
+        return Math.max(-dp[0], 0) + 1;
+    }
+}

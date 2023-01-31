@@ -220,3 +220,82 @@ class Solution {
     }
 }
 
+
+
+// Review 23/1/31
+/*Thoughts
+M1: do BFS of the graph. Change the visited set to a map label node with its group(or an array). Changing the group label between levels of BFS, if the node in current level has been visited and in a different label, return false directly. Otherwise, if we can successfully do the BFS of the whole group, return true.
+Also notice the graph may not be connected, meaning we should start a BFS for every node. And if either one return false, we return false.
+Time O(n) space O(n)
+
+M2: Similar as above, we can also do dfs for each traverse.
+Time O(n) space O(n)
+
+
+*/
+// M1: BFS
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        int[] visited = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (visited[i] != 0) {continue;}
+            if (!bfs(graph, visited, i)) {return false;}
+        }
+        return true;       
+    }
+
+    private boolean bfs(int[][] graph, int[] visited, int i) {
+        int label = 1;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(i);
+        visited[i] = label;
+        
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            label *= -1;
+            while (size-- > 0) {
+                int cur = queue.poll();
+                for (int next: graph[cur]) {
+                    if (visited[next] == -label) {return false;}
+                    if (visited[next] == 0) {
+                        queue.add(next);
+                        visited[next] = label;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+// M2: DFS - slightly diff from above dfs, but idea is the same
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n = graph.length;
+        int[] visited = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (visited[i] != 0) {continue;}
+            if (!dfs(graph, visited, i,1)) {return false;}
+        }
+        return true;       
+    }
+
+    private boolean dfs(int[][] graph, int[] visited, int i, int label) {
+        visited[i] = label;
+        label *= -1;
+        for (int next: graph[i]) {
+            if (visited[next] == -label) {return false;}
+            if (visited[next] == 0) {
+                if(!dfs(graph, visited, next, label)) {return false;}
+            }
+        }
+        return true;
+    }
+}
+
+
+
+
+
+
+
