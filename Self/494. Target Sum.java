@@ -189,6 +189,52 @@ class Solution {
 
 
 
+// Review 23/2/1 - still need the notes (A summary of above solutions as below 4 ways)
+/* Thoughts - 4 methods have same time complexity
+Type 1:  consider it from the most direct way
+M1: dfs + backtracking + memo, basically for each position there's two choices to make and will change the target number for following recursions.
+time and space same as below M2
+
+M2:dp way. dp[i][t] = dp[i-1][t-nums[i-1]] + dp[i-1][t+nums[i-1]]
+tRange = t+ sum(nums) - (t-sum(nums)) = 2*sum(nums)
+time O(l * sum(nums)) space O(l * sum(nums)) => can be optimized to O(sum(nums))
+
+---------------------------------------------
+Type 2: convert the problem.  The problem is actually about finding a subset with sum T, where T - (totalSum - T) = target => T = (target + totalSum) / 2.
+M3: dfs + memo way
+time O(l * T) since abs(target) < totalSum => T in [0, totalSum] => time O(l * sum(nums)) space the same
+
+M4: dp way. dp[i][t] = dp[i-1][t] + dp[i-1][t-nums[i]]
+time O(l * sum(nums)) space can be optimized to O(sum(nums))
+
+
+*/
+// implement M4 here as it is the easiest way
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int n: nums) {sum += n;}
+        if ((target + sum) % 2 != 0 || Math.abs(target) > sum) {return 0;}
+        int newTarget = target + (sum - target) / 2;
+
+        int[] dp = new int[newTarget + 1];
+        dp[0] = 1;
+        for (int n: nums) {
+            for (int t = newTarget; t >= n; t--) {
+                dp[t] += dp[t-n];
+            }
+        }
+        return dp[newTarget];
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
