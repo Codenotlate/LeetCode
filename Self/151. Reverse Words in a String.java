@@ -260,4 +260,80 @@ class Solution {
 
 
 
+// Review 23/2/2
+/* Thoughts
+The requirement is reverse and remove all extra spaces in middle and two sides.
+M1: split the string using space into an array. reverse the array, then append to result and skip the "" in the array. time O(n) space O(n)
+M2: Similar idea as M1 without using build-in methods like split. Then we can do the split manully, and put each word in a stack/deque(add in front), then poll out accordingly with space added in between.
+M3: if s is given as a char[] and we can do inplace change, then we can have one way with time O(n) space O(1). 
+The idea is to reverse the whole char[] first, then start from left to right, skip spaces, and reverse each word in char[] inplace. The third round, we remove all the extra spaces.
+s = "  hello  world  "
+1st round: "  dlrow  olleh  "
+2nd round: "  world  hello  "
+3rd round: "world hello"
+
+*/
+// M1
+class Solution {
+    public String reverseWords(String s) {
+        String[] split = s.split(" ");
+        StringBuilder res = new StringBuilder();
+        for (int i = split.length - 1; i >= 0; i--) {
+            String str = split[i];
+            if (str.equals("")) {continue;}
+            res.append(str).append(" ");
+        }
+        res.deleteCharAt(res.length() - 1);
+        return res.toString();
+    }
+}
+// M3 - less precise than above ways, above ways combine 2nd and 3rd rounds together.
+class Solution {
+    public String reverseWords(String s) {
+        char[] chars = s.toCharArray();
+        // 1st round
+        reverse(chars,0, chars.length-1);
+        // 2nd round
+        int left = 0; 
+        while(left < chars.length) {
+            while(left < chars.length && chars[left] == ' ') {left++;}
+            int right = left;
+            while(right < chars.length && chars[right] != ' ') {right++;}
+            reverse(chars, left, right-1);
+            left = right;
+        }
+        // 3rd round
+        int resIdx = 0;
+        left = 0;
+        while(left < chars.length) {
+            while(left < chars.length && chars[left] == ' ') {left++;}
+            int right = left;
+            while(right < chars.length && chars[right] != ' ') {right++;}
+            for (int i = left; i < right && i < chars.length; i++) {
+                if (i == left && resIdx != 0) {chars[resIdx++] = ' ';}
+                chars[resIdx++] = chars[i];
+            }
+            left = right;
+        }
+
+        // now chars[:resIdx-1] is the answer
+        // String(char[] value, int offset, int count) - Allocates a new String that contains characters from a subarray of the character array argument.
+        return new String(chars, 0, resIdx);
+    }
+
+    private void reverse(char[] chars, int i, int j) {
+        while (i < j) {
+            char temp = chars[i];
+            chars[i] = chars[j];
+            chars[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}
+
+
+
+
+
 

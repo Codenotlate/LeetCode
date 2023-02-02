@@ -5,7 +5,10 @@ First find the min and max of the array. If coins < min, directly return 0.
 Then setup the counting array with len = max-min+1, the position in counting array will be num - min.
 After the sorting, we iterate the counting array from left to right. If coins / (idx + min) >= count[idx], then res += count[idx], coins - (idx + min) * count[idx]; Otherwise, res += coins / (idx + min) and return res directly.
 
-Time O(n) space O(max-min)
+Time O(n + max - min) space O(max-min)
+
+-----------------------
+also from solution, we can do basic sort, in Java, time O(nlogn), space O(logn) as in Java, Arrays.sort() is implemented using a variant of the Quick Sort algorithm which has a space complexity of O(log⁡n).
 */
 
 
