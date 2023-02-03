@@ -80,7 +80,24 @@ class Solution {
 
 
 
-
+// Review 23/2/3 - since this is connected to problem 378
+/* Thoughts
+use the feature of the matrix. starting with mat[r=0][c=n-1], if curNum < target, r++; else if curNum > target, c--, else, return true.
+If r >= m or c <= 0 in the end, return false.
+time O(m + n) space O(1)
+*/
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int r = 0;
+        int c = matrix[0].length - 1;
+        while ( r < matrix.length && c >= 0) {
+            if (matrix[r][c] < target) {r++;}
+            else if (matrix[r][c] > target) {c--;}
+            else {return true;}
+        }
+        return false;
+    }
+}
 
 
 

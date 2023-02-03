@@ -147,3 +147,60 @@ class Solution {
         }
     }
 }
+
+
+
+
+// Review 23/2/3 - same idea as above, slightly diff implementation, not single time pass, forgot some details
+/* Thoughts
+require in-place. Since we want to find the next in permutation, we need to focus on the right side of the array.
+As we know, for an array of number in non-ascending order, it must be the largest permutation. Thus we want to find the first position from right that unsatisfies this trend, and switch the number at that position with the last number bigger than it in the non-ascending subarray following it. And then reverse the following non-ascending subarray to make it non-descending.
+special case: if the whole array is actually non-ascending, then we simply reverse the whole array to return the min of the permutation.
+
+time O(n) space O(1)
+*/
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int i = nums.length - 2;
+        while(i >= 0) {
+            if (nums[i] < nums[i+1]) {break;}
+            i--;
+        }
+        if (i < 0) {
+            reverse(nums, 0, nums.length-1);
+            return;
+        }
+        int j = i+1;
+        while(j < nums.length) {
+            // should have equal sign here
+            if (nums[j] <= nums[i]) {
+                break;
+            }
+            j++;
+        }
+        swap(nums, i, j-1);
+        reverse(nums, i+1, nums.length - 1);
+        return;
+    }
+
+
+    private void reverse(int[] nums, int i, int j) {
+        while ( i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+
+
+
+
+
