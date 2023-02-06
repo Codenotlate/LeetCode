@@ -159,6 +159,55 @@ class Solution {
 
 
 
+// Review 23/2/6 - self with some debug
+/* Thoughts
+This is a dp problem. Assume dp[i] represents the max product of all subarrays ending in position i. Then dp[i] will need both max and min product of all subarrays ending in position i-1. Then the mindp[i] = min(mindp[i-1] * nums[i], maxdp[i-1] * nums[i],nums[i]), and maxdp[i] = max(mindp[i-1] * nums[i], maxdp[i-1] * nums[i], nums[i]). We want to keep both the min and max because both of them have the potential to contribute to the larger max product.
+Along the way, keep check of max of maxdp, and that is the final result.
+
+time O(n) space O(n) optimized to O(1)
+
+*/
+// basic O(n) space way
+class Solution {
+    public int maxProduct(int[] nums) {
+        int n = nums.length;
+        int[] mindp = new int[n];
+        int[] maxdp = new int[n];
+        int res = nums[0];
+        for (int i = 0; i < n; i++) {
+            if (i == 0) {
+                mindp[i] = nums[i];
+                maxdp[i] = nums[i];
+                continue;
+            }
+            int minProd = mindp[i-1]*nums[i];
+            int maxProd = maxdp[i-1]*nums[i];
+            mindp[i] = Math.min(maxProd, Math.min(minProd, nums[i]));
+            maxdp[i] = Math.max(maxProd, Math.max(minProd,nums[i]));
+            res = Math.max(maxdp[i], res);
+        }
+        return res;
+    }
+}
+// O(1) space way
+class Solution {
+    public int maxProduct(int[] nums) {
+        int n = nums.length;
+        int mindp = nums[0];
+        int maxdp = nums[0];
+        int res = nums[0];
+        for (int i = 1; i < n; i++) {
+            int minProd = mindp*nums[i];
+            int maxProd = maxdp*nums[i];
+            mindp = Math.min(maxProd, Math.min(minProd, nums[i]));
+            maxdp = Math.max(maxProd, Math.max(minProd,nums[i]));
+            res = Math.max(maxdp, res);
+        }
+        return res;
+    }
+}
+
+
 
 
 
