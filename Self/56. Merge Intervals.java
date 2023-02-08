@@ -109,3 +109,42 @@ class Solution {
 }
 
 // check above followup question idea
+
+
+
+
+// Review 23/2/8 - Same as above, but not precise enough, also rememver resList.toArray(new int[resList.size()][]) syntax.
+/*Thoughts
+sort the array by the start and adjust one by one, add only when it's non-overlap with the next one.
+time O(nlogn) space O(n) or O(logn) if not counting in result space List
+
+ */
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (i1, i2) -> (i1[0] - i2[0]));
+        List<int[]> resList = new ArrayList<>();
+        int start = -1;
+        int end = -1;
+        for (int[] cur: intervals) {
+            if (start == -1) {
+                start = cur[0];
+                end = cur[1];
+                continue;
+            }
+            if (cur[0] > end) {
+                resList.add(new int[]{start, end});
+                start = cur[0];
+                end = cur[1];
+            } else {
+                end = Math.max(end, cur[1]);
+            }
+        }
+        resList.add(new int[]{start, end});
+        int[][] res = new int[resList.size()][2];
+        for (int i = 0; i < res.length; i++) {res[i] = resList.get(i);}
+        return res;
+    }
+}
+
+
+// next time only check the followup questions - How do you add intervals and merge them for a large stream of intervals? (Facebook Follow-up Question)
