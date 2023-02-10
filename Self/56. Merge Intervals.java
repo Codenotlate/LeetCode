@@ -28,18 +28,6 @@ class Solution {
     }
 }
 
-// followup questions in solution comment -- need review
-/*
-https://leetcode.com/problems/merge-intervals/discuss/355318/Fully-Explained-and-Clean-Interval-Tree-for-Facebook-Follow-Up-No-Sorting
-Question: How do you add intervals and merge them for a large stream of intervals? (Facebook Follow-up Question)
-*/
-
-/*
-some ideas from discussion for the followup
-1. Cant we just do this with a priority queue ? As we have an incoming stream of intervals, we just need to keep them sorted and pop the smallest two intervals and check if we can merge them.
-
-
-*/
 
 
 
@@ -148,3 +136,22 @@ class Solution {
 
 
 // next time only check the followup questions - How do you add intervals and merge them for a large stream of intervals? (Facebook Follow-up Question)
+// followup questions in solution comment -- need review
+/*
+https://leetcode.com/problems/merge-intervals/discuss/355318/Fully-Explained-and-Clean-Interval-Tree-for-Facebook-Follow-Up-No-Sorting
+Question: How do you add intervals and merge them for a large stream of intervals? (Facebook Follow-up Question)
+*/
+
+/*
+some ideas from discussion for the followup
+1. Cant we just do this with a priority queue ? As we have an incoming stream of intervals, we just need to keep them sorted and pop the smallest two intervals and check if we can merge them.
+
+2.want to discuss about the FB follow up question, "How do you add intervals and merge them for a large stream of intervals? (Facebook Follow-up Question)" from here, https://leetcode.com/problems/merge-intervals/discuss/355318/Fully-Explained-and-Clean-Interval-Tree-for-Facebook-Follow-Up-No-Sorting
+If this is an real world abstrcted problem, i'd prefer to use divide and conquer technique depends on the requirements. For example, partitioning input intervals based on interval start/end value, i.e we have 1000 buckets, inside each bucket we maintain a sorted intervals, each bucket can be in one machine or multiples buckets in one machine. then we use merge those bucket 2 by 2 until to the point each bucket contains maximum intervals. And make sure no intervals are across two buckets
+For either endless incoming stream mentioned here or memory is too small to load all intervals, this approach should work.
+this BST approach is impresive but not realistic for me to write in the interview
+https://leetcode.com/problems/merge-intervals/discuss/21451/Share-my-BST-interval-tree-solution-C%2B%2B-No-sorting!
+
+
+*/
+

@@ -178,3 +178,38 @@ class Solution {
         return dp_prev1;
     }
 }
+
+
+
+
+
+// Review 23/2/10 - mostly the same as above way(above way is more precise)
+/* Thoughts
+This is a dp problem. At each position, if it's 0, it will be zero starting this pos. Otherwise we check s[i] and s[i:i+1]. Assume dp[i] stands for number of ways for s[i:], then dp[i] = dp[i+1] + (if i+1 and i+2 exists and s[i:i+1] in [10,26] and dp[i+2]). dp[n] init to 1.
+Since dp[i] only relies on dp[i+1] and dp[i+2], space can be optimized to O(1)
+
+time O(n) space O(1)
+
+ */
+class Solution {
+    public int numDecodings(String s) {
+        int dp_i = s.charAt(s.length() - 1)=='0'? 0:1;
+        int dp_i1 = 1;
+        for (int i = s.length() - 2; i >= 0; i--) {
+            if (s.charAt(i) == '0') {
+                dp_i1 = dp_i;
+                dp_i = 0;
+                continue;
+            }
+            int val = 10 * (s.charAt(i) - '0') + (s.charAt(i+1) - '0');
+            if (val >= 10 && val <= 26) {
+                int temp = dp_i1;
+                dp_i1 = dp_i;
+                dp_i += temp;
+            } else { // don't forget this line
+                dp_i1 = dp_i;
+            }
+        }
+        return dp_i;
+    }
+}
