@@ -111,3 +111,34 @@ class Solution {
 }
 
 
+// Review 23/2/14 - similar as above, can't write it smoothly.
+/* Thoughts
+We need to first sort the array. And since when there are multiple values we want the max one, we need to go through from the largest to the smallest.
+[6,5,0,3,0,1,0] left to right, when arr[i] == i+1, return i+1 or arr[i] > i+1 return i
+[6,5,4,1,0]
+for the sort part, regular one takes O(nlogn) time. considering counting sort.
+although the number range in array is [1,1000], but for this problem arr[i] > n is the same as arr[i] == n, because in total we only have n papers to check. Thus we can have a counting array with [0, n] size (n+1).
+
+space O(n) time O(n)
+
+*/
+class Solution {
+    public int hIndex(int[] citations) {
+        int n = citations.length;
+        int[] count = new int[n+1];
+        // counting sort
+        for (int c: citations) {
+            if (c >= n) {c = n;}
+            count[c]++;
+        }
+
+        
+        int num = 0;
+        for (int i = n; i > 0; i--) {
+            num += count[i];
+            if (num >= i) {return i;}
+        }
+        return 0;
+    }
+}
+
