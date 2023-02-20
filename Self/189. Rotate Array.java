@@ -165,3 +165,34 @@ class Solution {
         }        
     }    
 }
+
+
+
+
+// Review 23/2/20 - Above M3 didn't mention
+/* Thoughts
+O(n) space way is trivial. we have another temp array to store the result and then copy back. First adjust k buy k%nums.len. 
+M1: start from left to right, for each i, its new pos in temp is (i+k) % len.
+M2: first put nums[len - k:len-1] to the first k positions of temp, then put nums[0:len-k-1] to the rest of the temp.
+O(1) space way M3: use reverse. first reverse the total nums, then reverse [0: k-1] and [k:len-1] separately.
+
+*/
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int n = nums.length;
+        k = k % n;
+        reverse(nums, 0, n-1);
+        reverse(nums, 0, k-1);
+        reverse(nums, k, n-1);
+    }
+
+    private void reverse(int[] arr, int i, int j) {
+        while(i < j) {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}

@@ -99,3 +99,34 @@ class Solution {
         return (int) res;
     }
 }
+
+
+// Review 23/2/20 - need to pay attention to use long handling overflow
+/*Thoughts
+M0: naive way. To get all subarrays and get the min sum. Time O(n^2) space O(1)
+M1: Another way to view this problem is for each num in arr, how many times it is viewed as min of a subarray it is in. Using monotonic stack.
+sum += popnum * (popIdx - left) * (right - popIdx)
+time O(n) space O(n)
+
+e.g.
+[11,81,94,43,3]
+94*1*1+81*1*2+43*3*1+11*1*4+3*5*1 = 444
+*/
+
+class Solution {
+    public int sumSubarrayMins(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        int mod = 1000000007;
+        stack.push(-1);
+        long sum = 0;
+        for (int i = 0; i <= arr.length; i++) {
+            while(stack.peek() != -1 && (i == arr.length || arr[stack.peek()] >= arr[i])){
+                int popIdx = stack.pop();
+                sum += (long)arr[popIdx] * (popIdx - stack.peek()) * (i - popIdx);
+                sum %= mod;
+            }
+            stack.push(i);
+        }
+        return (int)sum%mod;
+    }
+}
