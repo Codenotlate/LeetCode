@@ -57,7 +57,7 @@ class Solution {
 }
 
 
-
+// compared with the way in 23/2/22 review, this way can't guarantee the space is min(m,n). It is O(n) which might be the max(m,n).
 class Solution {
 	// M3: based on M2, optimize to time O(n*m), space O(min(m,n))
     public int longestCommonSubsequence(String text1, String text2) {
@@ -209,5 +209,44 @@ class Solution {
             }
         }
         return dp[0];
+    }
+}
+
+
+
+
+
+
+// Review 23/2/22 - still need hint from solution
+/* Thoughts - need hint from the solution
+Assume we have two pointers. If s1[i] == s2[j] then, i++, j++. Otherwise, either i++ or j++. Thus if we use dp[i][j] to represent the result for s1[:i] and s2[:j]. Then:
+if s1[i] == s2[j], dp[i][j] = d[i-1][j-1] +1
+Otherwise, dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+(similarly, if we assume dp[i][j] is result for s1[i:] and s2[j:], we also can have similar dp formula except with reverse direction)
+M1: we can use dfs + memo as top-down way. time & space both O(mn)
+M2: bottom-up DP way. time O(mn) space can be optimized to O(min(m,n))
+
+*/
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        if (text1.length() < text2.length()) {
+            String temp = text1;
+            text1 = text2;
+            text2 = temp;
+        }
+        int[] dp = new int[text2.length()+1];
+        for (int i = 0; i < text1.length(); i++) {
+            int dp_i1j1 = 0;
+            for (int j = 1; j <= text2.length(); j++) {
+                int prev = dp[j]; // for dp[i-1][j]
+                if (text1.charAt(i) == text2.charAt(j-1)) {
+                    dp[j] = dp_i1j1 + 1;
+                } else {
+                    dp[j] = Math.max(dp[j-1], dp[j]);
+                }
+                dp_i1j1 = prev; // become dp[i-1][j-1] for next round of j
+            }
+        }
+        return dp[dp.length - 1];
     }
 }
