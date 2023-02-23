@@ -46,3 +46,44 @@ class Solution {
         return Math.max(0,right - left + 1);
     }
 }
+
+
+
+
+// Review 23/2/23 - M1 same as above M2, need to figure out M3 self next time
+/* Thoughts
+M0 naive way: sort nums in another array, then two pointers move from start and end, stop at the first element they meet in wrong position. The distance is the result. Time O(nlogn) space O(n)
+M1 O(n) both time and space way: If we go from left to right and see nums[i+1] < nums[i], we want to find the correct position for nums[i+1] in nums[0:i], and the min of that position is the left side of the shortest subarray. Similarly for right to left, and nums[i-1] > nums[i], we want to find correct position for nums[i-1] in nums[i:]. And the max of that position is the right side of the shortest subarray.
+Thus we can use monotonic stack. Each element will be searched 4 times in two iterations.
+
+[2,6,4,1,8,16,9,15,19]
+
+*/
+// M1
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        int left = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) {
+                left = Math.min(left, stack.pop());
+            }
+            stack.push(i);
+        }
+        stack.clear();
+        int right = 0;
+        for (int i = nums.length-1; i >= 0; i--) {
+            while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
+                right = Math.max(right, stack.pop());
+            }
+            stack.push(i);
+        }
+        return Math.max(0,right - left+1);
+    }
+}
+
+
+
+
+
+

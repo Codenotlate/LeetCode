@@ -125,7 +125,7 @@ class Solution {
 
 // review
 /*Initial thought
-bottom-up recursion way. At each cur node, we need third info from its children node. First is the maxSum(it may not contain the child node). Second is max left Sum till left child, and third is max right sum till right child.
+bottom-up recursion way. At each cur node, we need three info from its children node. First is the maxSum(it may not contain the child node). Second is max left Sum till left child, and third is max right sum till right child.
 Then for current node maxSum = max(maxleft, maxright, (max(leftsum,0) + max(rightsum, 0) + cur.val)). maxleft/maxright = max(maxleft/maxright,0) + cur.val
 time O(n) space O(n)
 */
@@ -144,6 +144,41 @@ class Solution {
         int curmax = Math.max(0, maxleft) + Math.max(0,maxright) + root.val;
         maxres[0] = Math.max(maxres[0], curmax);
         return Math.max(Math.max(maxleft, 0) + root.val, Math.max(maxright, 0) + root.val);
+    }
+}
+
+
+
+
+
+// Review 23/2/23 - similar as above, just put maxres as the first element in the returned array
+/*Thoughts
+M1: Recursive way - if we are at root and we want to know the max path sum. We need below info: max path sum including left/also right child in its subtree, max path sum in left/also right subtree. 
+MaxResult = max(maxleftsub, maxrightsub, max(0,leftIncSum)+root.val+max(0,rightIncSum)).
+Thus in each recur node call, we need to return maxpathsum include the node, and max result in the node subtree.
+Base case: for leaf node, maxpathsum = node.val; maxRes = node.val; one level deeper, for null node, maxpathsum = maxRes = -inf
+
+time O(n)
+space O(tree depth) -> O(n)
+
+*/
+class Solution {
+    public int maxPathSum(TreeNode root) {
+        int[] res = maxPathSumRecurHelper(root);
+        return res[0];
+    }
+
+    private int[] maxPathSumRecurHelper(TreeNode root) {
+        if (root == null) {return new int[]{Integer.MIN_VALUE, Integer.MIN_VALUE};}
+        int[] leftRes = maxPathSumRecurHelper(root.left);
+        int[] rightRes = maxPathSumRecurHelper(root.right);
+        int maxLeftSub = leftRes[0];
+        int maxLeftPath = Math.max(0,leftRes[1]);
+        int maxRightSub = rightRes[0];
+        int maxRightPath = Math.max(0,rightRes[1]);
+        int maxPath = Math.max(maxLeftPath, maxRightPath)+root.val;
+        int maxSub = Math.max(Math.max(maxLeftSub, maxRightSub), maxLeftPath+maxRightPath+root.val);
+        return new int[]{maxSub, maxPath};
     }
 }
 
