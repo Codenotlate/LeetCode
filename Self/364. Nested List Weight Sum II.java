@@ -171,6 +171,50 @@ class Solution {
 
 
 
+// Review 23/2/24 - similar as above DFS way. Above BFS way can review next time.
+// Below special test case is newly added. Thus above DFS methods can't handle this case. But above BFS way also handles this case.
+/* Thoughts
+result sum = (maxDepth+1)*listSum - (a1d1+a2d2+...andn)
+first step: how to get maxDepth.
+For each object in the nestedList, recursively get its depth. Actually we can get the maxDepth, listSum, depth*number all from the recursive call. The recursive call can return the element*depth sum, and at the same time record the current depth, listSum and maxDepth so far in its parameters.
+time O(n) space O(depth) -> O(n)
+
+
+Debug special case: [[1,1],2,[1,1],[[[[]]]]]
+*/
+class Solution {
+    public int depthSumInverse(List<NestedInteger> nestedList) {
+        int weightSum = 0;
+        int[] maxDepthAndSum = new int[]{0, 0};
+        for (NestedInteger ni: nestedList) {
+            weightSum += depthSumRecur(ni, 1, maxDepthAndSum);
+        }
+        return (maxDepthAndSum[0] + 1)*maxDepthAndSum[1] - weightSum;
+        
+    }
+
+    private int depthSumRecur(NestedInteger ni, int depth, int[] maxDepthAndSum) {
+        // base case1: ni already an integer 
+        if (ni.isInteger()) {
+            maxDepthAndSum[0] = Math.max(maxDepthAndSum[0], depth);
+            maxDepthAndSum[1] += ni.getInteger();
+            return ni.getInteger()*depth;
+        }
+        // base case2: ni is an empty list
+        // note this should be listed after base case1, as single interger also satisfies this case
+        if (ni.getList().size() == 0) {
+            maxDepthAndSum[0] = Math.max(maxDepthAndSum[0], depth);
+            return 0;
+        }
+        // ni still a nested
+        int weightSum = 0;
+        for (NestedInteger nextni: ni.getList()) {
+            weightSum += depthSumRecur(nextni, depth+1, maxDepthAndSum);
+        }
+        return weightSum;
+    }
+}
+
 
 
 
