@@ -155,3 +155,76 @@ class Solution {
     }
     
 }
+
+
+
+
+
+
+
+// Review 23/2/27 - basically the same as above ways
+/*Thoughts
+M1: DFS way. for each node, we label its index as left = root-1 and right = root + 1, and also its row number. Along the way, we store a map as label:List<int[]{num, rowNum}>. And also record down the min label. When adding number to the list, we need to sort the order w.r.t. its row number. After the traverse of the whole tree, we start with min label, and add all lists into final result.
+Time O(w*hlogh) space O(n) where w/h is the width/height of the tree
+M2: BFS way. similar as DFS, we assign label to each node, then when the node is poll out from the queue, we add it to the corresponding list in the map. We only need column label in BFS, because we have guaranteed the row number will be from top to bottom.
+Time O(n)  space O(n)
+
+ */
+// M1: DFS way 
+class Solution {
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        Map<Integer, List<int[]>> map = new HashMap<>();
+        int[] minCol = new int[]{0};
+        searchHelper(root, 0, 0, map, minCol);
+        List<List<Integer>> res = new ArrayList<>();
+        int colNum = minCol[0];
+        while(map.containsKey(colNum)) {
+            Collections.sort(map.get(colNum), (p1, p2) -> (p1[1] - p2[1]));
+            List<Integer> curList = new ArrayList<>();
+            for (int[] p: map.get(colNum)) {curList.add(p[0]);}
+            res.add(curList);
+            colNum++;
+        }
+        return res;
+    }
+
+    private void searchHelper(TreeNode root, int curCol, int curRow, Map<Integer, List<int[]>> map, int[] minCol) {
+        if (root == null) {return;}
+        map.putIfAbsent(curCol, new ArrayList<int[]>());
+        map.get(curCol).add(new int[]{root.val, curRow});
+        minCol[0] = Math.min(minCol[0], curCol);
+        searchHelper(root.left, curCol-1, curRow+1, map, minCol);
+        searchHelper(root.right, curCol+1, curRow+1, map, minCol);
+    }
+}
+
+// BFS way
+class Solution {
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        Queue<Pair<TreeNode, Integer>> queue = new LinkedList<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        List<List<Integer>> res = new LinkedList<>();
+        int minCol = 0;
+
+        if (root == null) {return res;}
+        queue.add(new Pair(root, 0));
+        while(!queue.isEmpty()) {
+            Pair<TreeNode, Integer> cur = queue.poll();
+            TreeNode curNode = cur.getKey();
+            int curCol = cur.getValue();
+            minCol = Math.min(minCol, curCol);
+            map.putIfAbsent(curCol, new ArrayList<>());
+            map.get(curCol).add(curNode.val);
+            //!!!!! don't typo curNode as root !!!
+            if (curNode.left != null) {queue.add(new Pair(curNode.left, curCol-1));}
+            if (curNode.right != null) {queue.add(new Pair(curNode.right, curCol+1));}
+        }
+        // put map into res
+        while(map.containsKey(minCol)) {
+            res.add(map.get(minCol));
+            minCol++;
+        }
+        return res;
+    }
+}
+

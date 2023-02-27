@@ -49,3 +49,93 @@ class Leaderboard {
     }
 }
 
+
+
+
+// Review 23/2/27 - self came up with M2, but not familiar with time complexity analysis for treeMap
+/* Thoughts
+M1: maintain size k min heap for top (time O(nlogk)). Hashmap for addScore and reset (time O(1)).
+M2: Using a hashmap for mapping between playerId and score. Using a treemap for mapping between score and count of that score.
+For addScore, we get the oldScore of that player if any, reduce the count by 1 in the treemap for that oldScore. (time O(logn)). Add the count by 1 in the treemap for the newScore (time O(logn)). And update/add the new <id, score> in the hashmap (time O(1)). Thus total time O(logn)
+For reset, get the score of that Id using hashmap, remove it from hashMap. Then reduce the count of that score in treemap. time O(logn)
+For top, get the sorted (scores,count) in the treeMap key values. Go from largest to smallest, add count*score to the result, until count == K.
+About the time:
+If get sorted (scores, count) is not already O(1) in treemap, then we can get it by inorder tree traverse, which takes O(N).
+Alternatively, a single next() call in treemap iterator is O(logn), thus if we call it k times, then time O(klogn). [can be better than PQ way O(nlogk)]
+
+ */
+// M1:
+class Leaderboard {
+    Map<Integer, Integer> map;
+    PriorityQueue<Integer> pq;
+
+    public Leaderboard() {
+        map = new HashMap<>();
+        pq = new PriorityQueue<>();
+    }
+    
+    public void addScore(int playerId, int score) {
+        map.put(playerId, map.getOrDefault(playerId,0)+score);
+    }
+    
+    public int top(int K) {
+        int sum = 0;
+        for (int id: map.keySet()) {
+            int score = map.get(id);
+            pq.add(score);
+            K--;
+            if (K < 0) {pq.poll(); K++;}
+        }
+        while(!pq.isEmpty()) {
+            sum += pq.poll();
+        }
+        return sum;
+    }
+    
+    public void reset(int playerId) {
+        map.remove(playerId);
+    }
+}
+
+// M2:
+class Leaderboard {
+    Map<Integer, Integer> map;
+    TreeMap<Integer, Integer> treeMap;
+
+    public Leaderboard() {
+        map = new HashMap<>();
+        treeMap = new TreeMap<>((e1,e2) ->(e2 - e1));
+    }
+    
+    public void addScore(int playerId, int score) {
+        if (map.containsKey(playerId)) {
+            int oldScore = map.get(playerId);
+            treeMap.put(oldScore, treeMap.get(oldScore)-1);
+            if (treeMap.get(oldScore) == 0) {treeMap.remove(oldScore);}
+        }
+        map.put(playerId, map.getOrDefault(playerId,0)+score);
+        int newScore = map.get(playerId);
+        treeMap.put(newScore, treeMap.getOrDefault(newScore, 0)+1);
+
+    }
+    
+    public int top(int K) {
+        int sum = 0;
+        for (Map.Entry<Integer, Integer> entry: treeMap.entrySet()) {
+            int count = Math.min(K, entry.getValue());
+            int score = entry.getKey();
+            sum += count * score;
+            K -= count;
+            if (K == 0) {break;}
+        }
+        return sum;
+        
+    }
+    
+    public void reset(int playerId) {
+        int score = map.get(playerId);
+        map.remove(playerId);
+        treeMap.put(score, treeMap.get(score) -1);
+        if (treeMap.get(score) == 0) {treeMap.remove(score);}
+    }
+}
