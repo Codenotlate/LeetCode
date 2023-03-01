@@ -184,6 +184,39 @@ class Solution {
 
 
 
+// Review 23/3/1 - first time with bug, second time two pass way. Didn't think about there's one pass way. Hope next time can come up with one-pass way self.
+/* Thoughts
+Go through secret string, get the count number for each digit in it. Then go through guess string, if current digit is the same as the current position digit in secret, A++, and reduce the number in the count array (>0). Else if current digit is contained in the count array, B++, reduce the number in the count array.
+!! Bug in above example("1122" and "1222"): if we do it in one pass, numB will consume the potential numA later. Two pass of guess can solve this bug. Or move the calculation for numA into the pass of secret.
+time O(l1+l2) space O(10) = O(1)
+ */
+class Solution {
+    public String getHint(String secret, String guess) {
+        int[] count = new int[10];
+        int numA = 0;
+        int numB = 0;
+        for (int i = 0; i < guess.length(); i++) {
+            if(guess.charAt(i) == secret.charAt(i)) {
+                numA++;
+            } else {
+                count[secret.charAt(i)-'0']++;
+            }           
+        }
+        for (int i = 0; i < guess.length(); i++) {
+            if(guess.charAt(i) == secret.charAt(i)) {continue;}
+            if (count[guess.charAt(i)-'0']>0) {
+                numB++;
+                count[guess.charAt(i)-'0']--;
+            }
+        }
+
+        StringBuilder res = new StringBuilder();
+        res.append(numA).append('A').append(numB).append('B');
+        return res.toString();
+    }
+}
+
+
 
 
 

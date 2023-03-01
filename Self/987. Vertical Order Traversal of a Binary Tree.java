@@ -167,6 +167,48 @@ time O(k * llogl) space O(n)
 
 
 
+// Review - 23/3/1 - shortly after review 314. First time didn't realize the sort by value is for same position ones not for same column ones. Thus add in rowNum the second time. And DFS way is good. Can try bug-free for both DFS and BFS way next time.
+/* Thoughts
+use a map with the key as the column label. We also need row label here as in the end the nodes in the same list will first sorted by its rowNum, then by its colNum and finally by its value.
+We can do it using both DFS way, or BFS where queue store pair(treenode, colNum). Either way we should record down the min colNum after the traverse, and use it to convert to the final list.
+time O(w*hlogh) where w is the number of cols (width of the tree), h is the average number of nodes sharing the same position.
+
+ */
+// DFS way
+class Solution {
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        Map<Integer, List<int[]>> map = new HashMap<>();
+        int[] minCol = new int[]{0};
+        verticalSearch(root, 0, 0, map, minCol);
+        List<List<Integer>> res = new ArrayList<>();
+        int col = minCol[0];
+        while(map.containsKey(col)) {
+            List<int[]> curList = map.get(col);
+            List<Integer> curResList = new LinkedList<>();
+            Collections.sort(curList, 
+                (l1,l2)->(l1[0]!=l2[0]? l1[0]-l2[0]:l1[1]-l2[1]));
+            for (int i = 0; i < curList.size(); i++) {
+                curResList.add(curList.get(i)[1]);
+            }
+            res.add(curResList);
+            col++;
+        }
+        return res;
+    }
+
+    private void verticalSearch(TreeNode root, int curCol, int curRow, Map<Integer, List<int[]>> map, int[] minCol) {
+        if (root == null) {return;}
+        map.putIfAbsent(curCol, new ArrayList<>());
+        map.get(curCol).add(new int[]{curRow,root.val});
+        minCol[0] = Math.min(minCol[0], curCol);
+        verticalSearch(root.left, curCol-1, curRow+1, map, minCol);
+        verticalSearch(root.right, curCol+1, curRow+1, map, minCol);
+    }
+}
+
+
+
+
 
 
 

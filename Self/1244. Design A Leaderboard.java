@@ -63,6 +63,10 @@ About the time:
 If get sorted (scores, count) is not already O(1) in treemap, then we can get it by inorder tree traverse, which takes O(N).
 Alternatively, a single next() call in treemap iterator is O(logn), thus if we call it k times, then time O(klogn). [can be better than PQ way O(nlogk)]
 
+
+time complexity for treeMap refer url:
+https://stackoverflow.com/questions/53670535/treemap-collection-views-iterators-time-complexity
+https://qiita.com/zhupeijun/items/e7d2bf2da7d3661f32cd
  */
 // M1:
 class Leaderboard {
