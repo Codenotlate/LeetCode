@@ -155,3 +155,62 @@ class Solution {
         return totalDiff < 0 ? -1 : startIdx;
     }
 }
+
+
+
+
+
+
+// Review - 23/3/8
+// self come up with above M1, but can be combined with math idea and improve to above M2&M3
+/*Thoughts
+Given it's circular route, we expand both arrays to twice its size and get the diff as gas-cost for each pos. If we want to succeed, we need to start at a position with accum diff >= 0 and along the way whenever we have accum diff < 0, we get start over with the next pos and accum diff = 0. If we are able to reach the full length, meaning we are able to return with current start index. Otherwise, return -1.
+
+time O(2n) = O(n) space O(1)
+
+e.g.
+[1,2,3,4,5][1,2,3,4,5]
+[3,4,5,1,2][3,4,5,1,2]
+-2,-2,-2,3,3,-2,-2,-2,3,3
+ */
+// M0
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int curStart = 0;
+        int diffSum = 0;
+        int curLen = 0;
+ 
+        for (int i = 0; i < 2*gas.length; i++) {
+            // one optimization: if curStart >= len, meaning every pos has been tested as the start, we can directly break the loop
+            if (diffSum < 0) {
+                diffSum = 0;
+                curStart = i;
+                if (curStart >= gas.length) {break;}
+                curLen = 0;
+            }
+            diffSum += gas[i % gas.length] - cost[i % gas.length];
+            curLen++;
+            if (curLen == gas.length && diffSum >= 0) {
+                return curStart% gas.length;
+            }            
+        }
+        return -1;
+    }
+}
+//M1: optimized with math idea from M0
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int curStart = 0;
+        int diffSum = 0;
+        int totalSum = 0;
+        for (int i = 0; i < gas.length; i++) {
+            if (diffSum < 0) {
+                diffSum = 0;
+                curStart = i;
+            }
+            diffSum += gas[i] - cost[i];
+            totalSum += gas[i] - cost[i];           
+        }
+        return totalSum >= 0 ? curStart : -1;
+    }
+}
