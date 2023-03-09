@@ -106,3 +106,50 @@ class Solution {
         return dummy.next;
     }
 }
+
+
+
+
+// Review - 23/3/9 - similar as above idea, first time did it, didn't realize left and right are numbers not nodes.
+/*Thoughts
+require one pass.
+label leftPrev, then reverse the LL starting from left, till reach right, also label rightNext.
+In the end, have leftPrev.next = right and left.next = rightNext.
+Note: left and right here are position int, need to track correspondng nodes.
+
+Special case1: when left == right, directly return.
+Special case2: when left or right is at one end of the LL. We can have a dummyhead point to head, and leftPrev starts as the dummyhead position.
+time O(n) space O(1)
+
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if (left == right) {return head;}
+        ListNode dummyHead = new ListNode(-1, head);
+        ListNode leftPrev = dummyHead;
+        ListNode cur = head;
+        int curIdx = 1;
+
+        // find the leftPrev
+        while(curIdx != left) {
+            leftPrev = cur;
+            cur = cur.next;    
+            curIdx++;        
+        }
+        ListNode leftNode = cur;
+        // start reverse from left
+        ListNode revHead = null;
+        while(curIdx != right+1) {
+            ListNode next = cur.next;
+            cur.next = revHead;
+            revHead = cur;
+            cur = next;
+            curIdx++;
+        }
+        //reverse part done, connect with the left and right side of original LL
+        leftPrev.next = revHead;
+        leftNode.next = cur;
+        return dummyHead.next;
+
+    }
+}
