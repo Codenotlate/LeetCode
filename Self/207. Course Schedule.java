@@ -313,3 +313,83 @@ class Solution {
 
 
 
+
+
+
+
+
+
+// Review - 23/3/10 (M1 handled, M2 need help from earlier solution, next time try to self come up with M2)
+/*Thoughts
+M1: Topological sort
+use prereq array to build the graph, [ai, bi] means an edge from bi to ai.
+start to put all nodes with indegree == 0 into the queue. At each round, pop out from the queue, reduce the indegree of its neighbor nodes, if they have indegree=0, also put intothe queue.
+Count the number of nodes popped out from the queue until the queue is empty. If the count equal to  numCourses, then return true.
+time O(prereq.length+numCourses) space O(prereq.length+numCourses)
+
+
+M2: cycle detect dfs way
+again use the prereq array to build the graph. If the graph has cycle in it, then obviously it's false.
+for each node, we do a dfs, we need a visit memo for this dfs specificly, meaning we should do backtracking for visit. if in this dfs we found node revisited, we return false directly, otherwise, label it as passed. Thus we also need another global memo, where memo[i] = 1 meaning the paths start with this node have no cycle. This global memo helps to avoid repetitive work.
+time and space same as M1.
+
+ */
+// M1
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer,List<Integer>> map = new HashMap<>();
+        int[] indegree = new int[numCourses];
+        for (int[] edge: prerequisites){
+            map.putIfAbsent(edge[1], new ArrayList<>());
+            map.get(edge[1]).add(edge[0]);
+            indegree[edge[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i]== 0) {queue.add(i);}
+        }
+
+        while(!queue.isEmpty()) {
+            int cur = queue.poll();
+            numCourses--;
+            // pay attention to map.get(cur)= null case
+            for (int next: map.getOrDefault(cur, new ArrayList<>())) {
+                indegree[next]--;
+                if (indegree[next] == 0) {queue.add(next);}
+            }
+        }
+
+        return numCourses == 0;
+    }
+}
+// M2
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer,List<Integer>> map = new HashMap<>();
+        for (int[] edge: prerequisites){
+            map.putIfAbsent(edge[1], new ArrayList<>());
+            map.get(edge[1]).add(edge[0]);
+        }
+        
+
+        int[] memo = new int[numCourses];
+        int[] visited = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(i, map, memo, visited)){return false;}
+        }
+        return true;
+    }
+
+    private boolean hasCycle(int i, Map<Integer,List<Integer>> map, int[] memo, int[] visited) {
+        if (memo[i] == 1) {return false;}
+        if (visited[i] == 1) {return true;}
+        visited[i] = 1;
+        for (int next: map.getOrDefault(i, new ArrayList<>())) {
+            if (hasCycle(next, map, memo, visited)) {return true;}
+        }
+        visited[i] = 0;
+        memo[i] = 1;
+        return false;
+    }
+}
+
