@@ -48,3 +48,52 @@ class Solution {
 
 
 // another way using PQ: https://leetcode.com/problems/reorganize-string/discuss/128907/Java-solution-99-similar-to-358
+
+
+
+
+
+// Review 23/3/16 - the string generation part needs hint from the answer above
+/*Thought
+Count the chars first. Then make the char with largest count as the border for each gap. if sum(other count) < maxCount - 1, return "". Otherwise, build the result string.
+Hint from solution: have a char[s.len], then have idx label the current insertion position, idx += 2, making sure it's not adjacent. If idx >=len, reset to 1. Note need to make sure starts with the char having maxCount first. otherwise, may have "cabaa".
+time O(n) space (n)
+ */
+class Solution {
+    public String reorganizeString(String s) {
+        int[] counts = new int[26];
+        int maxCount = 0;
+        int maxCharIdx = -1;
+        for (char c: s.toCharArray()) {
+            counts[c-'a']++;
+            if (counts[c-'a'] > maxCount) {
+                maxCount = counts[c-'a'];
+                maxCharIdx = c-'a';
+            }
+           
+        }
+        if (s.length() - maxCount < maxCount - 1) {return "";}
+        int idx = 0;
+        char[] chars = new char[s.length()];
+        // start with char having maxCount first
+        idx = insert(chars, counts, idx, maxCharIdx);
+        for (int i = 0; i < 26; i++) {
+            if (counts[i] > 0) {
+                idx = insert(chars, counts, idx, i);
+            }
+        }
+        return new String(chars);
+    }
+
+
+    private int insert(char[] chars, int[] counts, int idx, int countIdx) {
+        char c = (char) (countIdx + 'a');
+        while (counts[countIdx] > 0) {
+                chars[idx] = c;
+                idx += 2;
+                if (idx >= chars.length) {idx = 1;}
+                counts[countIdx]--;
+        }
+        return idx;
+    }
+} 

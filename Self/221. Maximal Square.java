@@ -130,3 +130,43 @@ class Solution {
         return maxLen * maxLen;
     }
 }
+
+
+
+
+// Review - 23/3/16 - within 15min, same as above
+/*Thought
+DP problem. dp[i][j] represents the length of the edge of the square with cell(i,j) as the right bottom corner. Then if matrix[i][j] = 1, dp[i][j] = min(dp[i-1][j], dp[i-1][j-1], dp[i][j-1]) + 1.
+M0: time O(mn) space O(mn)
+M1: time O(mn) space O(min(m,n))
+
+ */
+
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        int maxLen = 0;
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[] dp = new int[n+1];
+
+        for (int i = 0; i < m; i++) {
+            int last_ij = dp[0];
+            for (int j = 0; j < n; j++) {
+                int temp = dp[j+1];
+                if (matrix[i][j] == '0') {
+                    dp[j+1] = 0;
+                } else {
+                    dp[j+1] = Math.min(Math.min(dp[j], dp[j+1]), last_ij) + 1;
+                    maxLen = Math.max(maxLen, dp[j+1]);
+                }
+                last_ij = temp;
+            }
+        }
+        return maxLen * maxLen;
+
+    }
+}
+
+
+
+
