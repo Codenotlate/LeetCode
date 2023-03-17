@@ -129,3 +129,85 @@ Formula: If a sorted array is shifted, if you take the middle, always one side w
 3a- if [middle] < target < [right] then do recursion with middle + 1 (left), right
 3b- right side is sorted, but target not in here, search on left side left, middle -1 (right)
 */
+
+
+
+
+
+
+// Review 23/3/17 - still need to draw out all graphs and do case by case summary on conditions, not a good way for interview I think. Also forgot the equal sign in all <= conditions with first try.
+/*Thoughts
+Binary search. M2 preferred.
+M1: draw out 4 types of graphs
+comparison between start, mid, end, target
+target > mid case:
+    start <= mid || target <= end: start = mid+1
+    else: end = mid-1
+target < mid case:
+    start <= target|| mid <= end: end = mid-1
+    else: start = mid+1 
+
+M2:idea: every time we can only exclude the sorted part
+if mid >= start : meaning left side sorted
+    if start <= target < mid: end = mid-1
+    else >: start = mid+1
+else: meaning right side sorted
+    if end >= target > mid: start = mid+1
+    else <: end = mid-1
+
+
+
+ */
+// M1: not preferred
+class Solution {
+    public int search(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length-1;
+        while (start < end) {
+            int mid = start + (end-start) /2;
+            if (nums[mid] == target) {return mid;}
+            else if (nums[mid] < target) {
+                if (nums[start] <= nums[mid] || target <= nums[end]) {
+                    start = mid+1;
+                } else{
+                    end = mid-1;
+                }
+            } else {
+                if (nums[start] <= target || nums[mid] <= nums[end]) {
+                    end = mid - 1;
+                } else {
+                    start = mid + 1;
+                }
+            }
+        }
+        return nums[start] == target?start:-1;
+    }
+}
+
+// M2: prefered way
+class Solution {
+    public int search(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length-1;
+        while (start < end) {
+            int mid = start + (end-start) /2;
+            if (nums[mid] == target) {return mid;}
+            if (nums[mid] >= nums[start]) {
+                if (target < nums[mid] && target >= nums[start]) {end = mid-1;}
+                else {start = mid + 1;}
+            } else {
+                if (target > nums[mid] && target <= nums[end]) {start = mid + 1;}
+                else {end = mid-1;}
+            }
+        }
+        return nums[start] == target?start:-1;
+    }
+}
+
+
+
+
+
+
+
+
