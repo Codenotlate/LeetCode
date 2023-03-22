@@ -100,3 +100,58 @@ class RandomizedSet {
         return idxToVal.get(idx);
     }
 }
+
+
+
+
+// Review 2023/3/22
+// same method as above M2: two maps way. Again forgot the only 1 element case in remove function. And also not familiar with Random clas.
+/*Thoughts
+A set can make O(1) for both insert and remove, but the getRandom can't be O(1).
+To make random O(1), we need elements corresponding to index 0 to n-1. Then we can generate one index between 0 and n-1, as the index of the random number, with equal prob.
+Have two maps: one map is element to index, the other is index to element. Also keep track of the current element size of the map.
+when insert, check elementMap.keys, if exist, return false. Else, add the element with size. size++. Also update in indexMap.
+when remove, check elementMap.keys. If not exist, return false. Else, remove it from elementMap, get its index. In indexMap, make indexMap[index] = indexMap[size-1], size--. Also update in elementMap[indexMap[size-1]] = index.
+
+ */
+
+class RandomizedSet {
+    Map<Integer, Integer> elementMap;
+    Map<Integer, Integer> indexMap;
+    int size;
+
+    public RandomizedSet() {
+        elementMap = new HashMap<>();
+        indexMap = new HashMap<>();
+        size = 0;
+    }
+    
+    public boolean insert(int val) {
+        if (elementMap.containsKey(val)) {return false;}
+        elementMap.put(val, size);
+        indexMap.put(size, val);
+        size++;
+        return true;
+    }
+    
+    public boolean remove(int val) {
+        if (!elementMap.containsKey(val)) {return false;}
+        // pay attention to special case, when there's only 1 element
+        int idx = elementMap.get(val);
+        int lastElement = indexMap.get(size-1);
+        elementMap.remove(val);
+        if (lastElement != val) {
+            indexMap.put(idx, lastElement);
+            elementMap.put(lastElement, idx);
+        }       
+        size--;
+        return true;
+    }
+    
+    public int getRandom() {
+        Random rn = new Random();
+        int randomIdx = rn.nextInt(size);
+        return indexMap.get(randomIdx);
+    }
+}
+
