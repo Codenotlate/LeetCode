@@ -45,3 +45,29 @@ class Solution {
 }
 
 // can try iterative way next time
+
+
+
+
+
+// Review - 23/3/24 (after few text run debug)
+/* Thoughts
+M1: recursively based on pow(x, n/2) * pow(x, n/2). Note need to store the result of pow(x, n/2), otherwise too slow
+Take care of overflow issue.
+time O(logn) space O(logn)
+
+M2: iterative way from solution. time the same. space O(1). - same algos not quite understand.
+
+ */
+
+class Solution {
+    public double myPow(double x, int n) {
+        if (n == 0) {return 1.0;}
+        if (n == 1) {return x;}
+        if (n == -1) {return 1.0/x;}
+        double factor = n % 2 == 0? 1:x;
+        if ( n < 0) {factor = 1.0 / factor;}
+        double next = myPow(x, n/2);
+        return factor * next * next;
+    }
+}
