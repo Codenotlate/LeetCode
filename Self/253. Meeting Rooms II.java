@@ -129,3 +129,79 @@ class Solution {
     }
 }
 // next time implement way2: sort start and end separately
+
+
+
+
+
+
+
+// Review 23/3/27 (self come up with M1, M2 with little hint)
+/*Thoughts
+M1: sort the intervals based on start time, then add it to a pq sorted in ending time to mimic the logic. If the least ending time is >= current meeting start time, we need a new room. Track the max size of the pq along the process.
+Time O(nlogn + nlogn) = O(nlogn)
+space O(logn + n) = O(n)
+
+M2: similar as above idea, sort the start and end into two arrays. Then two pointers to check start and end separaterly, if curstart >= curend, curend++, size--. In both case, curstart++, size++. Again track the maxSize along the process.
+time O(nlogn + nlogn + n) = O(nlogn)
+space O(n + n +logn + logn) = O(n)
+
+ */
+// M1:
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, (i1,i2) -> (i1[0] - i2[0]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int size = 0;
+        int maxSize = 0;
+        for (int[] itv: intervals) {
+            if (!pq.isEmpty() && pq.peek() <= itv[0]) {
+                pq.poll();
+                size--;
+            } 
+            pq.add(itv[1]);
+            size++;
+            maxSize = Math.max(maxSize, size);
+        }
+        return maxSize;
+
+    }
+}
+// M2:
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        int n = intervals.length;
+        int[] start = new int[n];
+        int[] end = new int[n];
+        for (int i = 0; i < n; i++) {
+            start[i] = intervals[i][0];
+            end[i] = intervals[i][1];
+        }
+        Arrays.sort(start);
+        Arrays.sort(end);
+        int startpt = 0;
+        int endpt = 0;
+        int size = 0;
+        int maxSize = 0;
+        while(startpt < n && endpt < n) {
+            if (start[startpt] >= end[endpt]) {
+                endpt++;
+                size--;
+            }
+            startpt++;
+            size++;
+            maxSize = Math.max(maxSize, size);
+            
+        }
+        return maxSize;
+
+    }
+}
+
+
+
+
+
+
+
+

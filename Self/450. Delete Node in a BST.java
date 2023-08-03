@@ -168,3 +168,70 @@ class Solution {
         return root;
     }
 }
+
+
+
+
+// Review - 23/4/3
+// come up with above M2, but didn't come up with the simple comparison between leftParent.left and leftmost & parent.left and cur.
+// M2 is harder to implement, but keeps the height change minimum, didn't think about the eaiser M1 way above. 
+/* Thought
+first use the BST attr to find the node with key value, if it has right subtree, find the leftmost node of the it, replace the key node value with leftmost node value. If leftmost node has right subtree, make its right subtree as the new left subtree of its parent.
+time O(height)
+
+
+ */
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // first find key
+        if (root == null) {return null;}
+        TreeNode cur = root;
+        TreeNode parent = null;
+        while(cur != null) {
+            if (cur.val == key) {break;}
+            parent = cur;
+            if (cur.val < key) {
+                cur = cur.right;
+            } else {
+                cur = cur.left;
+            }
+        }
+        // no key found
+        if (cur == null) {return root;}
+        TreeNode leftmost = cur.right;
+        // if no right subtree
+        if (leftmost == null) {
+            if (parent == null) {return cur.left;}
+            if (parent.left == cur) {
+                parent.left = cur.left;
+            } else {
+                parent.right = cur.left;
+            }
+            return root;
+        }
+        // has right subtree
+        TreeNode leftParent = cur;
+        while(leftmost.left != null) {
+            leftParent = leftmost;
+            leftmost = leftmost.left;
+        }
+        cur.val = leftmost.val;
+        if (leftParent.left == leftmost) {
+            leftParent.left = leftmost.right;
+        } else {
+            leftParent.right = leftmost.right;
+        }
+        
+        return root;
+    }
+}
+
+
+
+
+
+
+
+
+
+
