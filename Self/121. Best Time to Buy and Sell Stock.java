@@ -29,3 +29,23 @@ class Solution {
         return profit;
     }
 }
+
+
+
+//23/8/4 - above ways view each day as a sell day and try to find min prices of all previous days
+// O(n) time and O(1) space
+// Basically for each day we want to see the max of all the following day's price. Thus we start from right to left.
+class Solution {
+    public int maxProfit(int[] prices) {
+        int maxProfit = 0;
+        int maxAtRight = 0;
+        for (int i = prices.length - 1; i >= 0; i--) {
+            if (prices[i] > maxAtRight) {
+                maxAtRight = prices[i];
+            } else {
+                maxProfit = Math.max(maxProfit, maxAtRight - prices[i]);
+            }
+        }
+        return maxProfit;
+    }
+}
