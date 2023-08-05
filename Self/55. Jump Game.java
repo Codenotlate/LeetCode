@@ -60,3 +60,30 @@ class Solution {
         return minTrueIdx == 0;
     }
 }
+
+
+
+
+
+// 23/8/5 - used hint
+/*
+Way 1:
+dp[i] = max(dp[i+k]) for k in range[0, nums[i]]. Compare dp[0] with n-1.
+start from right to left. dp[n-1] = n-1。
+This way we need to check k to find max and time will be O(n^2)
+
+Way 2:
+View this as the farest position the current window [0,i] can reach to.
+O(n) time O(1) space
+ */
+
+class Solution {
+    public boolean canJump(int[] nums) {
+        int far = 0;
+        for (int i = 0; i < nums.length; i++) {
+            far = Math.max(far, i + nums[i]);
+            if (i == far) {return far == nums.length-1;} // deal with [0] case
+        }
+        return far >= nums.length - 1;
+    }
+}

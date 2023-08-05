@@ -196,3 +196,40 @@ class Solution {
         }
     }
 }
+
+
+
+
+// 23/8/5 review
+/* 
+Way 1:  start from n-k to n-1, copy to temp array 0 to k, and for nums[0] to nums[n-k-1], copy then to temp array k+1 to n-1. Then copy back to nums.
+Way 2: directly start from 0 to n-1 in nums, for each index i, the target position in temp array is (i+k) % n
+Way 3: O(1) space way. reverse the first part and second part independently, then reverse the whole array.
+ */
+ // Way 3
+class Solution {
+    public void rotate(int[] nums, int k) {
+        int n = nums.length;
+        k %= n;
+        reverse(nums, 0, n-k-1);
+        reverse(nums, n-k, n-1);
+        reverse(nums, 0, n-1);
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}
+
+
+
+
+
+
+
