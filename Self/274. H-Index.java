@@ -142,3 +142,74 @@ class Solution {
     }
 }
 
+
+
+// Review 23/8/7 - used hint
+// M1: O(nlogn) time space O(logn)
+class Solution {
+    public int hIndex(int[] citations) {
+        Arrays.sort(citations);
+        int h = 0;
+        while ( h < citations.length) {
+            if (citations.length - h <= citations[h]) {
+                return citations.length - h;
+            }
+            h++;
+        }
+        return 0;
+    }
+}
+// M2: O(n) time using counting sort as citations[i] > n is the same as citations[i] == n because the h index is in range [0,n]. Space O(n)
+/*
+e.g. for [3,0,6,1,5]
+counts = [1,1,0,1,0,1,1]
+i -> from right to left
+cumsum >= i, return i
+*/
+
+class Solution {
+    public int hIndex(int[] citations) {
+        int[] counts = new int[citations.length + 1];
+        for (int c: citations) {
+            c = Math.min(c, citations.length);
+            counts[c]++;
+        }
+        int cumsum = 0;
+        for (int i = citations.length; i >= 0; i--) {
+            cumsum += counts[i];
+            if (cumsum >= i) {return i;}
+        }
+        return 0;
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

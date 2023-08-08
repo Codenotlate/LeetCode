@@ -22,7 +22,7 @@ class Solution {
 }
 
 
-// review self
+// review self O(n) way
 class Solution {
     public int jump(int[] nums) {
         int farp = 0;
@@ -33,6 +33,7 @@ class Solution {
             int lastfarp = farp;
             while (i <= lastfarp) {
                 farp = Math.max(farp, i + nums[i]);
+                i++;
             }
             count++;
             
@@ -111,5 +112,35 @@ class Solution {
         }
         return step; // should not reach this line
 
+    }
+}
+
+
+
+
+
+
+// Review 23/8/7 - used hint
+/*
+Way 1 O(n^2): dp[i] = min(dp[j] + 1) where j + nums[j]  > = i
+Way 2 O(n) gready way: think about all positions that can reach to with same step amounts as tree nodes at same level. Then we can BFS. Or we can view all positions in the same window having the same step amounts. Then the start of the next window will be current far + 1, and step++. (Basically, whenever we have the left side of the window exceeding the previous right side of the window(farest), we do step++.)
+ */
+
+class Solution {
+    public int jump(int[] nums) {
+        int far = 0;
+        int step = 0;
+        int i = 0;
+        while ( i < nums.length) {
+            if (far >= nums.length - 1) {return step;}
+            int nextfar = far;
+            while (i <= far) {
+                nextfar = Math.max(nextfar, i + nums[i]);
+                i++;
+            }
+            far = nextfar;
+            step++;
+        }
+        return step;
     }
 }
