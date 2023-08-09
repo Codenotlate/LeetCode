@@ -41,3 +41,35 @@ class Solution {
         return res;
     }
 }
+
+
+
+
+
+// Review 23/8/9 - same method as above
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int[] result = new int[nums.length];
+        int cumsum = 1;
+        for (int i = 0; i < nums.length; i++) {
+            cumsum *= nums[i];
+            result[i] = cumsum;
+        }
+        cumsum = 1;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            int leftSide = i == 0 ? 1: result[i-1];
+            result[i] = leftSide * cumsum;
+            cumsum *= nums[i];
+        }
+        return result;
+    }
+}
+
+
+/*
+Check the post: [3 Minute Read] Mimicking an Interview
+How to go from brute force to the final stage.
+
+*/
+
+

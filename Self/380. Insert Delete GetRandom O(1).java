@@ -155,3 +155,68 @@ class RandomizedSet {
     }
 }
 
+
+
+
+
+// Review - 23/8/9 self come up, not familiar with datas tructure methods
+class RandomizedSet {
+    Map<Integer, Integer> setMap;
+    ArrayList<Integer> setArray;
+    int curSize;
+    Random rd;
+
+    public RandomizedSet() {
+        setMap = new HashMap<>();
+        setArray = new ArrayList<>();
+        curSize = 0;
+        rd = new Random();
+    }
+    
+    public boolean insert(int val) {
+        if (setMap.containsKey(val)) {return false;}
+        setMap.put(val, curSize);
+        setArray.add(curSize,val);
+        curSize++;
+        return true;
+    }
+    
+    public boolean remove(int val) {
+        if (!setMap.containsKey(val)) {return false;}
+        int removeIdx = setMap.get(val);
+        // do switch in ArrayList
+        int switchVal = setArray.get(curSize-1);
+        setArray.set(removeIdx,switchVal);
+        curSize--;
+        // removal in setMap
+        setMap.put(switchVal, removeIdx);
+        setMap.remove(val);
+        return true;
+    }
+    
+    public int getRandom() {
+        int randomPos = rd.nextInt(curSize);
+        return setArray.get(randomPos);
+    }
+}
+
+
+/*
+I got a similar question for my phone interview. The difference is that the duplicated number is allowed. So, think that is a follow-up of this question.
+How do you modify your code to allow duplicated number?
+
+The follow-up: allowing duplications.
+For example, after insert(1), insert(1), insert(2), getRandom() should have 2/3 chance return 1 and 1/3 chance return 2.
+Then, remove(1), 1 and 2 should have an equal chance of being selected by getRandom().
+The idea is to add a set to the hashMap to remember all the locations of a duplicated number.
+*/
+
+
+
+
+
+
+
+
+
+

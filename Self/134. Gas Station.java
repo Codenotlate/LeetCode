@@ -214,3 +214,37 @@ class Solution {
         return totalSum >= 0 ? curStart : -1;
     }
 }
+
+
+
+
+
+
+// Review 23/8/9 - self come up, similar to above M1. Can combine below the two loops to one loop, and optimize space from O(n) to O(1)
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int[] diff = new int[gas.length];
+        int totalDiff = 0;
+        for (int i = 0; i < gas.length; i++) {
+            diff[i] = gas[i] - cost[i];
+            totalDiff += diff[i];
+        }
+        if (totalDiff < 0) {return -1;}
+        int start = 0;
+        int cur = 0;
+        int cumsum = 0;
+        while (cur < gas.length) {
+            cumsum += diff[cur];
+            if (cumsum < 0) {
+                start = cur + 1;
+                cumsum = 0;
+            }
+            cur++;
+        }
+        return start;
+    }
+}
+
+
+
+
