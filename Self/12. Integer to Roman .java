@@ -96,3 +96,46 @@ class Solution {
 }
 
 
+
+// 23/8/16 Review - self(same as above)
+// thinking how to do that if 900/400/90...are not allowed to be put into the list, seems no solution related to this. May think about it next time
+class Solution {
+    private int[] nums = new int[]{1000, 900, 500, 400, 100, 90,50,40,10,9,5,4,1};
+    private String[] romens = new String[]{"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+    public String intToRoman(int num) {
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < nums.length; i++) {
+            if (num / nums[i] != 0) {
+                int count = num / nums[i];
+                num = num % nums[i];
+                while(count-- > 0) {res.append(romens[i]);}
+            } 
+        }
+        return res.toString();
+    }
+}
+
+
+
+/*
+Complexity Analysis
+
+Time complexity : O(1)
+
+As there is a finite set of roman numerals, there is a hard upper limit on how many times the loop can iterate. This upper limit is 15 times, and it occurs for the number 3888, which has a representation of MMMDCCCLXXXVIII. Therefore, we say the time complexity is constant, i.e. O(1)
+
+Space complexity : O(1)
+
+The amount of memory used does not change with the size of the input integer, and is therefore constant.
+
+
+
+*/
+
+
+
+
+
+
+
+

@@ -216,7 +216,55 @@ class Solution {
 }
 
 
+// Review 23/8/16 - self with M1, hint for M2, solution for M3
+/**
+M0: naive way O(n^2) O(1)- Key idea: for each position, we want to know its leftMax and rightMax, then the water from this position = min(leftMax, rightMax) - height[cur].
+M1: two traverse O(n) O(n)- from left to right, record down the leftMax, then from right to left, get the rightMax and compare to leftMax.
+M2: Use a stack O(n) O(n) - M1 way is to add the vertical height of each pos. M2 way is to add the horizontal rectangle of each pos. The stack will store the index.
+M3: two pointers O(n) O(1) space - similar as M1, but do it in one iteration with start and end pointers. The key is to determine which pointer to move each time. And we move the side with smaller max number, and add the height to res. Because that part is at least guaranteed.
+*/
+// M2
+class Solution {
+    public int trap(int[] height) {
+        Stack<Integer> stack = new Stack<>();
+        int res = 0;
+        for (int i = 0; i < height.length; i++) {
+            while (!stack.isEmpty() && height[stack.peek()] <= height[i]) {
+                int cur = stack.pop();
+                // don't forget this case
+                if (!stack.isEmpty()) {
+                    int leftMax = height[stack.peek()];
+                    res += (Math.min(leftMax, height[i]) - height[cur]) * (i - stack.peek() - 1);
+                }               
+            }
+            stack.push(i);
+        }
+        return res;
+    }
+}
+// M3
+class Solution {
+    public int trap(int[] height) {
+        int res = 0;
+        int left = 0;
+        int right = height.length - 1;
+        int leftMax = 0;
+        int rightMax = 0;
 
+        while (left <= right) {
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            if(leftMax < rightMax) {
+                res += leftMax - height[left];
+                left++;
+            } else {
+                res += rightMax - height[right];
+                right--;
+            }
+        }
+        return res;
+    }
+}
 
 
 
