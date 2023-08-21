@@ -224,6 +224,28 @@ class Solution {
 
 
 
+// 23/8/20 - forget about the numRows = 1 special case
+// special case numRows = 1.
+class Solution {
+    public String convert(String s, int numRows) {
+        if(numRows == 1) {return s;}
+        int gap = 2 * numRows - 2;
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            int center = 0;
+            while(center - i < s.length()) {
+                if(i == 0 || i == numRows - 1) {
+                    if(center + i < s.length()) {res.append(s.charAt(center+i));}
+                } else {
+                    if(center-i > 0) {res.append(s.charAt(center-i));}
+                    if(center + i < s.length()) {res.append(s.charAt(center+i));}
+                }
+                center += gap;
+            }
+        }
+        return res.toString();
+    }
+}
 
 
 

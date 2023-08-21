@@ -48,7 +48,7 @@ class Solution {
 
 		private TrieNode root;
 
-		pubcli Trie() {
+		public Trie() {
 			root = new TrieNode();
 		}
 
@@ -100,8 +100,48 @@ class Solution {
 
 
 
+// 23/8/20 - Basic way is easy, Trie way needs review
+/*
+Can compare vertically O(n*min(m)) or horizontally O(n*average(m)).
 
-
+*/
+// M1: horizontal way
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        StringBuilder res = new StringBuilder(strs[0]);
+        for (int i = 1; i < strs.length; i++) {
+            int k = 0;
+            while (k < res.length() && k < strs[i].length()) {
+                if (res.charAt(k) != strs[i].charAt(k)) {break;}
+                k++;
+            }
+            res.delete(k, res.length());
+        }
+        return res.toString();
+    }
+}
+// M2: vertical way
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        StringBuilder res = new StringBuilder();
+        int k = 0;
+        boolean isDone = false;
+        while (true) {
+            if (isDone || k >= strs[0].length()) {break;}
+            char stdChar = strs[0].charAt(k);
+            for (int i = 1; i < strs.length; i++) {
+                if (k >= strs[i].length() || stdChar != strs[i].charAt(k)) {
+                    isDone = true; 
+                    break;
+                }                
+            }
+            if (!isDone) {res.append(stdChar);}
+            k++;
+        }
+        
+        return res.toString();
+    }
+}
 
 
 

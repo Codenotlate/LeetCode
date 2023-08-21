@@ -335,5 +335,111 @@ class Solution {
 
 
 
+// 23/8/20 - still can't solve without bug for M3
+/*
+M1: using built-in trim, split and join
+M2: two pointers to get word, and add to a deque/stack, pop out in reverse order and get the result.
+M3: Assume it's char[], can do it in-place. By reverse each word and the reverse the whole string.
+ */
+// M1
+class Solution {
+    public String reverseWords(String s) {
+        s = s.trim();
+        String[] splited = s.split("\s+");
+        int start = 0;
+        int end = splited.length - 1;
+        while (start < end) {
+            String temp = splited[start];
+            splited[start] = splited[end];
+            splited[end] = temp;
+            start++;
+            end--;
+        }
+        return String.join(" ", splited);
+    }
+}
+//M1.1
+class Solution {
+    public String reverseWords(String s) {
+        s = s.trim();
+        String[] splited = s.split("\s+");
+        Collections.reverse(Arrays.asList(splited));
+        return String.join(" ", splited);
+    }
+}
+// M2:
+class Solution {
+    public String reverseWords(String s) {
+        Stack<String> stack = new Stack<>();
+        int left = 0;
+        while(left < s.length()) {
+            while(left < s.length() && s.charAt(left) == ' ') {left++;}
+            int right = left;
+            StringBuilder word = new StringBuilder();
+            while(right < s.length() && s.charAt(right) != ' ') {
+                word.append(s.charAt(right));
+                right++;
+            }
+            if(!word.toString().isEmpty()) {stack.push(word.toString());}
+            left = right;
+        }
+
+        StringBuilder res = new StringBuilder();
+        while(!stack.isEmpty()) {
+            res.append(stack.pop());
+            if (!stack.isEmpty()) {res.append(" ");}
+        }
+        return res.toString();
+    }
+}
+// M3:
+class Solution {
+    public String reverseWords(String s) {
+        char[] chars = s.toCharArray();
+        int left = 0;
+        int resIdx = 0;
+        while(left < s.length()) {
+            while(left < s.length() && s.charAt(left) == ' '){left++;}
+            int right = left;
+            while(right < s.length() && s.charAt(right) != ' '){
+                right++;
+            }
+            reverse(chars, left, right-1);
+            // this line is important
+            if (resIdx != 0 && left < right){chars[resIdx++] = ' ';}
+            for (int i = left; i < right; i++) {
+                chars[resIdx++] = chars[i];
+            }
+            
+            left = right;
+        }
+        if(resIdx - 1 < chars.length && chars[resIdx-1] == ' ') {resIdx--;}
+        reverse(chars, 0, resIdx - 1);
+        return new String(chars, 0, resIdx);
+    }
+
+
+    private void reverse(char[] arr, int start, int end) {
+        while(start < end) {
+            char temp = arr[start];
+            arr[start]= arr[end];
+            arr[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
