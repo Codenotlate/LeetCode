@@ -44,3 +44,28 @@ class Solution {
         return resEnd;
     }
 }
+
+
+
+
+// 24/2/28
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int resArrEnd = 1;
+        int count = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == nums[i-1]) {
+                count++;
+                if (count <= 2) {
+                    nums[resArrEnd] = nums[i];
+                    resArrEnd++;
+                }
+            } else {
+                count = 1;
+                nums[resArrEnd] = nums[i];
+                resArrEnd++;
+            }
+        }
+        return resArrEnd;
+    }
+}
