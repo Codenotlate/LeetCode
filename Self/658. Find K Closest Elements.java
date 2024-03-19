@@ -132,12 +132,84 @@ class Solution {
 }
 
 
+// 2024/3/18
+/*
+Very similar idea as above, use binary search first to find the closest pos, then two pointers to add to res, and remeber to use linkedlist to make add to the front O(1) time.
+Time: O(logn + k) Space O(1)
+*/
+
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int closest = binarySearchClosest(arr, x);
+        int left = closest-1;
+        int right = closest+1;
+        List<Integer> res = new LinkedList<>();
+        res.add(arr[closest]);
+        while(res.size() != k) {
+            if (left >= 0 && right < arr.length) {
+                if (Math.abs(arr[left]-x) <= Math.abs(arr[right]-x)) {
+                    res.add(0,arr[left]);
+                    left--;
+                } else {
+                    res.add(arr[right]);
+                    right++;                   
+                }
+            } else if (left < 0) {
+                res.add(arr[right]);
+                right++;             
+            } else {
+                res.add(0,arr[left]);
+                left--;
+            }
+        }
+        return res;
+    }
 
 
+    private int binarySearchClosest(int[] arr, int x) {
+        int start = 0;
+        int end = arr.length -1;
+        while (start < end - 1) {
+            int mid = start + (end-start)/2;
+            if (arr[mid]==x) {
+                return mid;
+            }
+            if (arr[mid] > x) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+        }
+        return Math.abs(arr[start]-x) <= Math.abs(arr[end]-x)? start:end;
+    }
+}
 
 
+/* another interesting way - find the leftmost element in the array. Assume that's pos i, since the result array will be at length k, we should not expect pos [i+k] to be included in the result. Thus for binary search, the removing condition can be comparing arr[i] with arr[i+k]. If arr[i] is closer than a[i+k], we know end = i; else start = i+1.
+Also the binary search end pointer can start with len-k.
+Time O(log(n-k) + k) space O(1)
+*/
 
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int start = 0;
+        int end = arr.length - k;
+        while (start < end) {
+            int mid = start + (end-start)/2;
+            if (x-arr[mid] <= arr[mid+k] - x) {
+                end = mid;
+            } else {
+                start = mid+1;
+            }
+        }
 
+        List<Integer> res = new LinkedList<>();
+        for (int i =start; i < start + k; i++) {
+            res.add(arr[i]);
+        }
+        return res;
+    }
+}
 
 
 
