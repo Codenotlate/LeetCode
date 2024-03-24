@@ -27,7 +27,66 @@ https://leetcode.com/problems/longest-repeating-character-replacement/discuss/91
 Check the second comment in Java
 
 another good post: https://leetcode.com/problems/longest-repeating-character-replacement/discuss/91285/Sliding-window-similar-to-finding-longest-substring-with-k-distinct-characters
+-- self comment: here it checks all letters to update the maxCharCount which in unnecessary step. Although it's O(26) ~ O(1) here.
 
 And a followup in the interview
 https://leetcode.com/problems/longest-repeating-character-replacement/discuss/91285/Sliding-window-similar-to-finding-longest-substring-with-k-distinct-characters/274788
+-- self comment: if we need to return the result substring, we can use the way in above post, where we check O(26) to update maxCount intime.
 */
+
+
+
+/* 2024/3/23
+Similar idea as above. Two things not figured out in the first place:
+1) we only need to record maxCount, no need for nonMaxCount, as nonMaxCount = current window size - maxCount
+2) we don't need to update maxCount in time. i.e. when we move left out of window, we don't need to update maxCount to the most accurate one (maybe from another letter). Which also means we don't need to track maxCountLetter.
+The reason being (from discussion):
+we focus on "longest". The length of valid substring is determined by what?  Max Occurrence + k
+We only need to update max occurrence when it becomes larger, because only that can we generate a longer valid substring.
+If we can't surpass the historic max occurrence, then we can not generate a longer valid substring from current "start", I mean the new windows's left bound. To some extend, this becomes a game to find max occurrence.
+Or , a better understanding is:
+"A game to eliminate inferior 'left bounds'.
+
+*/
+
+class Solution {
+    public int characterReplacement(String s, int k) {
+        int maxLen = 0;
+        int left = 0;
+        int right = 0;
+        char maxChar = '_';
+        int maxCharCount = 0;
+        int[] map = new int[26];
+        while(right < s.length()) {
+            char cur = s.charAt(right);
+            map[cur-'A']++;
+            if (map[cur-'A']>maxCharCount) {
+                maxCharCount = map[cur-'A'];
+                maxChar = cur;
+            }
+            if (right - left + 1 - maxCharCount <= k) {
+                maxLen = Math.max(maxLen, right-left+1);
+            } else { // shrink left side
+                char leftChar = s.charAt(left);
+                map[leftChar-'A']--;
+                if (leftChar == maxChar) {
+                    maxCharCount -= 1;
+                }
+                left++;
+            }
+            right++;
+        }
+        return maxLen;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
