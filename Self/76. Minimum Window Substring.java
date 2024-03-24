@@ -279,7 +279,54 @@ class Solution {
 
 
 
-
+// 2024/3/24
+class Solution {
+    public String minWindow(String s, String t) {
+        if(t.length() > s.length()) {return "";}
+        // record the min result window (left idx, and length)
+        int minLen = s.length()+1;
+        int minLeft = -1;
+        Map<Character, Integer> count = new HashMap<>();
+        for (char c: t.toCharArray()) {
+            count.put(c, count.getOrDefault(c,0)+1);
+        }
+        int left = 0;
+        int right = 0;
+        int zeroCount = 0;
+        while (right < s.length()) {
+            while (right < s.length()) {
+                char curChar = s.charAt(right);
+                if (count.containsKey(curChar)) {
+                    count.put(curChar, count.get(curChar)-1);
+                    if (count.get(curChar)==0) {zeroCount++;}
+                }
+                if (zeroCount == count.size()) {
+                    if(minLen > right-left+1){
+                        minLen = right-left+1;
+                        minLeft = left;
+                    }
+                    break;
+                }
+                right++;
+            }
+            
+            while(left <= right && zeroCount == count.size()) {
+                char leftChar = s.charAt(left);
+                left++;
+                if (count.containsKey(leftChar)) {
+                    count.put(leftChar, count.get(leftChar)+1);
+                    if (count.get(leftChar)==1) {zeroCount--;}
+                }
+                if (zeroCount == count.size() && minLen > right-left+1) {
+                    minLen = right-left+1;
+                    minLeft = left;
+                }
+            }
+            right++;
+        }
+        return minLeft != -1? s.substring(minLeft, minLeft+minLen):"";
+    }
+}
 
 
 
