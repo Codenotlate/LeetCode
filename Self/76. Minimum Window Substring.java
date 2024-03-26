@@ -280,6 +280,8 @@ class Solution {
 
 
 // 2024/3/24
+// basic way and below optimized way and template way
+// first draft (basic way)
 class Solution {
     public String minWindow(String s, String t) {
         if(t.length() > s.length()) {return "";}
@@ -327,8 +329,125 @@ class Solution {
         return minLeft != -1? s.substring(minLeft, minLeft+minLen):"";
     }
 }
+// optimized way
+/**
+Basic idea is the same as above prev solutions.
+A few optimizations based on this self solution:
+=== Opt1: can filter s with t first, since we only care those chars and their positions that t contains. (skip in below, cause it's better to company with count map.) Given the time after opt1 is O(s.len+t.len+2*filteredSlen), comparing to before time O(2*s.len+t.len), will improve a lot when filteredSlen <<< s.len
+=== Opt2: can change map to int[58] since we only have letters here and A=65, a=97, thus 26+97-65=58. 
+And we don't need to worry about count++,-- for chars not in t would impact our accurate nonZero. Cause their count will always be <= 0, since they need to always be added to the window first, which is doing count-- from 0. And when they are moved out of the window, the highest value they can go is just 0.
+Also we just need zeroCount. Add to it when get uniq char in t, and remove it
+ */
 
+class Solution {
+    public String minWindow(String s, String t) {
+        if(t.length() > s.length()) {return "";}
+        // record the min result window (left idx, and length)
+        int minLen = s.length()+1;
+        int minLeft = -1;
+        int zeroCount = 0;
+        // opt 2
+        int[] count = new int[58];
+        for (char c: t.toCharArray()) {
+            count[c-'A']++;
+            if (count[c-'A']==1) {zeroCount++;}
+        }
+        int left = 0;
+        int right = 0;
+        while (right < s.length()) {
+            while (right < s.length()) {
+                char curChar = s.charAt(right);
+                count[curChar-'A']--;
+                if (count[curChar-'A']==0){zeroCount--;}
+                if (zeroCount == 0) {
+                    if(minLen > right-left+1){
+                        minLen = right-left+1;
+                        minLeft = left;
+                    }
+                    break;
+                }
+                right++;
+            }
+            
+            while(left <= right && zeroCount == 0) {
+                char leftChar = s.charAt(left);
+                left++;
+                count[leftChar-'A']++;
+                if (count[leftChar-'A']==1) {zeroCount++;}
+                if (zeroCount == 0 && minLen > right-left+1) {
+                    minLen = right-left+1;
+                    minLeft = left;
+                }
+            }
+            right++;
+        }
+        return minLeft != -1? s.substring(minLeft, minLeft+minLen):"";
+    }
+}
 
+// template way
+/**
+Also a templated way:
+    int findSubstring(string s){
+        vector<int> map(128,0);
+        int counter; // check whether the substring is valid
+        int begin=0, end=0; //two pointers, one point to tail and one  head
+        int d; //the length of substring
+
+        for() { // initialize the hash map here  }
+
+        while(end<s.size()){
+
+            if(map[s[end++]]-- ?){  // modify counter here }
+
+            while(// counter condition ){ 
+                 
+                 // update d here if finding minimum
+
+                //increase begin to make it invalid/valid again
+                
+                if(map[s[begin++]]++ ?){ //modify counter here }
+            }  
+
+            // update d here if finding maximum
+        }
+        return d;
+  }*/
+
+class Solution {
+    public String minWindow(String s, String t) {
+        if(t.length() > s.length()) {return "";}
+        // record the min result window (left idx, and length)
+        int minLen = s.length()+1;
+        int minLeft = -1;
+        int zeroCount = 0;
+        // opt 2
+        int[] count = new int[58];
+        for (char c: t.toCharArray()) {
+            count[c-'A']++;
+            if (count[c-'A']==1) {zeroCount++;}
+        }
+        int left = 0;
+        int right = 0;
+        while(right < s.length()) {
+            char curChar = s.charAt(right);
+            count[curChar-'A']--;
+            if (count[curChar-'A']==0){zeroCount--;}
+            right++;
+            while(zeroCount == 0) {
+                if (minLen > right-left) {
+                    minLen = right-left;
+                    minLeft = left;
+                }
+                char leftChar = s.charAt(left);
+                count[leftChar-'A']++;
+                if (count[leftChar-'A']==1){zeroCount++;}
+                left++;
+            }
+        }
+        return minLeft == -1?"":s.substring(minLeft, minLeft+minLen);
+    }
+}
 
 
 
