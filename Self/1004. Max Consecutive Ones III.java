@@ -95,3 +95,28 @@ class Solution {
         return maxlen;
     }
 }
+
+
+
+
+// 2024/3/27 - same as above S2
+/** This solution strictly follows the template from Q76.
+Time O(n) space O(1)
+*/
+class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int maxLen = 0;
+        int left = 0;
+        int right = 0;
+        while(right < nums.length) {
+            if (nums[right]== 0) {k--;}
+            if (k < 0) { // starts to shrink, and because we want max len, we don't need to keep shrinking, thus 'if' instead of 'while'.
+                if(nums[left]==0) {k++;}
+                left++;
+            }
+            maxLen = Math.max(maxLen, right-left+1);
+            right++;
+        }
+        return maxLen;
+    }
+}
