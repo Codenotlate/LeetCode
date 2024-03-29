@@ -97,7 +97,49 @@ class Solution {
 
 
 
+// 24/3/29
+// Time O(l1+l2-l1)=O(l2) space O(26) = O(1)
+// When shrinking the window, we need to take one step as a time instead of jumping, due to examples like: s1=abcd, s2 = adbac
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        if (s1.length() > s2.length()) {return false;}
+        int[] count = new int[26];
+        int uniqChar = 0;
+        for (char c: s1.toCharArray()){
+            count[c-'a']++;
+            if (count[c-'a']==1) {uniqChar++;}
+        }
 
+        int left = 0;
+        int right = 0;
+        int unneeded = 0;
+        while (right < s2.length()) {
+            char curChar = s2.charAt(right);
+            count[curChar - 'a']--;
+            if (count[curChar-'a'] == 0) {
+                uniqChar--;
+                if (uniqChar == 0) {return true;}
+            } else if (count[curChar-'a']<0) {
+                unneeded++;
+            }
+            // while(unneeded> 0 && left <= right) { can be optimized to below
+            while(unneeded> 0 && left <= right-s1.length()+1) {
+                char leftChar = s2.charAt(left);
+                count[leftChar-'a']++;
+                if (count[leftChar-'a']==1) {
+                    uniqChar++;
+                } else if (count[leftChar-'a']==0){
+                    unneeded--;
+                }
+                left++;
+            }
+            right++;
+            
+        }
+        return false;
+
+    }
+}
 
 
 
