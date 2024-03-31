@@ -97,3 +97,51 @@ class Solution {
     }
 }
 
+
+
+
+
+/** 2024/3/31
+Similar as above idea. But used the template from Q76.
+For questions having a fixed window size like this, the window shrink condition can be directly the window size.
+The equal condition is all counts as 0, thus nonZero == 0.
+
+Time O(l1+l2) space O(26) = O(1)
+
+ */
+
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> res = new ArrayList<>();
+        int[] count = new int[26];
+        int nonZero = 0;
+        for (char c: p.toCharArray()) {
+            count[c-'a']++;
+            if (count[c-'a']==1) {nonZero++;}
+        }
+        int left = 0;
+        int right = 0;
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            count[rightChar-'a']--;
+            if (count[rightChar-'a']==0) {nonZero--;}
+            else if (count[rightChar-'a']==-1){nonZero++;}
+            if (right - left + 1 > p.length()) {
+                char leftChar = s.charAt(left);
+                count[leftChar-'a']++;
+                if (count[leftChar-'a']==0) {nonZero--;}
+                else if (count[leftChar-'a']==1) {nonZero++;}
+                left++; 
+            }
+            if (nonZero==0) {res.add(left);}
+            right++;
+        }
+        return res;
+    }
+}
+
+
+
+
+
