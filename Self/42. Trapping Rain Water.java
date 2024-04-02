@@ -270,6 +270,77 @@ class Solution {
 
 
 
+/** 2024/4/2
+M1: View the graph vertically, for each position, the area = min(maxLeft,maxRight)-curHeight. Thus we do two pass, one from left to right to get maxLeft, another from right to left to get maxRight. Can only use one array, since in the second pass we can directly calculate results. Time O(2n) space O(n)
+M2 (used monotonic template): View the graph horizontally, for each position, the area = (min(prevGreater,nextGreater)-curHeight) * index diff between prevGreater and next Greater. Since this involves prevGreater and nextGreater, it can use monotonic stack with 1 pass. Time O(n) Space O(n)
+M3 (learn from solution): Two pointer way. Again view the graph vertically like M1. We track leftMax and rightMax from the two ends of the array, update them based on current left and right pointer. And move the left pointer when leftMax < rightMax. The reason being, future rightMax is only going to be larger than or equal to current rightMax, if current rightMax already larger than leftMax, then for this position, the min(maxLeft, rightMax) will always equal to current maxLeft. Thus we can directly add maxLeft-curHeight to the result for this position and move left++. Time O(n) Space O(1)
+
+ */
+ // M1
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int[] maxLeft = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (i == 0) {maxLeft[i] = height[i]; continue;}
+            maxLeft[i] = Math.max(maxLeft[i-1], height[i]);
+        }
+        int res = 0;
+        int maxRight = 0;
+        for (int i = n-1; i >= 0; i--) {
+            maxRight = Math.max(maxRight, height[i]);
+            res += Math.min(maxLeft[i], maxRight)-height[i];
+        }
+        return res;
+
+    }
+}
+// M2
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int res = 0;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while(!stack.isEmpty() && height[stack.peek()] <= height[i]) {
+                int top = stack.pop();
+                if (!stack.isEmpty()) {
+                    res += (Math.min(height[i], height[stack.peek()])-height[top]) * (i-stack.peek()-1);
+                }
+            }
+            stack.push(i);
+        }
+        return res;
+
+    }
+}
+// M3
+class Solution {
+    public int trap(int[] height) {
+        int res = 0;
+        int left = 0;
+        int right = height.length-1;
+        int leftMax = 0;
+        int rightMax = 0;
+
+        while (left <= right) {
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            if (leftMax < rightMax) {
+                res += leftMax - height[left];
+                left++;
+            } else {
+                res += rightMax - height[right];
+                right--;
+            }
+        }
+        return res;
+        
+
+    }
+}
+
+
 
 
 

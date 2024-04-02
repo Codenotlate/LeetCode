@@ -34,3 +34,30 @@ class Solution {
         return res;
     }
 }
+
+
+
+
+/** 2024/4/2
+Basically what we want is a strictly decreasing monoStack.
+Time O(n) space O(n) for the stack if not view stack as output.
+-----------------
+We can of course also do right to left and only keep the maxRight, if the list can be viewed as output, then there's O(1) space used.
+ */
+
+class Solution {
+    public int[] findBuildings(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < heights.length; i++) {
+            while(!stack.isEmpty() && heights[stack.peek()] <= heights[i]) {
+                stack.pop();
+            }
+            stack.push(i);
+        }
+        int[] res = new int[stack.size()];
+        for (int i = res.length-1; i>= 0; i--) {
+            res[i] = stack.pop();
+        }
+        return res;
+    }
+}
