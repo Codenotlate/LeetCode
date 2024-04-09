@@ -178,3 +178,72 @@ class Solution {
 }
 
 
+
+
+
+
+/** 2024/4/8
+M1: Monotonic stack O(n) time and space
+no use - M2: from right to left and use result array directly as it points to the next position to jump to. Time O(n) space O(1) -- Although still not fully understand why the time here is O(n). Also need to specially treat the max value in the array to avoid infinite loop, thus need to record the maxRight so far.
+M2.1 & M2.2 - A better way to understand M2 time complexity is to first do the right-to-left version of M1. Then convert the stack to an array with peekIdx. The key is to understand the stack.pop() now becomes peekIdx + res[peekIdx]. Again pay attention to infinite loop.
+
+ */
+// M1
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] res = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
+                int topIdx = stack.pop();
+                res[topIdx] = i - topIdx;
+            }
+            stack.add(i);
+        }
+        return res;
+    }
+}
+ // M2.1 right to left monotonic stack
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] res = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = n-1; i >= 0; i--) {
+            while (!stack.isEmpty() && temperatures[stack.peek()] <= temperatures[i]) {
+                stack.pop();
+            }
+            if (!stack.isEmpty()) {res[i] = stack.peek() - i;}
+            stack.add(i);
+        }
+        return res;
+    }
+}
+// M2.2 O(1) space
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int n = temperatures.length;
+        int[] res = new int[n];
+        int peekIdx = n; // represent stack is empty
+        for (int i = n-1; i >= 0; i--) {
+            while (peekIdx != n && temperatures[peekIdx] <= temperatures[i]) {
+                if (res[peekIdx] != 0) {
+                    peekIdx += res[peekIdx];
+                } else {
+                    peekIdx = n;
+                }
+            }
+            if (peekIdx != n) {res[i] = peekIdx - i;}
+            peekIdx = i;
+        }
+        return res;
+    }
+}
+
+
+
+
+
+
+
