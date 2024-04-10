@@ -201,5 +201,30 @@ class Solution {
 
 
 
+----------Use below most concise way-------------
+
+/** 2024/4/9
+Very similar to 907.For each element, we again want to find it's previous smaller and next smaller.
+O(n) time and space
+
+
+ */
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        int res = 0;
+        for (int cur = 0; cur <= heights.length; cur++) {
+            // note: the order of the two Or conditions can't be reversed
+            while (stack.peek()!=-1 && (cur == heights.length||heights[stack.peek()]>= heights[cur])) {
+                int height = heights[stack.pop()];
+                res = Math.max(res, height * (cur - stack.peek() -1));
+            }
+            stack.push(cur);
+        }
+        return res;
+    }
+}
+
 
 

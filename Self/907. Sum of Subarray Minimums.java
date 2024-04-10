@@ -130,3 +130,32 @@ class Solution {
         return (int)sum%mod;
     }
 }
+
+
+
+
+
+
+/** 2024/4/9
+Naive way O(n^3), O(n) for search min of each subarray can be optimized to O(1). Thus O(n^2)
+M1: Use monotonic stack.  time O(n) space O(n). Essentially, we are checking for each element how far a range of subarray it can be min. Basically we are trying to find the index for the prevsmaller and nextsmaller to that element.
+Another note is to use mod to avoid data overflow. Any place with possible huge multiplication, we need to do mod first.
+ */
+
+class Solution {
+    public int sumSubarrayMins(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        long mod = 1000000007;
+        stack.push(-1);
+        long sum = 0;
+        for (int i = 0; i <= arr.length; i++) {
+            while (stack.peek() != -1 && (i == arr.length || arr[stack.peek()] >= arr[i])) {
+                int popIdx = stack.pop();
+                long subsum = (popIdx - stack.peek())% mod * (i - popIdx) % mod * arr[popIdx]% mod ;
+                sum = (sum + subsum)% mod;
+            }
+            stack.push(i);
+        }
+        return (int)(sum%mod);
+    }
+}
