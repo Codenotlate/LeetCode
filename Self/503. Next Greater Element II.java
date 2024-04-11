@@ -71,3 +71,30 @@ class Solution {
         return res;
     }
 }
+
+
+
+
+/** 2024.4.10
+Basically same idea as above, adding a stop early condition
+Time O(n) Space O(n) 
+
+*/
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        int n = nums.length;
+        int[] res = new int[n];
+        Arrays.fill(res, -1);
+        int cur = 0;
+        while (cur < nums.length * 2) {
+            while (!stack.isEmpty() && nums[stack.peek()] < nums[cur%n]) {
+                res[stack.pop()] = nums[cur%n];
+            }
+            if (!stack.isEmpty() && stack.peek() == cur%n) {break;}
+            if (res[cur%n] == -1) {stack.push(cur%n);}
+            cur++;
+        }
+        return res;
+    }
+}

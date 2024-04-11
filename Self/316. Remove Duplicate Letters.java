@@ -160,3 +160,29 @@ class Solution {
     }
 }
 
+
+
+// 2024.4.10 - similar idea as above ones, using stringbuilder directly as stack 
+
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        int[] count = new int[26];
+        int[] added = new int[26];
+        for (char c: s.toCharArray()) {
+            count[c-'a']++;
+        }
+        // Use StringBuilder directly as a stack
+        StringBuilder res = new StringBuilder();
+        for (char c: s.toCharArray()) {                  
+            if (added[c-'a'] > 0) {count[c-'a']--;     continue;}
+            while (res.length() > 0 && c < res.charAt(res.length()-1) && count[res.charAt(res.length()-1)-'a'] > 0) {
+                added[res.charAt(res.length()-1)-'a']--;
+                res.deleteCharAt(res.length()-1);
+            }
+            res.append(c);
+            added[c-'a']++;
+            count[c-'a']--;     
+        }
+        return res.toString();
+    }
+}
