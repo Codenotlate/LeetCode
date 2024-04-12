@@ -104,10 +104,37 @@ class Solution {
 
 
 
+/** 24/4/11
+Essentially, we can view this as for each row we want to find the max rectangle, which means we need to find prevSmaller and NextSmaller, thus using monotonic stack. Also the value of each row will be accumulated from previous rows, and we can use an array to store that. As we are adding each number, we can do the stack process as well. After processing of each row, the stack will only contain -1 again.
+A note is that for positions with value = 0, the accumulated value is just 0. Also note here matrix is a char matrix not an int one.
+time O(m*n) space O(n)
+
+ */
+class Solution {
+    public int maximalRectangle(char[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[] row = new int[n];
+        int maxArea = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        for (int i = 0; i < m; i++) {
+            for(int j = 0; j <= n;j++) {
+                if (j < n) {row[j] = matrix[i][j]=='1'? row[j] + 1 : 0;}
+                while(stack.peek() != -1 && (j ==n || row[stack.peek()] > row[j])) {
+                    int popIdx = stack.pop();
+                    maxArea = Math.max(maxArea, row[popIdx] * (j - stack.peek() - 1));
+                }
+                if (j < n) {stack.push(j);}
+            }
+        }
+        return maxArea;
+    }
+}
 
 
 
-
+// also has dp way time O(mn) for later learning
 
 
 
