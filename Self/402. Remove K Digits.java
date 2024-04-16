@@ -75,7 +75,31 @@ class Solution {
 
 
 
+/** 2024.4.16 -- exactly the same as above
+Similarly use StringBuilder directly as a stack. The pop out condition will be (peek > cur) and k >= 0. Whenever an element is popped out, do k--. For pushing into stack, whenever it's a leading zero, meaning cur = '0' and stack is empty, we don't do the push.
+Also, it's possible after the iteration, we didn't remove as many as k chars. Then in this case, we need to remove k elements from the top of the stack.
+Time O(n) space O(n) 
 
+*/
+
+class Solution {
+    public String removeKdigits(String num, int k) {
+        StringBuilder stack = new StringBuilder();
+        for (char c: num.toCharArray()) {
+            while (stack.length() != 0 && stack.charAt(stack.length()-1) > c && k > 0) {
+                stack.deleteCharAt(stack.length()-1);
+                k--;
+            }
+            if (stack.length() != 0 || c != '0') {stack.append(c);}
+        }
+        // note: pay attention when stack is empty
+        while(k > 0 && stack.length() > 0) {
+            stack.deleteCharAt(stack.length()-1);
+            k--;
+        }
+        return stack.length() == 0 ? "0" : stack.toString();
+    }
+}
 
 
 

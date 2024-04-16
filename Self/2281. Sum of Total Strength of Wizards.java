@@ -68,3 +68,44 @@ class Solution {
         return (int)((res + mod) % mod);
     }
 }
+
+
+
+
+/** 2024/4/16
+Again got tricked by using mod to avoid overflow.
+Other than that, the best way to notice the pattern for using prefixSum of prefixSum is to assume a case for index i and least out all sums required for array say from i-2 to i+3.
+Time O(n) space O(n)
+
+ */
+class Solution {
+    public int totalStrength(int[] strength) {
+        int n = strength.length;
+        long[] pre = new long[n];
+        long[] prepre = new long[n];
+        int mod = 1000000007;
+        for (int i = 0; i < n; i++) {
+            if (i == 0) {
+                pre[i] = strength[i];
+                prepre[i] = strength[i];
+            } else {
+                pre[i] = (pre[i-1]+strength[i]);
+                prepre[i] = (prepre[i-1]+pre[i]);
+            }
+        }
+
+        long res = 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+        for (int i = 0; i <= n; i++) {
+            while(stack.peek()!=-1 && (i == n || strength[stack.peek()] >= strength[i])) {
+                int pop = stack.pop();
+                long rightPart = (prepre[i-1]-(pop>=1?prepre[pop-1]:0)) % mod * (pop-stack.peek()) % mod;
+                long leftPart =  ((pop>= 1? prepre[pop-1]:0) - (stack.peek() >= 1?prepre[stack.peek()-1]:0)) %mod * (i-pop) % mod; 
+                res = (res%mod + strength[pop] * (rightPart-leftPart)%mod) % mod;
+            }
+            stack.push(i);
+        }
+        return (int)((res + mod) % mod);
+    }
+}
