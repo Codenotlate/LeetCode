@@ -294,3 +294,45 @@ class Solution {
         nums[right] = temp;
     }
 }
+
+
+
+// Review 2024/7/10 3 ways: sort way/ pq size k way / partition way
+// Way2: Partition way
+// note Lpartition way will exceed time limit even with shuffle
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int left = 0;
+        int right = nums.length - 1;
+        k = nums.length - k;
+        while (left <= right) {
+            int partIdx = Hpartition(nums, left, right);
+            if (partIdx == k) {
+                return nums[k];
+            } else if (partIdx > k) {
+                right = partIdx - 1;
+            } else {
+                left = partIdx + 1;
+            }
+        }
+        return -1;
+    }
+
+    private int Hpartition(int[] nums, int left, int right) {
+        int pivot = left;
+        while (left <= right) {
+            while (left <= right && nums[left] <= nums[pivot]) {left++;}
+            while (left <= right && nums[right] > nums[pivot]) {right--;}
+            if (left > right) {break;}
+            swap(nums, left, right);
+        }
+        swap(nums, left-1, pivot);
+        return left-1;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
