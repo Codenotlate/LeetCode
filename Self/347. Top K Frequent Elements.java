@@ -393,6 +393,37 @@ class Solution {
 
 
 
+/** 2024.7.22
+count the element takes O(n)
+Then way1 sort by count, O(nlogn)
+way2 sort by maxheap with size k, O(nlogk)
+way3 counting sort the count since count [1,n], O(n)
+ */
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> counts = new HashMap<>();
+        for (int n: nums) {
+            counts.put(n, counts.getOrDefault(n,0)+1);
+        }
+        ArrayList<Integer>[] sort = new ArrayList[nums.length+1];
+        for (int n: counts.keySet()){
+            if (sort[counts.get(n)] == null) {
+                sort[counts.get(n)] = new ArrayList<>();
+            }
+            sort[counts.get(n)].add(n);
+        }
+        int[] res = new int[k];
+        int resIdx = 0;
+        for (int i = nums.length; i >= 0; i--) {
+            if (sort[i] == null) {continue;}
+            for (int n: sort[i]) {
+                res[resIdx++] = n;
+            }
+            if (resIdx >= k) {break;}
+        }
+        return res;
+    }
+}
 
 
 
