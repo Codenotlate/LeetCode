@@ -203,5 +203,47 @@ class Solution {
 
 
 
+// 2024.7.16
+//Way1: sort by start then use PQ sort by end, more intuitive way O(nlogn)
+//Way2: sort start and end separately, then just compare start with end array. Count the meeting starts before the earliest meeting ends. if current meeting starts later then earliest ending, we can reuse on room, thus move both to next. Less intuitive way O(nlogn)
+// way 1:
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, (a,b)-> (a[0]-b[0]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int maxCount = 0;
+        int size = 0;
+        for (int[] interval: intervals) {
+            while (!pq.isEmpty() && pq.peek() <= interval[0]) {
+                pq.poll();
+                size--;
+            } 
+            pq.add(interval[1]);
+            size++;
+            if (size > maxCount) {maxCount = size;}
+        }
+        return maxCount;
+    }
+}
+// way 2:
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        int[] starts = new int[intervals.length];
+        int[] ends = new int[intervals.length];
+        for (int i=0; i < intervals.length; i++){
+            starts[i] = intervals[i][0];
+            ends[i] = intervals[i][1];
+        }
+        Arrays.sort(starts);
+        Arrays.sort(ends);
+        int count = 0;
+        int endIdx = 0;
+        for (int i = 0; i < starts.length; i++) {
+            if (starts[i] < ends[endIdx]) {count++;}
+            else {endIdx++;}
+        }
+        return count;
 
+    }
+}
 

@@ -97,3 +97,49 @@ class Solution {
         return idx;
     }
 } 
+
+
+
+
+
+//2024.7.16
+// Get count with array, check if it's impossible
+// insert char with maxCount to 0,2,4,... Then the rest
+// time O(n)
+class Solution {
+    public String reorganizeString(String s) {
+        int[] count = new int[26];
+        int maxCount = 0;
+        char maxChar = '*';
+        for (char c: s.toCharArray()) {
+            count[c-'a']++;
+            if (count[c-'a'] > maxCount) {
+                maxCount = count[c-'a'];
+                maxChar = c;
+            }
+        }
+        if (s.length() - maxCount < maxCount - 1) {return "";}
+        char[] res = new char[s.length()];
+        int addCount = 0;
+        int index = 0;
+        // added maxCount char first
+        while(count[maxChar-'a'] > 0) {
+            res[index] = maxChar;
+            count[maxChar-'a']--;
+            addCount++;
+            index += 2;
+            if (index >= res.length) {index = 1;}
+        }
+        // add the rest
+        for (int i = 0; i < 26; i++) {
+            while (count[i] > 0) {
+                res[index] = (char) ('a'+i);
+                count[i]--;
+                index += 2;
+                if (index >= res.length) {index = 1;}
+            }
+        }
+
+        return new String(res);
+    }
+}
