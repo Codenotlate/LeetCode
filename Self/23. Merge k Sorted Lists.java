@@ -141,3 +141,31 @@ class Solution {
 }
 
 
+
+/** 2024.7.29
+Use a pq with size k to add one node from each linkedlist. Each time pop one node, add its next to othe pq.
+
+Time O(nlogk)
+
+----------------------
+Above D&C way is fancy. Try it next time!
+
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a,b)->(a.val-b.val));
+        for (ListNode first: lists) {
+            if(first != null) {pq.add(first);}
+        }
+        ListNode dummyHead = new ListNode(-1);
+        ListNode curEnd = dummyHead;
+        while (!pq.isEmpty()) {
+            ListNode cur = pq.poll();
+            curEnd.next = cur;
+            curEnd = curEnd.next;
+            if (cur.next != null) {pq.add(cur.next);}
+        }
+        return dummyHead.next;
+    }
+}
+
