@@ -171,4 +171,25 @@ class Solution {
 
 
 
+// 2024.8.5
+// The two pointer way to start with the whole array then move the lower side is incorrect. with Example: [2,5,1,3] t = 7
+// Need to use sliding window way with expansion to right then shrinking to left.
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int left = 0;
+        int right = 0;
+        int sum = 0;
+        int minLen = nums.length+1;
+        while (right < nums.length) {
+            sum += nums[right];
+            while(sum >= target && left <= right) {
+                minLen = Math.min(minLen, right-left+1);
+                sum -= nums[left];
+                left++;
+            }
+            right++;
+        }
+        return minLen == nums.length + 1 ? 0 : minLen;
+    }
+}
 

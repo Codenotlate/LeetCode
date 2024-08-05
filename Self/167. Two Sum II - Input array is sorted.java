@@ -32,3 +32,28 @@ class Solution {
         return new int[0]; // since answer is guaranteed, thus should not reach this line.
     }
 }
+
+
+
+// 20240805
+// two pointer O(n) space O(1), dictionary O(n) space O(n), binary search O(nlogn) space O(1)
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int left = 0;
+        int right = numbers.length - 1;
+        int[] res = new int[2];
+        while (left < right) {
+            if (numbers[left] + numbers[right] == target) {
+                res[0] = left+1;
+                res[1] = right+1;
+                return res;
+            }
+            if (numbers[left] + numbers[right] > target) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+        return res;
+    }
+}

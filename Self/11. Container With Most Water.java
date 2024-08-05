@@ -80,6 +80,25 @@ class Solution {
 
 
 
+// 2024.8.5
+// same as above, we move the bar with lower height, because all remaining pairs with this bar won't exceed current area as the width gets smaller and height won't increase. Thus safe to get rid of all these pairs.
+class Solution {
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length-1;
+        int maxarea = 0;
+        while (left < right) {
+            maxarea = Math.max(maxarea, Math.min(height[left], height[right])*(right-left));
+            if(height[left] <= height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return maxarea;
+    }
+}
+
 
 
 

@@ -55,3 +55,28 @@ class Solution {
 
 
 // check another two BS ways in solution method3 & 4
+
+
+
+// 2024.7.30 - same as above Maxheap way but in two pass, can be combined in one pass, and can actually get rid of diff[]
+// There is a binary search way, but didn't look in detail how each check is O(n). Can check next time
+class Solution {
+    public int furthestBuilding(int[] heights, int bricks, int ladders) {
+        int[] diff = new int[heights.length];
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a,b)-> (b-a));
+        int diffSum = 0;
+        for (int i = 0; i < diff.length-1; i++) {
+            diff[i] = heights[i+1]-heights[i];
+            if (diff[i] <= 0) {continue;}
+            pq.add(diff[i]);
+            diffSum += diff[i];
+            if (diffSum > bricks) {
+                if (ladders <= 0) {return i;}
+                ladders--;
+                diffSum -= pq.poll();
+            }
+        }
+        return diff.length-1;
+    }
+}
+

@@ -78,3 +78,86 @@ class Solution {
 
 
 // Try M0 Trie way next time
+
+// 24/7/30 Trie way self
+/* Time complexity from solution:
+Time complexity : O(M) to build the trie where M is total number of characters in products For each prefix we find its representative node in O(len(prefix)) and dfs to find at most 3 words which is an O(1) operation. Thus the overall complexity is dominated by the time required to build the trie.
+
+*/
+
+
+class Solution {
+    private class TrieNode {
+        boolean isEnd = false;
+        TrieNode[] children = new TrieNode[26];
+    }
+    
+    public class Trie {
+        TrieNode head;
+        
+        public Trie() {
+            head = new TrieNode();
+        }
+        
+        public void insert(String s) {
+            TrieNode cur = head;
+            for (char c: s.toCharArray()) {
+                if (cur.children[c-'a'] == null) {
+                    cur.children[c-'a'] = new TrieNode();
+                }
+                cur = cur.children[c-'a'];
+            }
+            cur.isEnd = true;
+        }
+        
+    }
+    
+    private void getPrefix(TrieNode curNode, int k, StringBuilder curStr, List<String> res) {
+        if (res.size() >= k) {return;}
+        if (curNode.isEnd) {res.add(curStr.toString());}
+        for (int i =0; i<26; i++) {
+            if (curNode.children[i] == null) {continue;}
+            curStr.append((char)('a'+i));
+            getPrefix(curNode.children[i], k, curStr, res);
+            curStr.deleteCharAt(curStr.length() - 1);
+        }
+    }
+
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        Trie trie = new Trie();
+        for (String s: products) {
+            trie.insert(s);
+        }
+        List<List<String>> res = new ArrayList<>();
+        TrieNode curNode = trie.head;
+        StringBuilder curStr = new StringBuilder();
+        for (char c: searchWord.toCharArray()) {
+            List<String> curRes = new ArrayList<>();
+            if (curNode!= null) {curNode = curNode.children[c-'a'];}
+            if (curNode == null) {
+                res.add(curRes);
+                continue; // instead of break
+            }
+            curStr.append(c);
+            getPrefix(curNode, 3, curStr, curRes);
+            res.add(curRes);
+            
+        }
+        return res;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

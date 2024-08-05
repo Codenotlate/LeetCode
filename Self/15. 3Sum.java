@@ -167,3 +167,45 @@ class Solution {
         }
     }
 }
+
+
+
+
+
+
+// 2024.8.5
+// follow similar idea as two sum. We can do O(n) when we fix one element and do two sum for the rest.
+// sort is necessary for the two pointer way of twoSum. Also it can help to avoid duplicates naturally.
+// time O(n^2) + O(nlogn) = O(n^2)
+
+// Next time try the unsort way and using map to solve two sum and use set of list to avoid duplicates(then triplets need to be sorted before added). 
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i= 0; i < nums.length - 2; i++) {
+            // avoid duplicates
+            if (i > 0 && nums[i] == nums[i-1]) {continue;}
+            int target = -nums[i];
+            int left = i+1;
+            int right = nums.length-1;
+            while (left < right) {
+                while (left > i+1 && left < right && nums[left] == nums[left-1]) {left++;}
+                while (right < nums.length-1 && left < right && nums[right] == nums[right+1]) {right--;}
+                if (left >= right) {break;}
+                int sum = nums[left] + nums[right];
+                if (sum == target) {
+                    res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    left++;
+                    right--;
+                } else if (sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+            
+        }
+        return res;
+    }
+}
