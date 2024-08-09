@@ -115,3 +115,25 @@ class Solution {
 
 
 
+// 2024/08/08
+// can solve either recursively or iteratively using a loop
+// This ending condition is better than above ones.
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        int up = 0;
+        int left = 0;
+        int down = matrix.length-1;
+        int right = matrix[0].length-1;
+        List<Integer> res = new ArrayList<>();
+        int totalCount = matrix.length * matrix[0].length;
+        while(res.size() < totalCount) {
+            for (int k = left; k <= right && res.size() < totalCount; k++) {res.add(matrix[up][k]);}
+            for (int k = up+1; k <= down-1 && res.size() < totalCount; k++) {res.add(matrix[k][right]);}
+            for (int k = right; k >= left && res.size() < totalCount; k--) {res.add(matrix[down][k]);}
+            for (int k = down-1; k >= up+1 && res.size() < totalCount; k--) {res.add(matrix[k][left]);}
+            left++; up++; down--; right--;
+        }
+        return res;
+    }
+}
+

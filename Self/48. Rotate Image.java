@@ -61,3 +61,27 @@ class Solution {
 
 
 
+// 20240808 - diff from above ways
+// a 4 position rotation: (i,j)-(j, n-i)-(n-i, n-j)-(n-j,i)
+class Solution {
+    public void rotate(int[][] matrix) {
+        int i1 = 0;
+        int i2 = matrix.length-1;
+        while(i1 < i2) {
+            for (int k = i1; k < i2; k++) {
+                rotate4(matrix, i1, k);
+            }
+            i1++;
+            i2--;
+        }
+    }
+
+    private void rotate4(int[][] mat, int a, int b) {
+        int n = mat.length-1;
+        int temp = mat[n-b][a];
+        mat[n-b][a] = mat[n-a][n-b];
+        mat[n-a][n-b]=mat[b][n-a];
+        mat[b][n-a]=mat[a][b];
+        mat[a][b] = temp;
+    }
+}

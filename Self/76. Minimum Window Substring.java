@@ -452,6 +452,47 @@ class Solution {
 
 
 
+// 20240808 - same as above
+class Solution {
+    public String minWindow(String s, String t) {
+        if (t.length() > s.length()) {return "";}
+        Map<Character, Integer> count = new HashMap<>();
+        for (char c: t.toCharArray()) {
+            count.put(c, count.getOrDefault(c, 0)+1);
+        }
+        int nonZeros = count.keySet().size();
+
+        int left = 0;
+        int right = 0;
+        int[] optimal = new int[3]; // minLen, left, right
+        optimal[0] = s.length() + 1;
+        while (right < s.length()) {
+            char rightChar = s.charAt(right);
+            if (count.containsKey(rightChar)) {
+                count.put(rightChar, count.get(rightChar)-1);
+                if (count.get(rightChar)==0) {nonZeros--;}
+            }
+            while(nonZeros == 0) {
+                if (right-left+1 <optimal[0]) {
+                    optimal[0]=right-left+1;
+                    optimal[1] = left;
+                    optimal[2] = right;
+                }
+                char leftChar = s.charAt(left);
+                if (count.containsKey(leftChar)) {
+                    count.put(leftChar, count.get(leftChar)+1);
+                    if(count.get(leftChar)==1) {nonZeros++;}
+                }
+                left++;
+            }
+            right++;
+        }
+        return optimal[0] == s.length() + 1? "": s.substring(optimal[1], optimal[2]+1);
+    }
+}
+
+
+
 
 
 

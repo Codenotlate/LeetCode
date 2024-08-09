@@ -52,3 +52,49 @@ class Solution {
         return true;
     }
 }
+
+
+// 20240808
+// traditional way
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        int[][] row = new int[9][9];
+        int[][] col = new int[9][9];
+        int[][] blk = new int[9][9];
+        for (int i=0; i <9; i++) {
+            for (int j = 0; j<9; j++) {
+                char cur = board[i][j];
+                if (cur == '.') {continue;}
+                if(row[i][cur-'1'] != 0 || col[j][cur-'1'] != 0 || blk[i/3*3+j/3][cur-'1']!=0) {
+                    return false;
+                }
+                row[i][cur-'1']=1;
+                col[j][cur-'1']=1;
+                blk[i/3*3+j/3][cur-'1']=1;
+            }
+        }
+        return true;
+    }
+}
+// interesting way- for each value 1 to 9, represent its position at row/col/blk. For each same row/col/blk, one value can only appear once. thus if it's already in the set, it means it's invalid.
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        Set<String> seen = new HashSet<>();
+        for (int i=0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                char c = board[i][j];
+                if (c=='.') {continue;}
+                String row = c + "at row" + i;
+                String col = c + "at col" + j;
+                String blk = c + "at blk" + (i/3*3+j/3);
+                if (seen.contains(row) || seen.contains(col) || seen.contains(blk)) {
+                    return false;
+                }
+                seen.add(row);
+                seen.add(col);
+                seen.add(blk);
+            }
+        }
+        return true;
+    }
+}

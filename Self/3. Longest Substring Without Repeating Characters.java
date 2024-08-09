@@ -89,6 +89,26 @@ class Solution {
 
 
 
+// 2024/8/7
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int left = 0;
+        int right = 0;
+        Set<Character> counts = new HashSet<>();
+        int maxlength = 0;
+        while(right < s.length()) {
+            char cur = s.charAt(right);
+            while(counts.contains(cur)) {
+                counts.remove(s.charAt(left));
+                left++;
+            }
+            maxlength = Math.max(maxlength, right-left+1);
+            counts.add(cur);
+            right++;
+        }
+        return maxlength;
+    }
+}
 
 
 

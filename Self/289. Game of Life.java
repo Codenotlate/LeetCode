@@ -219,3 +219,34 @@ In order for us to update a particular cell, we only have to look at its 8 neigh
 
 
 
+// 20240808
+class Solution {
+    public void gameOfLife(int[][] board) {
+        for(int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                int count = getLiveNum(board, i, j);
+                if (board[i][j]%2==1 && count != 2 && count != 3) {board[i][j] = 3;}
+                else if (board[i][j]%2== 0 && count==3) {board[i][j] =2;}
+            }
+        }
+        for(int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == 2 || board[i][j] == 3) {
+                    board[i][j] = 1-board[i][j] % 2;
+                }           
+            }
+        }
+    }
+
+    private int getLiveNum(int[][] mat, int i, int j) {
+        int[][] dirs = new int[][]{{-1, 0},{1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}};
+        int count = 0;
+        for (int[] d: dirs) {
+            int newi = i + d[0];
+            int newj = j + d[1];
+            if (newi >= 0 && newi < mat.length && newj >= 0 && newj < mat[0].length && mat[newi][newj] % 2 != 0) {count++;}
+        }
+        return count;
+    }
+}
+
