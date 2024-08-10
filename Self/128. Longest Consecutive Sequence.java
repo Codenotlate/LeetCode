@@ -155,7 +155,24 @@ class Solution {
 
 
 
-
+// 20240809
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int n: nums) {set.add(n);}
+        int length = 0;
+        for (int n: nums) {
+            if (set.contains(n-1)) {continue;}
+            int curlen = 0;
+            while(set.contains(n)) {
+                curlen += 1;
+                n += 1;
+            }
+            length = Math.max(curlen, length);
+        }
+        return length;
+    }
+}
 
 
 

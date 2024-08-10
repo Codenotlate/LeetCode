@@ -133,6 +133,39 @@ class Solution {
 
 
 
+// 20240809
+// a representation for one group
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for(String str: strs) {
+            String repr = getRepr(str);
+            map.putIfAbsent(repr, new ArrayList<>());
+            map.get(repr).add(str);
+        }
+        List<List<String>> res = new ArrayList<>();
+        for (String key: map.keySet()) {
+            res.add(map.get(key));
+        }
+        return res;
+    }
+
+    private String getRepr(String str) {
+        int[] counts = new int[26];
+        for (char c: str.toCharArray()) {
+            counts[c-'a']++;
+        }
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < 26; i++) {
+            if(counts[i] == 0) {continue;}
+            res.append((char)'a'+i);
+            res.append(counts[i]);
+        }
+        return res.toString();
+    }
+}
+
+
 
 
 

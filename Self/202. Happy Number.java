@@ -52,3 +52,32 @@ Also Approach 2: Floyd's Cycle-Finding Algorithm can have O(1) space
 
 
 */
+
+
+
+// 20240809
+// intuitive way using a set is simple. using Floyd Cycle detection algo with O(1) space is interesting solution.
+// we are basically trying to find a cycle here.
+class Solution {
+    public boolean isHappy(int n) {
+        int slow = n;
+        int fast = n;
+        while(slow != 1 && fast != 1) {
+            slow = getSum(slow);
+            fast = getSum(getSum(fast));
+            if (slow == fast && slow != 1) {return false;} // don't forget !=1 condition
+        }
+        return true;
+    }
+
+
+    private int getSum(int n) {
+        int sum = 0;
+        while ( n != 0) {
+            int digit = n % 10;
+            n /= 10;
+            sum += digit*digit;
+        }
+        return sum;
+    }
+}

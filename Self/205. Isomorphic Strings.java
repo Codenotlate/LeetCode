@@ -37,3 +37,21 @@ public class Solution {
         
     }
 }
+
+
+//20240809
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        Map<Character,Character> smap = new HashMap<>();
+        Map<Character, Character> tmap = new HashMap<>();
+        for (int i = 0; i < s.length();i++) {
+            char s_c = s.charAt(i);
+            char t_c = t.charAt(i);
+            if(smap.containsKey(s_c) && smap.get(s_c) != t_c || (tmap.containsKey(t_c) && tmap.get(t_c) != s_c)) {return false;}
+            smap.put(s_c, t_c);
+            tmap.put(t_c, s_c);
+
+        }
+        return true;
+    }
+}
