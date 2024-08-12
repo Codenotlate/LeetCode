@@ -37,3 +37,29 @@ Here I provide a concise template that I summarize for the so-called "Overlappin
 4)If the current interval does not overlap with the active set, we just drop current active set, record some parameters, and create a new active set that contains the current interval.
 
 */
+
+
+
+// 20240810
+// Didn't pass casea: [[-2147483646,-2147483645],[2147483646,2147483647]]
+// Apparently a new test case has been added recently. If you cannot pass this one, then it is because the result of subtraction is too large and thus the overflow is encountered. So don't use a-b to compare when sorting. Use Integer.compare(a,b) instead!!!
+// another interesting greedy way is to sort by end, and always shoot as right as possible.
+// One point missing in the explanation is that there might be some balloon later in the array supposed to be shot already but still seating in the array. However, this can be taken care of by some later arrow.
+// from (https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/solutions/93703/share-my-explained-greedy-solution/?envType=study-plan-v2&envId=top-interview-150)
+class Solution {
+    public int findMinArrowShots(int[][] points) {
+        Arrays.sort(points, (a,b)->(Integer.compare(a[0],b[0])));
+        int count = 0;
+        int[] cur = points[0];
+        for (int i = 1; i < points.length; i++) {
+            if (points[i][0] > cur[1]) {
+                count++;
+                cur = points[i];
+            } else {
+                cur[0] = Math.max(cur[0], points[i][0]);
+                cur[1] = Math.min(cur[1], points[i][1]);
+            }
+        }
+        return count+1;
+    }
+}

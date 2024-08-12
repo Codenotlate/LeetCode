@@ -166,3 +166,26 @@ class Solution {
         return res;
     }
 }
+
+
+
+// 20240810
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        List<int[]> resList = new LinkedList<>();
+        int[] cur = newInterval;
+        for (int i = 0; i < intervals.length; i++) {
+            if (intervals[i][0] > cur[1]) {
+                resList.add(cur);
+                cur = intervals[i];
+            } else if (intervals[i][1] < cur[0]) {
+                resList.add(intervals[i]);
+            } else {
+                cur[0] = Math.min(cur[0], intervals[i][0]);
+                cur[1] = Math.max(cur[1], intervals[i][1]);
+            }
+        }
+        resList.add(cur);
+        return resList.toArray(new int[resList.size()][]);
+    }
+}

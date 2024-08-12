@@ -106,3 +106,29 @@ class Solution {
         return res.length() == 0? "/" : res.toString();
     }
 }
+
+
+
+// 20240811
+class Solution {
+    public String simplifyPath(String path) {
+        Deque<String> deque = new LinkedList<>();
+        String[] split = path.split("/");
+        for (String s: split) {
+            if (s.equals("") || s.equals(".")) {continue;}
+            if (s.equals("..")) {
+                if (!deque.isEmpty()) {deque.pollLast();}
+            } else {
+                deque.addLast(s);
+            }
+        }
+        if(deque.isEmpty()) {return "/";}
+        String[] list = new String[deque.size()];
+        for (int i = 0; i < list.length; i++) {
+            list[i] = deque.pollFirst();
+        }
+        return "/"+String.join("/", list);
+
+
+    }
+}

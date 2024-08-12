@@ -155,3 +155,27 @@ https://leetcode.com/problems/merge-intervals/discuss/21451/Share-my-BST-interva
 
 */
 
+
+// 20240810
+// sort way O(nlogn)
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals,(i1, i2)->(i1[0]-i2[0]));
+        int[] cur = intervals[0];
+        List<int[]> res = new LinkedList<>();
+        for (int i = 1; i < intervals.length; i++) {
+            if (cur[1] < intervals[i][0]) {
+                res.add(cur);
+                cur = intervals[i];
+            } else {
+                cur[1] = Math.max(cur[1], intervals[i][1]);
+            }
+        }
+        res.add(cur); // don't forget this line
+        int[][] reslist = new int[res.size()][2];
+        for (int i = 0; i < reslist.length; i++) {
+            reslist[i] = res.get(i);
+        }
+        return reslist;
+    }
+}

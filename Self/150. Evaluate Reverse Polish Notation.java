@@ -60,3 +60,30 @@ class Solution {
         return stack.pop();
     }
 }
+
+
+
+// 20240811
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (String s: tokens) {
+            if ("+-*/".contains(s)) {
+                int num1 = stack.pop();
+                int num2 = stack.pop();
+                if (s.equals("+")) {
+                    stack.push(num1+num2);
+                } else if (s.equals("-")) {
+                    stack.push(num2-num1);
+                } else if (s.equals("*")) {
+                    stack.push(num1 * num2);
+                } else {
+                    stack.push(num2/num1);
+                }
+            } else {
+                stack.push(Integer.valueOf(s));
+            }
+        }
+        return stack.pop();
+    }
+}

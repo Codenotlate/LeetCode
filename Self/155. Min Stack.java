@@ -246,4 +246,35 @@ class MinStack {
 
 
 
+// 2024/08/11
+// get the hint: Consider each node in the stack having a minimum value.
+// with this idea, can also do it with two stacks or use self built stack.
+class MinStack {
+    Stack<int[]> stack;
+
+    public MinStack() {
+        stack = new Stack<>();
+    }
+    
+    public void push(int val) {
+        if (stack.isEmpty() ||val < stack.peek()[1]) {
+            stack.push(new int[]{val, val});
+        } else {
+            stack.push(new int[]{val, stack.peek()[1]});
+        }
+    }
+    
+    public void pop() {
+        stack.pop();
+    }
+    
+    public int top() {
+        return stack.peek()[0];
+    }
+    
+    public int getMin() {
+        return stack.peek()[1];
+    }
+}
+
 
