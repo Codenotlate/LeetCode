@@ -41,3 +41,42 @@ class Solution {
 
 
 
+
+// 2024.9.24 (self come up)
+// two monotonic deque way, time O(n) space O(n)
+// ALWAYS remember what you put in deque is index, when comparing use nums[index]!!
+class Solution {
+    public int longestSubarray(int[] nums, int limit) {
+        Deque<Integer> dq1 = new LinkedList<>(); //repre minStack (min at left)
+        Deque<Integer> dq2 = new LinkedList<>(); // repre maxStack (max at left)
+        int left = 0;
+        int right = 0;
+        int size = 0;
+        while (right < nums.length) {
+            // add right to dq1 and dq2 accordingly
+            while (!dq1.isEmpty() && nums[dq1.peekLast()] >= nums[right]) {
+                dq1.pollLast();
+            }
+            dq1.addLast(right);
+            while (!dq2.isEmpty() && nums[dq2.peekLast()] <= nums[right]) {
+                dq2.pollLast();
+            }
+            dq2.addLast(right);
+
+            // shrink the window if invalid (dq won't be empty cause 1 size array always valid)
+            while (left < nums.length && nums[dq2.peekFirst()] - nums[dq1.peekFirst()] > limit) {
+                left++;
+                // poll out data outside the current window
+                while (dq1.peekFirst() < left) {dq1.pollFirst();}
+                while (dq2.peekFirst() < left) {dq2.pollFirst();}
+            }
+            // update size for valid window
+            size = Math.max(size, right-left+1);
+            right++;
+        }
+        return size;
+
+    }
+}
+
+
