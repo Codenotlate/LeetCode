@@ -84,3 +84,36 @@ class Solution {
         return hours;
     }
 }
+
+
+
+
+// 2024.10.15
+// Similar as above way. The answer k ranges from [1, maxP]. Thus do binary search on this range, each check time O(n) time . Thus O(nlog(maxP)) time
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int maxP = piles[0];
+        for (int p: piles) {maxP = Math.max(maxP, p);}
+        if (h==piles.length) {return maxP;}
+        int left = 1;
+        int right = maxP;
+        while (left < right) {
+            int mid = left + (right-left)/2;
+            if (timeNeed(mid, piles) <= h) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    private int timeNeed(int k, int[] piles) {
+        int time = 0;
+        for (int p: piles) {
+            time += p / k + (p%k==0?0:1);
+        }
+        return time;
+
+    }
+}

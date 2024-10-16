@@ -202,8 +202,32 @@ class Solution {
 
 
 
+// 2024.10.1
+// sort by dist to origin
+// can use a size k max heap
+// time O(nlogk) space O(k)
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> b[0]*b[0]+b[1]*b[1]-a[0]*a[0]-a[1]*a[1]);
+        int[][] res = new int[k][2];
+        for (int[] p: points) {
+            pq.add(p);
+            k--;
+            if (k < 0) {
+                pq.poll();
+                k++;
+            }
+        }
+        
+        for (int i = 0; i < res.length; i++) {
+            res[i] = pq.poll().clone();
+        }
+        return res;
+    }
+}
 
 
+// tried quick select but failed, practice quick sort and quick select together as a topic
 
 
 

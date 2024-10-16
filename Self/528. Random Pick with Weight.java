@@ -120,3 +120,44 @@ class Solution {
         return start;
     }
 }
+
+
+
+
+
+// 2024.10.15
+// self come up with quickly, same idea as above ways
+class Solution {
+    Random rand;
+    int[] accuWeight;
+
+    public Solution(int[] w) {
+        rand = new Random();
+        accuWeight = new int[w.length];
+        for (int i = 0; i < w.length; i++) {
+            if (i == 0) {
+                accuWeight[i] = w[i];
+                continue;
+            }
+            accuWeight[i] = accuWeight[i-1]+w[i];
+        }
+
+    }
+    
+    public int pickIndex() {
+        int picked = rand.nextInt(accuWeight[accuWeight.length-1])+1;
+        int left = 0;
+        int right = accuWeight.length - 1;
+        while (left < right) {
+            int mid = left + (right-left)/2;
+            if (accuWeight[mid] >= picked) {
+                right = mid;
+            } else {
+                left = mid+1;
+            }
+        }
+
+        return left;
+        
+    }
+}

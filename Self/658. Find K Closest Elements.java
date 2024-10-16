@@ -213,7 +213,52 @@ class Solution {
 
 
 
+// 2024.10.9
+// Naive way: using a PQ and define the specific order, but it's not optimized cause it didn't use the sorted characteristic of the array. time O(nlogn)
+// binary search to find the number >= x. O(logn) (note it's possible no value is returned)
+// have left = pos-1, right = pos, expand the window to the two sides. Comparing left number with right number regarding how close they are to x. Add the closer one to result and move its pointer to expand the window. O(k)
+// time O(logn + k)
+// another interesting way as above
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int pos = findLE(arr, x);
+        int left = pos - 1;
+        int right = pos;
+        List<Integer> res = new ArrayList<>();
+        while (right-left-1 < k) {
+            if (left < 0 || (right < arr.length && compare(arr[right], arr[left], x) < 0)) {
+                right++;
+            } else {
+                left--;
+            }
+        }
+        for (int i = left+1; i < right; i++) {res.add(arr[i]);}
+        return res;
+    }
 
+    // if no value largerthanorequalto x, return arr.len
+    private int findLE(int[] arr, int x) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left < right) {
+            int mid = left + (right-left)/2;
+            if (arr[mid] < x) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return arr[left] >= x ? left : arr.length;
+    }
+
+    private int compare(int a, int b, int x) {
+        int diff = Math.abs(a-x) - Math.abs(b-x);
+        if (diff < 0 || (diff==0 && a < b)) {
+            return -1;
+        }
+        return 0;
+    }
+}
 
 
 
