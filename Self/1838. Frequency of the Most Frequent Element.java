@@ -98,3 +98,44 @@ class Solution {
         
     }
 }
+
+
+
+
+// 2024.10.28
+// solution on range [1, n]. 「 This is WRONG! 』For each freq x, the min operation needed is to change every one smaller than the xth number to the xth number. Thus we need to sort first. And use above check for validation on each freq. The check can take two ways: way1 is O(n) time, starts from the (x-1) and sum the diff till the first element in nums. way2 is O(1) time, but we need to pre-calculate it and store in an diffSum array.
+// no matter which validation check way we take, time is O(nlogn) due to the sort operation.
+// M1: way2 check
+class Solution {
+    public int maxFrequency(int[] nums, int k) {
+        int n = nums.length;
+        long[] diffSum = new long[n];
+        Arrays.sort(nums);
+        for (int i = 1; i < n ; i++) {
+            diffSum[i] = diffSum[i-1] + (nums[i]-nums[i-1])*(long)i;
+        }
+        int left = 1;
+        int right = n;
+        int res = 1;
+        while (left <= right) {
+            int mid = left + (right-left) / 2;
+            if (isValid(mid, diffSum, k)) {
+                res = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return res;
+    }
+
+
+    private boolean isValid(int n, long[] diffSum, int k) {
+        return diffSum[n-1] <= k;
+    }
+
+    
+}
+
+
+

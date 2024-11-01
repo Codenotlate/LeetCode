@@ -134,6 +134,37 @@ class HitCounter {
 
 
 
+// 2024.10.17 - use Deque way
+// but above dict + binary search way is good for non-chrononical call of getHits.
+class HitCounter {
+    Deque<int[]> deque;
+    int curCount;
+
+    public HitCounter() {
+        deque = new LinkedList<>();
+        curCount = 0;
+    }
+    
+    public void hit(int timestamp) {
+        if (!deque.isEmpty() && deque.peekLast()[0]==timestamp) {
+            int[] poll = deque.pollLast();
+            poll[1] += 1;
+            deque.addLast(poll);
+        } else {
+            deque.addLast(new int[]{timestamp, 1});
+        }
+        curCount += 1;
+    }
+    
+    public int getHits(int timestamp) {
+        while (!deque.isEmpty() && deque.peekFirst()[0] + 300 <= timestamp) {
+            int[] out = deque.pollFirst();
+            curCount -= out[1];
+        }
+        return curCount;
+    }
+}
+
 
 
 

@@ -166,3 +166,23 @@ class Solution {
         return nums[end];
     }
 }
+
+
+
+// 2024.10.29
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int  left = 0;
+        int right = nums.length - 1;
+        while (left < right) {
+            int mid = left + (right-left) / 2;
+            if ((mid - left + 1)%2 != 0) {mid++;} // make sure left till mid is always even length
+            if (nums[mid-1]==nums[mid]) {
+                left = mid + 1;
+            } else {
+                right = mid-1; // This is important, right = mid is not possible here. right = mid will cause infinite loop.
+            }
+        }
+        return nums[left];
+    }
+}

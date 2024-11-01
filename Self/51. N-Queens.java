@@ -198,3 +198,57 @@ class Solution {
         }
     }
 }
+
+
+
+// 2024.11.1
+// eventually each row can only have one queen. Thus we can view this as make a decision on each row provided that it's a valid choice.
+// Use a 2d board to make the validness check easier.
+// Same as all above ways, but feel like this way is more easy to read version.
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(board[i],'.');
+        }
+        List<List<String>> resList = new ArrayList<>();
+        Set<Integer> colTaken = new HashSet<>();
+        Set<Integer> diagTaken = new HashSet<>();
+        Set<Integer> revDiagTaken = new HashSet<>();
+        tryBoard(board, 0, resList, colTaken, diagTaken, revDiagTaken);
+        return resList;
+    }
+
+
+    private void tryBoard(char[][] board, int i, List<List<String>> resList, Set<Integer> colTaken, Set<Integer> diagTaken, Set<Integer> revDiagTaken) {
+        if ( i >= board.length) {
+            resList.add(convertBoardToList(board));
+            return;
+        }
+        for (int j = 0; j < board.length; j++) {
+            if (isValid(board, i, j, colTaken, diagTaken, revDiagTaken)) {
+                board[i][j] = 'Q';
+                colTaken.add(j);
+                diagTaken.add(j-i);
+                revDiagTaken.add(i+j);
+                tryBoard(board, i+1, resList, colTaken, diagTaken, revDiagTaken);
+                board[i][j] = '.';
+                colTaken.remove(j);
+                diagTaken.remove(j-i);
+                revDiagTaken.remove(i+j);
+            }
+        }
+    }
+
+    private boolean isValid(char[][] board, int i , int j, Set<Integer> colTaken, Set<Integer> diagTaken, Set<Integer> revDiagTaken) {
+        return (!colTaken.contains(j)) && (!diagTaken.contains(j-i)) && (!revDiagTaken.contains(i+j));
+    }
+
+    private List<String> convertBoardToList(char[][] board) {
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            res.add(new String(board[i]));
+        }
+        return res;
+    }
+}

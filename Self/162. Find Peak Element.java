@@ -99,3 +99,27 @@ class Solution {
         return start;
     }
 }
+
+
+
+
+// 2024.10.17 - above way is more concise, but this way is also good
+// same as earlier version
+class Solution {
+    public int findPeakElement(int[] nums) {
+         int left = 0;
+         int right = nums.length-1;
+         while (left < right) {
+            int mid = left + (right-left) /2;
+            int leftNum = mid == 0? Integer.MIN_VALUE:nums[mid-1];
+            int rightNum = mid == nums.length-1? Integer.MIN_VALUE:nums[mid+1];
+            if (nums[mid] > leftNum && nums[mid] > rightNum) {return mid;}
+            if (nums[mid] < leftNum) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+         }
+         return left;
+    }
+}

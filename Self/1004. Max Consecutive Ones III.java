@@ -120,3 +120,28 @@ class Solution {
         return maxLen;
     }
 }
+
+
+
+//2024.10.31
+// sliding window, and since asking for longest window length, don't need to shrink multiple steps for left side each time, just one step is enough.
+// O(n) - similar idea as above
+class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int left = 0;
+        int right = 0;
+        int maxLen = 0;
+        int curZeros = 0;
+        while (right < nums.length) {
+            if (nums[right] == 0) {curZeros++;}
+            if(curZeros <= k) {
+                maxLen = Math.max(maxLen, right - left+1);
+            } else {
+                if (nums[left] == 0) {curZeros--;}
+                left++;
+            }
+            right++;
+        }
+        return maxLen;
+    }
+}

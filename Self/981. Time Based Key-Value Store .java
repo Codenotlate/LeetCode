@@ -103,3 +103,45 @@ class TimeMap {
     }
 }
 
+
+
+
+
+
+// 2024.10.30
+// binary tree for the value array in sorted time order for each key
+// time for set O(1) get O(log(value_len))
+// This is the optimal way, but consider OOP, maybe better idea to have a private class for data.
+class TimeMap {
+    Map<String, List> map;
+
+    public TimeMap() {
+        map = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        map.putIfAbsent(key, new ArrayList<Pair<Integer, String>>());
+        map.get(key).add(new Pair(timestamp, value));
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) {return "";}
+        List<Pair<Integer, String>> values = map.get(key);
+        int left = 0;
+        int right = values.size()-1;
+        String res = "";
+        while (left < right) {
+            int mid = left + (right-left) / 2;
+            if (values.get(mid).getKey() <= timestamp) {
+                res = values.get(mid).getValue();
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        if (values.get(left).getKey() <= timestamp) {
+            res = values.get(left).getValue();
+        }
+        return res;
+    }
+}
